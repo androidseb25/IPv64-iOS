@@ -1,0 +1,495 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9A0034FC2930F9200065E1F3 /* TabbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0034FB2930F9200065E1F3 /* TabbView.swift */; };
+		9A0034FE2930F9460065E1F3 /* ProfilView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0034FD2930F9460065E1F3 /* ProfilView.swift */; };
+		9A0035002930FD010065E1F3 /* IPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0034FF2930FD010065E1F3 /* IPView.swift */; };
+		9A003502293101350065E1F3 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A003501293101350065E1F3 /* LogView.swift */; };
+		9A0035042931062B0065E1F3 /* LogItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0035032931062B0065E1F3 /* LogItemView.swift */; };
+		9A003506293129930065E1F3 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A003505293129930065E1F3 /* AccountView.swift */; };
+		9A8D5BE229196290006B8A74 /* ErrorSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5BE129196290006B8A74 /* ErrorSheetView.swift */; };
+		9A8D5BE429197355006B8A74 /* DetailDomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5BE329197355006B8A74 /* DetailDomainView.swift */; };
+		9A8D5C0529199141006B8A74 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5C0429199141006B8A74 /* HelpView.swift */; };
+		9AACEB8C291851E1009B506D /* IPv64App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEB8B291851E1009B506D /* IPv64App.swift */; };
+		9AACEB8E291851E1009B506D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEB8D291851E1009B506D /* ContentView.swift */; };
+		9AACEB90291851E2009B506D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AACEB8F291851E2009B506D /* Assets.xcassets */; };
+		9AACEB93291851E2009B506D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AACEB92291851E2009B506D /* Preview Assets.xcassets */; };
+		9AACEB98291851E2009B506D /* IPv64.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEB96291851E2009B506D /* IPv64.xcdatamodeld */; };
+		9AACEB9F2918524B009B506D /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEB9E2918524B009B506D /* LoginView.swift */; };
+		9AACEBA1291853C9009B506D /* NetworkServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA0291853C9009B506D /* NetworkServices.swift */; };
+		9AACEBA429185411009B506D /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA329185411009B506D /* Models.swift */; };
+		9AACEBA62918577D009B506D /* SetupPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA52918577D009B506D /* SetupPrefs.swift */; };
+		9AACEBA8291857AF009B506D /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA7291857AF009B506D /* SpinnerView.swift */; };
+		9AACEBAA2918609F009B506D /* NewDomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA92918609F009B506D /* NewDomainView.swift */; };
+		9AC2EDEC291ADFAF00140CD9 /* NewDomainDNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		9A0034FB2930F9200065E1F3 /* TabbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbView.swift; sourceTree = "<group>"; };
+		9A0034FD2930F9460065E1F3 /* ProfilView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilView.swift; sourceTree = "<group>"; };
+		9A0034FF2930FD010065E1F3 /* IPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPView.swift; sourceTree = "<group>"; };
+		9A003501293101350065E1F3 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
+		9A0035032931062B0065E1F3 /* LogItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItemView.swift; sourceTree = "<group>"; };
+		9A003505293129930065E1F3 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
+		9A8D5BE129196290006B8A74 /* ErrorSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorSheetView.swift; sourceTree = "<group>"; };
+		9A8D5BE329197355006B8A74 /* DetailDomainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailDomainView.swift; sourceTree = "<group>"; };
+		9A8D5C0429199141006B8A74 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		9AACEB88291851E1009B506D /* IPv64.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IPv64.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9AACEB8B291851E1009B506D /* IPv64App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPv64App.swift; sourceTree = "<group>"; };
+		9AACEB8D291851E1009B506D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		9AACEB8F291851E2009B506D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9AACEB92291851E2009B506D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		9AACEB97291851E2009B506D /* IPv64.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = IPv64.xcdatamodel; sourceTree = "<group>"; };
+		9AACEB9E2918524B009B506D /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		9AACEBA0291853C9009B506D /* NetworkServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkServices.swift; sourceTree = "<group>"; };
+		9AACEBA329185411009B506D /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		9AACEBA52918577D009B506D /* SetupPrefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupPrefs.swift; sourceTree = "<group>"; };
+		9AACEBA7291857AF009B506D /* SpinnerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
+		9AACEBA92918609F009B506D /* NewDomainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDomainView.swift; sourceTree = "<group>"; };
+		9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDomainDNSView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9AACEB85291851E1009B506D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9A7CDCDB296DEA3900237D5B /* Sheets */ = {
+			isa = PBXGroup;
+			children = (
+				9AACEBA92918609F009B506D /* NewDomainView.swift */,
+				9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */,
+			);
+			path = Sheets;
+			sourceTree = "<group>";
+		};
+		9A7CDCDC296DEA5800237D5B /* Domains */ = {
+			isa = PBXGroup;
+			children = (
+				9A7CDCDB296DEA3900237D5B /* Sheets */,
+				9AACEB8D291851E1009B506D /* ContentView.swift */,
+				9A8D5BE329197355006B8A74 /* DetailDomainView.swift */,
+			);
+			path = Domains;
+			sourceTree = "<group>";
+		};
+		9A7CDCDD296DEA6500237D5B /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				9A7CDCDF296DEBA200237D5B /* Items */,
+				9A0034FD2930F9460065E1F3 /* ProfilView.swift */,
+				9A003501293101350065E1F3 /* LogView.swift */,
+				9A003505293129930065E1F3 /* AccountView.swift */,
+				9A0034FF2930FD010065E1F3 /* IPView.swift */,
+				9A8D5C0429199141006B8A74 /* HelpView.swift */,
+			);
+			path = Account;
+			sourceTree = "<group>";
+		};
+		9A7CDCDE296DEA6F00237D5B /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				9A7CDCE0296DEBD400237D5B /* Sheets */,
+				9AACEB9E2918524B009B506D /* LoginView.swift */,
+				9A0034FB2930F9200065E1F3 /* TabbView.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		9A7CDCDF296DEBA200237D5B /* Items */ = {
+			isa = PBXGroup;
+			children = (
+				9A0035032931062B0065E1F3 /* LogItemView.swift */,
+			);
+			path = Items;
+			sourceTree = "<group>";
+		};
+		9A7CDCE0296DEBD400237D5B /* Sheets */ = {
+			isa = PBXGroup;
+			children = (
+				9A8D5BE129196290006B8A74 /* ErrorSheetView.swift */,
+			);
+			path = Sheets;
+			sourceTree = "<group>";
+		};
+		9A7CDCE1296DEBE800237D5B /* HelperViews */ = {
+			isa = PBXGroup;
+			children = (
+				9AACEBA7291857AF009B506D /* SpinnerView.swift */,
+			);
+			path = HelperViews;
+			sourceTree = "<group>";
+		};
+		9A7CDCE2296DEBF700237D5B /* Models&Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				9AACEBA52918577D009B506D /* SetupPrefs.swift */,
+				9AACEBA0291853C9009B506D /* NetworkServices.swift */,
+				9AACEBA329185411009B506D /* Models.swift */,
+			);
+			path = "Models&Helpers";
+			sourceTree = "<group>";
+		};
+		9AACEB7F291851E1009B506D = {
+			isa = PBXGroup;
+			children = (
+				9AACEB8A291851E1009B506D /* IPv64 */,
+				9AACEB89291851E1009B506D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9AACEB89291851E1009B506D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9AACEB88291851E1009B506D /* IPv64.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9AACEB8A291851E1009B506D /* IPv64 */ = {
+			isa = PBXGroup;
+			children = (
+				9A7CDCE2296DEBF700237D5B /* Models&Helpers */,
+				9A7CDCE1296DEBE800237D5B /* HelperViews */,
+				9A7CDCDE296DEA6F00237D5B /* Main */,
+				9A7CDCDD296DEA6500237D5B /* Account */,
+				9A7CDCDC296DEA5800237D5B /* Domains */,
+				9AACEB91291851E2009B506D /* Preview Content */,
+				9AACEB8B291851E1009B506D /* IPv64App.swift */,
+				9AACEB8F291851E2009B506D /* Assets.xcassets */,
+				9AACEB96291851E2009B506D /* IPv64.xcdatamodeld */,
+			);
+			path = IPv64;
+			sourceTree = "<group>";
+		};
+		9AACEB91291851E2009B506D /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				9AACEB92291851E2009B506D /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9AACEB87291851E1009B506D /* IPv64 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9AACEB9B291851E2009B506D /* Build configuration list for PBXNativeTarget "IPv64" */;
+			buildPhases = (
+				9AACEB84291851E1009B506D /* Sources */,
+				9AACEB85291851E1009B506D /* Frameworks */,
+				9AACEB86291851E1009B506D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IPv64;
+			productName = IPv64;
+			productReference = 9AACEB88291851E1009B506D /* IPv64.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9AACEB80291851E1009B506D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1410;
+				LastUpgradeCheck = 1410;
+				TargetAttributes = {
+					9AACEB87291851E1009B506D = {
+						CreatedOnToolsVersion = 14.1;
+					};
+				};
+			};
+			buildConfigurationList = 9AACEB83291851E1009B506D /* Build configuration list for PBXProject "IPv64" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9AACEB7F291851E1009B506D;
+			productRefGroup = 9AACEB89291851E1009B506D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9AACEB87291851E1009B506D /* IPv64 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9AACEB86291851E1009B506D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AACEB93291851E2009B506D /* Preview Assets.xcassets in Resources */,
+				9AACEB90291851E2009B506D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9AACEB84291851E1009B506D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AACEBA1291853C9009B506D /* NetworkServices.swift in Sources */,
+				9A8D5C0529199141006B8A74 /* HelpView.swift in Sources */,
+				9A0034FE2930F9460065E1F3 /* ProfilView.swift in Sources */,
+				9AACEBA8291857AF009B506D /* SpinnerView.swift in Sources */,
+				9A003506293129930065E1F3 /* AccountView.swift in Sources */,
+				9AACEB8E291851E1009B506D /* ContentView.swift in Sources */,
+				9AACEB8C291851E1009B506D /* IPv64App.swift in Sources */,
+				9A003502293101350065E1F3 /* LogView.swift in Sources */,
+				9AACEBA62918577D009B506D /* SetupPrefs.swift in Sources */,
+				9AACEB9F2918524B009B506D /* LoginView.swift in Sources */,
+				9A8D5BE429197355006B8A74 /* DetailDomainView.swift in Sources */,
+				9AC2EDEC291ADFAF00140CD9 /* NewDomainDNSView.swift in Sources */,
+				9A0034FC2930F9200065E1F3 /* TabbView.swift in Sources */,
+				9A0035002930FD010065E1F3 /* IPView.swift in Sources */,
+				9A0035042931062B0065E1F3 /* LogItemView.swift in Sources */,
+				9A8D5BE229196290006B8A74 /* ErrorSheetView.swift in Sources */,
+				9AACEBAA2918609F009B506D /* NewDomainView.swift in Sources */,
+				9AACEB98291851E2009B506D /* IPv64.xcdatamodeld in Sources */,
+				9AACEBA429185411009B506D /* Models.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		9AACEB99291851E2009B506D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		9AACEB9A291851E2009B506D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9AACEB9C291851E2009B506D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 5;
+				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9AACEB9D291851E2009B506D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 5;
+				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9AACEB83291851E1009B506D /* Build configuration list for PBXProject "IPv64" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9AACEB99291851E2009B506D /* Debug */,
+				9AACEB9A291851E2009B506D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9AACEB9B291851E2009B506D /* Build configuration list for PBXNativeTarget "IPv64" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9AACEB9C291851E2009B506D /* Debug */,
+				9AACEB9D291851E2009B506D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		9AACEB96291851E2009B506D /* IPv64.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				9AACEB97291851E2009B506D /* IPv64.xcdatamodel */,
+			);
+			currentVersion = 9AACEB97291851E2009B506D /* IPv64.xcdatamodel */;
+			path = IPv64.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 9AACEB80291851E1009B506D /* Project object */;
+}
