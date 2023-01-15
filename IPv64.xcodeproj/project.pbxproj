@@ -27,6 +27,7 @@
 		9AACEBA62918577D009B506D /* SetupPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA52918577D009B506D /* SetupPrefs.swift */; };
 		9AACEBA8291857AF009B506D /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA7291857AF009B506D /* SpinnerView.swift */; };
 		9AACEBAA2918609F009B506D /* NewDomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA92918609F009B506D /* NewDomainView.swift */; };
+		9AB155C229747DAC0052F21E /* CodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB155C129747DAC0052F21E /* CodeScanner.swift */; };
 		9AC2EDEC291ADFAF00140CD9 /* NewDomainDNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +53,8 @@
 		9AACEBA52918577D009B506D /* SetupPrefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupPrefs.swift; sourceTree = "<group>"; };
 		9AACEBA7291857AF009B506D /* SpinnerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
 		9AACEBA92918609F009B506D /* NewDomainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDomainView.swift; sourceTree = "<group>"; };
+		9AB155C129747DAC0052F21E /* CodeScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeScanner.swift; sourceTree = "<group>"; };
+		9AB155C329747F5C0052F21E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDomainDNSView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -127,6 +130,7 @@
 		9A7CDCE1296DEBE800237D5B /* HelperViews */ = {
 			isa = PBXGroup;
 			children = (
+				9AB155C129747DAC0052F21E /* CodeScanner.swift */,
 				9AACEBA7291857AF009B506D /* SpinnerView.swift */,
 			);
 			path = HelperViews;
@@ -161,6 +165,7 @@
 		9AACEB8A291851E1009B506D /* IPv64 */ = {
 			isa = PBXGroup;
 			children = (
+				9AB155C329747F5C0052F21E /* Info.plist */,
 				9A7CDCE2296DEBF700237D5B /* Models&Helpers */,
 				9A7CDCE1296DEBE800237D5B /* HelperViews */,
 				9A7CDCDE296DEA6F00237D5B /* Main */,
@@ -257,6 +262,7 @@
 				9A0034FE2930F9460065E1F3 /* ProfilView.swift in Sources */,
 				9AACEBA8291857AF009B506D /* SpinnerView.swift in Sources */,
 				9A003506293129930065E1F3 /* AccountView.swift in Sources */,
+				9AB155C229747DAC0052F21E /* CodeScanner.swift in Sources */,
 				9AACEB8E291851E1009B506D /* ContentView.swift in Sources */,
 				9AACEB8C291851E1009B506D /* IPv64App.swift in Sources */,
 				9A003502293101350065E1F3 /* LogView.swift in Sources */,
@@ -397,13 +403,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IPv64/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Die App benötigt diese Berechtigung um den QR Code auszulesen.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -429,13 +437,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IPv64/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Die App benötigt diese Berechtigung um den QR Code auszulesen.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
