@@ -13,7 +13,7 @@ Nur ein iOS Gerät mit einer Version von iOS15/iPadOS15 oder höher und die App 
 
 2. Du musst der [Einladung folgen](https://testflight.apple.com/join/DdBc50Kl) und die App IPv64.net installieren.
 
-3. Desweiteren brauchst du deinen API-Key von deinem Konto, damit du dich anmelden kannst.
+3. Desweiteren brauchst du deinen API-Key von deinem Konto, damit du dich anmelden kannst. Diesen scannst du einfach auf der Webseite.
 
 4. Fertig! Du hast es geschafft viel Spaß bei mit der App :D 
 
