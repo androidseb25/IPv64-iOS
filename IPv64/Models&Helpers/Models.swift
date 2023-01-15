@@ -281,7 +281,7 @@ extension UIDevice {
 
 
 enum ActiveSheet: Identifiable {
-    case detail, add, adddns, help, error
+    case detail, add, adddns, help, error, qrcode
     
     var id: Int {
         hashValue
