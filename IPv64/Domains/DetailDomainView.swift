@@ -59,7 +59,7 @@ struct DetailDomainView: View {
     }
     
     fileprivate func GetDomainUpdateUrl() -> String {
-        return "https://ipv64.net/update.php?key=" + accountInfos.update_hash!
+        return "https://ipv64.net/update.php?key=" + domain.domain_update_hash!
     }
     
     var body: some View {
@@ -130,8 +130,7 @@ struct DetailDomainView: View {
                         }
                         .tint(.blue)
                     }
-                    // Currently not available
-                    /*HStack {
+                    HStack {
                         Text("Domain Update URL:")
                         Spacer()
                         Text(GetDomainUpdateUrl())
@@ -145,7 +144,7 @@ struct DetailDomainView: View {
                             Label("Domain Update URL", systemImage: "doc.on.doc")
                         }
                         .tint(.blue)
-                    }*/
+                    }
                 }
                 
                 ForEach(domain.records!.sorted { $0.type!.lowercased() < $1.type!.lowercased() }, id: \.record_id) { record in

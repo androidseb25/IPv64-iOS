@@ -24,53 +24,81 @@ struct AccountView: View {
                 let apiUpdates = thousendSeperator.string(from: (accountInfos.api_updates! ?? Int(0 as NSNumber)) as NSNumber)
                 Form {
                     Section("") {
-                        HStack {
-                            Text("Account Status")
-                            Spacer()
-                            Text("Aktiviert")
-                                .foregroundColor(.green)
+                        Group {
+                            HStack {
+                                Text("Account Status")
+                                Spacer()
+                                Text("Aktiviert")
+                                    .foregroundColor(.green)
+                            }
+                            HStack {
+                                Text("Account Klasse")
+                                Spacer()
+                                Text(accountInfos.account_class?.class_name ?? "")
+                                    .foregroundColor(.yellow)
+                            }
+                            HStack {
+                                Text("E-Mail")
+                                Spacer()
+                                Text((accountInfos.email)!)
+                                    .foregroundColor(.gray)
+                            }
+                            HStack {
+                                Text("Registriert seit")
+                                Spacer()
+                                Text(dateString)
+                                    .foregroundColor(.gray)
+                            }
                         }
-                        HStack {
-                            Text("Account Klasse")
-                            Spacer()
-                            Text(accountInfos.account_class?.class_name ?? "")
-                                .foregroundColor(.yellow)
+                        Group {
+                            let subDom = accountInfos.dyndns_subdomains ?? 0
+                            let subDomMax = accountInfos.account_class?.dyndns_domain_limit ?? 0
+                            HStack {
+                                Text("Dyn Domains")
+                                Spacer()
+                                Text("\(subDom) / \(subDomMax)")
+                                    .foregroundColor(GetColor(cur: subDom, max: subDomMax))
+                            }
+                            let mDomains = accountInfos.owndomains ?? 0
+                            let mDomainsMax = accountInfos.account_class?.owndomain_limit ?? 0
+                            HStack {
+                                Text("Domains")
+                                Spacer()
+                                Text("\(mDomains) / \(mDomainsMax)")
+                                    .foregroundColor(GetColor(cur: mDomains, max: mDomainsMax))
+                            }
+                            let dynUp = accountInfos.dyndns_updates ?? 0
+                            let dynUpMax = accountInfos.account_class?.dyndns_update_limit ?? 0
+                            HStack {
+                                Text("DynDNS Update Limit / 24h")
+                                Spacer()
+                                Text("\(dynUp) / \(dynUpMax)")
+                                    .foregroundColor(GetColor(cur: dynUp, max: dynUpMax))
+                            }
                         }
-                        HStack {
-                            Text("E-Mail")
-                            Spacer()
-                            Text((accountInfos.email)!)
-                                .foregroundColor(.gray)
-                        }
-                        HStack {
-                            Text("Registriert seit")
-                            Spacer()
-                            Text(dateString)
-                                .foregroundColor(.gray)
-                        }
-                        HStack {
-                            Text("Dyn Domains")
-                            Spacer()
-                            Text("0 / \(accountInfos.account_class?.dyndns_domain_limit ?? 0)")
-                                .foregroundColor(.green)
-                        }
-                        HStack {
-                            Text("Domains")
-                            Spacer()
-                            Text("0 / 1")
-                                .foregroundColor(.green)
-                        }
-                        HStack {
-                            Text("DynDNS Update Limit / 24h")
-                            Spacer()
-                            Text("\(accountInfos.dyndns_updates ?? 0) / \(accountInfos.account_class?.dyndns_update_limit ?? 0)")
-                                .foregroundColor(.green)
-                        }
-                        HStack {
-                            Text("API Limit / 24h")
-                            Spacer()
-                            Text("\(apiUpdates ?? "0") / \(apiLimit ?? "0")")
-                                .foregroundColor(.green)
+                        Group {
+                            let health = accountInfos.healthchecks ?? 0
+                            let healthMax = accountInfos.account_class?.healthcheck_limit ?? 0
+                            HStack {
+                                Text("Healthchecks")
+                                Spacer()
+                                Text("\(health) / \(healthMax)")
+                                    .foregroundColor(GetColor(cur: health, max: healthMax))
+                            }
+                            let healthup = accountInfos.healthchecks_updates ?? 0
+                            let healthupMax = accountInfos.account_class?.healthcheck_update_limit ?? 0
+                            HStack {
+                                Text("Healthcheck Updates")
+                                Spacer()
+                                Text("\(healthup) / \(healthupMax)")
+                                    .foregroundColor(GetColor(cur: healthup, max: healthupMax))
+                            }
+                            HStack {
+                                Text("API Limit / 24h")
+                                Spacer()
+                                Text("\(apiUpdates ?? "0") / \(apiLimit ?? "0")")
+                                    .foregroundColor(GetColor(cur: accountInfos.api_updates ?? 0, max: accountInfos.account_class?.api_limit ?? 0))
+                            }
                         }
                         Group {
                             Button(action: {
@@ -149,6 +177,15 @@ struct AccountView: View {
             }
         }
         .navigationTitle("Account Status")
+    }
+    
+    fileprivate func GetColor(cur: Int, max: Int) -> Color {
+        
+        if (cur == max) {
+            return .red
+        }
+        
+        return .green
     }
     
     private let itemFormatter: DateFormatter = {

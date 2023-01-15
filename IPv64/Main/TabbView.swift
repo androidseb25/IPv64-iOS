@@ -18,11 +18,16 @@ struct TabbView: View {
                     Label("Domains", systemImage: "network")
                 }
                 .tag(1)
+            /*Text("Healthcheck")
+                .tabItem {
+                    Label("Healthcheck", systemImage: "waveform.path.ecg")
+                }
+                .tag(2)*/
             ProfilView()
                 .tabItem {
                     Label("Account", systemImage: "person.circle")
                 }
-                .tag(2)
+                .tag(3)
         }
     }
 }

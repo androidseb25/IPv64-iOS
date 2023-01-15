@@ -41,11 +41,13 @@ struct AddDomainResult : Codable {
 struct Domain : Codable {
     var updates: Int?
     var wildcard: Int?
+    var domain_update_hash: String?
     var records: [RecordInfos]?
     
     enum CodingKeys: String, CodingKey {
         case updates = "updates"
         case wildcard = "wildcard"
+        case domain_update_hash = "domain_update_hash"
         case records = "records"
     }
 }
@@ -101,10 +103,15 @@ struct Logs: Codable {
 
 struct AccountInfo: Codable {
     var email: String? = ""
+    var account_status: Int? = 0
     var reg_date: String? = "2022-01-01 00:00:00"
     var update_hash: String? = ""
     var api_key: String? = ""
     var dyndns_updates: Int? = 0
+    var dyndns_subdomains: Int? = 0
+    var owndomains: Int? = 0
+    var healthchecks: Int? = 0
+    var healthchecks_updates: Int? = 0
     var api_updates: Int? = 0
     var account_class: AccountClass? = AccountClass()
     var info: String? = ""
@@ -113,10 +120,15 @@ struct AccountInfo: Codable {
     
     enum CodingKeys: String, CodingKey {
         case email = "email"
+        case account_status = "account_status"
         case reg_date = "reg_date"
         case update_hash = "update_hash"
         case api_key = "api_key"
         case dyndns_updates = "dyndns_updates"
+        case dyndns_subdomains = "dyndns_subdomains"
+        case owndomains = "owndomains"
+        case healthchecks = "healthchecks"
+        case healthchecks_updates = "healthchecks_updates"
         case api_updates = "api_updates"
         case account_class = "account_class"
         case info = "info"
@@ -129,12 +141,20 @@ struct AccountClass: Codable {
     var class_name: String? = ""
     var dyndns_domain_limit: Int? = 0
     var dyndns_update_limit: Int? = 0
+    var owndomain_limit: Int? = 0
+    var healthcheck_limit: Int? = 0
+    var healthcheck_update_limit: Int? = 0
+    var dyndns_ttl: Int? = 0
     var api_limit: Int? = 0
     
     enum CodingKeys: String, CodingKey {
         case class_name = "class_name"
         case dyndns_domain_limit = "dyndns_domain_limit"
         case dyndns_update_limit = "dyndns_update_limit"
+        case owndomain_limit = "owndomain_limit"
+        case healthcheck_limit = "healthcheck_limit"
+        case healthcheck_update_limit = "healthcheck_update_limit"
+        case dyndns_ttl = "dyndns_ttl"
         case api_limit = "api_limit"
     }
 }
