@@ -10,6 +10,8 @@ import SwiftUI
 struct ProfilView: View {
     @Environment(\.openURL) var openURL
     
+    @State var showLoginView = false
+    
     var body: some View {
         VStack {
             NavigationView {
@@ -32,10 +34,25 @@ struct ProfilView: View {
                             Text("Discord")
                         }
                     }
+                    Section {
+                        Button(action: {
+                            SetupPrefs.setPreference(mKey: "APIKEY", mValue: "")
+                            withAnimation {
+                                showLoginView.toggle()
+                            }
+                        }) {
+                            Text("Logout")
+                                .foregroundColor(.red)
+                        }
+                    }
+                    .listRowBackground(Color.red.opacity(0.15))
                 }
                 .navigationTitle("Account")
             }
             .accentColor(Color("AccentColor"))
+        }
+        .fullScreenCover(isPresented: $showLoginView) {
+            LoginView()
         }
     }
 }

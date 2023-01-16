@@ -10,6 +10,8 @@ import SwiftUI
 struct TabbView: View {
     
     @State var selectedView = 1
+    @State var activeSheet: ActiveSheet? = nil
+    @State private var showWhatsNew = false
     
     var body: some View {
         TabView(selection: $selectedView) {
@@ -19,15 +21,38 @@ struct TabbView: View {
                 }
                 .tag(1)
             /*Text("Healthcheck")
-                .tabItem {
-                    Label("Healthcheck", systemImage: "waveform.path.ecg")
-                }
-                .tag(2)*/
+             .tabItem {
+             Label("Healthcheck", systemImage: "waveform.path.ecg")
+             }
+             .tag(2)*/
             ProfilView()
                 .tabItem {
                     Label("Account", systemImage: "person.circle")
                 }
                 .tag(3)
+        }
+        .sheet(item: $activeSheet) { item in
+            showActiveSheet(item: item)
+        }
+        .onAppear {
+            let lastBuildNumber = SetupPrefs.readPreference(mKey: "LASTBUILDNUMBER", mDefaultValue: "0") as! String
+            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            if Int(lastBuildNumber) != Int(Bundle.main.buildNumber) && !token.isEmpty {
+                withAnimation {
+                    showWhatsNew = true
+                    activeSheet = .whatsnew
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func showActiveSheet(item: ActiveSheet?) -> some View {
+        switch item {
+        case .whatsnew:
+            WhatsNewView(activeSheet: $activeSheet, isPresented: $showWhatsNew)
+        default:
+            EmptyView()
         }
     }
 }

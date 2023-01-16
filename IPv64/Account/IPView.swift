@@ -14,35 +14,43 @@ struct IPView: View {
     @State var myIPV6: MyIP = MyIP(ip: "")
     
     var body: some View {
-        VStack {
-            VStack {
-                Text("IPv4:")
+        
+        Form {
+            Section("IPv4") {
                 if (myIP.ip?.count == 0) {
                     Spinner(isAnimating: true, style: .medium, color: .white)
                 } else {
                     Text(myIP.ip!)
                         .lineLimit(1)
                         .minimumScaleFactor(0.01)
-                        .font(.system(.title, design: .rounded).bold())
-                        .frame(maxWidth: .infinity)
-                        .padding(10)
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .none, action: {
+                                UIPasteboard.general.string = myIP.ip! ?? "0.0.0.0"
+                            }) {
+                                Label("IPv4 kopieren", systemImage: "doc.on.doc")
+                            }
+                            .tint(.blue)
+                        }
                 }
             }
-            VStack {
-                Text("IPv6:")
+            Section("IPv6") {
                 if (myIPV6.ip?.count == 0) {
                     Spinner(isAnimating: true, style: .medium, color: .white)
                 } else {
                     Text(myIPV6.ip!)
                         .lineLimit(1)
                         .minimumScaleFactor(0.01)
-                        .font(.system(.title, design: .rounded).bold())
-                        .frame(maxWidth: .infinity)
-                        .padding(10)
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .none, action: {
+                                UIPasteboard.general.string = myIPV6.ip! ?? "0.0.0.0"
+                            }) {
+                                Label("IPv6 kopieren", systemImage: "doc.on.doc")
+                            }
+                            .tint(.blue)
+                        }
                 }
             }
         }
-        .padding(10)
         .onAppear {
             Task {
                 myIP = await api.GetMyIP() ?? MyIP(ip: "0.0.0.0")

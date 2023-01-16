@@ -269,6 +269,25 @@ struct ErrorTypes {
     }
 }
 
+struct WhatsNewObj : Codable {
+    var id = UUID()
+    var imageName: String
+    var title: String
+    var subtitle: String
+    
+    enum CodingKeys: String, CodingKey {
+        case imageName = "imageName"
+        case title = "title"
+        case subtitle = "subtitle"
+    }
+    
+    init(imageName: String = "", title: String = "", subtitle: String = "") {
+        self.imageName = imageName
+        self.title = title
+        self.subtitle = subtitle
+    }
+}
+
 extension UIDevice {
     static var isIPad: Bool {
         UIDevice.current.userInterfaceIdiom == .pad
@@ -281,7 +300,7 @@ extension UIDevice {
 
 
 enum ActiveSheet: Identifiable {
-    case detail, add, adddns, help, error, qrcode
+    case detail, add, adddns, help, error, qrcode, whatsnew
     
     var id: Int {
         hashValue
