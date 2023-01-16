@@ -13,6 +13,8 @@
 		9A003502293101350065E1F3 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A003501293101350065E1F3 /* LogView.swift */; };
 		9A0035042931062B0065E1F3 /* LogItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0035032931062B0065E1F3 /* LogItemView.swift */; };
 		9A003506293129930065E1F3 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A003505293129930065E1F3 /* AccountView.swift */; };
+		9A5A359E29756EFA006F27EB /* WhatsNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5A359C29756EFA006F27EB /* WhatsNewView.swift */; };
+		9A5A359F29756EFA006F27EB /* WhatsNewItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5A359D29756EFA006F27EB /* WhatsNewItemView.swift */; };
 		9A8D5BE229196290006B8A74 /* ErrorSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5BE129196290006B8A74 /* ErrorSheetView.swift */; };
 		9A8D5BE429197355006B8A74 /* DetailDomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5BE329197355006B8A74 /* DetailDomainView.swift */; };
 		9A8D5C0529199141006B8A74 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5C0429199141006B8A74 /* HelpView.swift */; };
@@ -38,6 +40,8 @@
 		9A003501293101350065E1F3 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		9A0035032931062B0065E1F3 /* LogItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItemView.swift; sourceTree = "<group>"; };
 		9A003505293129930065E1F3 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
+		9A5A359C29756EFA006F27EB /* WhatsNewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsNewView.swift; sourceTree = "<group>"; };
+		9A5A359D29756EFA006F27EB /* WhatsNewItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsNewItemView.swift; sourceTree = "<group>"; };
 		9A8D5BE129196290006B8A74 /* ErrorSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorSheetView.swift; sourceTree = "<group>"; };
 		9A8D5BE329197355006B8A74 /* DetailDomainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailDomainView.swift; sourceTree = "<group>"; };
 		9A8D5C0429199141006B8A74 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
@@ -69,6 +73,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9A5A359B29756EFA006F27EB /* WhatsNew */ = {
+			isa = PBXGroup;
+			children = (
+				9A5A359C29756EFA006F27EB /* WhatsNewView.swift */,
+				9A5A359D29756EFA006F27EB /* WhatsNewItemView.swift */,
+			);
+			path = WhatsNew;
+			sourceTree = "<group>";
+		};
 		9A7CDCDB296DEA3900237D5B /* Sheets */ = {
 			isa = PBXGroup;
 			children = (
@@ -171,6 +184,7 @@
 				9A7CDCDE296DEA6F00237D5B /* Main */,
 				9A7CDCDD296DEA6500237D5B /* Account */,
 				9A7CDCDC296DEA5800237D5B /* Domains */,
+				9A5A359B29756EFA006F27EB /* WhatsNew */,
 				9AACEB91291851E2009B506D /* Preview Content */,
 				9AACEB8B291851E1009B506D /* IPv64App.swift */,
 				9AACEB8F291851E2009B506D /* Assets.xcassets */,
@@ -265,6 +279,7 @@
 				9AB155C229747DAC0052F21E /* CodeScanner.swift in Sources */,
 				9AACEB8E291851E1009B506D /* ContentView.swift in Sources */,
 				9AACEB8C291851E1009B506D /* IPv64App.swift in Sources */,
+				9A5A359F29756EFA006F27EB /* WhatsNewItemView.swift in Sources */,
 				9A003502293101350065E1F3 /* LogView.swift in Sources */,
 				9AACEBA62918577D009B506D /* SetupPrefs.swift in Sources */,
 				9AACEB9F2918524B009B506D /* LoginView.swift in Sources */,
@@ -274,6 +289,7 @@
 				9A0035002930FD010065E1F3 /* IPView.swift in Sources */,
 				9A0035042931062B0065E1F3 /* LogItemView.swift in Sources */,
 				9A8D5BE229196290006B8A74 /* ErrorSheetView.swift in Sources */,
+				9A5A359E29756EFA006F27EB /* WhatsNewView.swift in Sources */,
 				9AACEBAA2918609F009B506D /* NewDomainView.swift in Sources */,
 				9AACEB98291851E2009B506D /* IPv64.xcdatamodeld in Sources */,
 				9AACEBA429185411009B506D /* Models.swift in Sources */,
@@ -403,7 +419,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -422,7 +438,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -437,7 +453,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -456,7 +472,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
