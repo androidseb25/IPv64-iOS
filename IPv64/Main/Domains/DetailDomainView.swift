@@ -160,6 +160,7 @@ struct DetailDomainView: View {
                             }) {
                                 Label("Löschen", systemImage: "trash")
                             }
+                            .tint(.red)
                         }
                 }
             }

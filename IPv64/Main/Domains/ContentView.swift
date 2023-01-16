@@ -131,6 +131,7 @@ struct ContentView: View {
                                                 Label("Löschen", systemImage: "trash")
                                             }
                                         }
+                                        .tint(.red)
                                     }
                                 }
                             }

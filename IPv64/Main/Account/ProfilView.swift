@@ -28,11 +28,13 @@ struct ProfilView: View {
                         }) {
                             Text("YouTube")
                         }
+                        .tint(Color("primaryText"))
                         Button(action: {
                             openURL(URL(string: "https://discord.gg/rpicloud")!)
                         }) {
                             Text("Discord")
                         }
+                        .tint(Color("primaryText"))
                     }
                     Section {
                         Button(action: {
