@@ -127,6 +127,7 @@ struct AccountView: View {
                                 }
                                 .tint(.blue)
                             }
+                            .tint(Color("primaryText"))
                             Button(action: {
                                 withAnimation {
                                     showApiKey.toggle()
@@ -153,6 +154,7 @@ struct AccountView: View {
                                 }
                                 .tint(.blue)
                             }
+                            .tint(Color("primaryText"))
                         }
                     }
                 }

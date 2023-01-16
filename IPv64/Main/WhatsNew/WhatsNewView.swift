@@ -14,8 +14,7 @@ struct WhatsNewView: View {
     
     var whatsNewList = [
         WhatsNewObj(imageName: "ant.circle", title: "Fehlerbehebung", subtitle: "Es wurden in diesem Update ein Paar Fehler behoben, die zur Steigerung der Performance und der Nutzbarkeit dienen"),
-        WhatsNewObj(imageName: "rectangle.portrait.and.arrow.right", title: "Logout", subtitle: "Es wurde ein Logout Button unter dem Punkt Account hinzugefügt"),
-        WhatsNewObj(imageName: "sparkles", title: "Was ist neu!", subtitle: "Es gibt jetzt eine \"Was ist neu \" Ansicht, ja genau diese hier."),
+        WhatsNewObj(imageName: "waveform.path.ecg", title: "Healthcheck", subtitle: "Es gibt jetzt die neue Funktion Healthcheck zum überwachen deiner Systeme"),
     ]
     
     var body: some View {
