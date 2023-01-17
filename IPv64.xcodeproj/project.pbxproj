@@ -30,6 +30,7 @@
 		9AACEBA8291857AF009B506D /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA7291857AF009B506D /* SpinnerView.swift */; };
 		9AACEBAA2918609F009B506D /* NewDomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA92918609F009B506D /* NewDomainView.swift */; };
 		9AB155C229747DAC0052F21E /* CodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB155C129747DAC0052F21E /* CodeScanner.swift */; };
+		9AB78EB7297740D00047FDFA /* DetailHealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB78EB6297740D00047FDFA /* DetailHealthcheckView.swift */; };
 		9AC2EDEC291ADFAF00140CD9 /* NewDomainDNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */; };
 		9AD5DF5E2975B5DB007928F6 /* HealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF5D2975B5DB007928F6 /* HealthcheckView.swift */; };
 		9AD5DF612975BAC3007928F6 /* HealthcheckStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */; };
@@ -63,6 +64,7 @@
 		9AACEBA92918609F009B506D /* NewDomainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDomainView.swift; sourceTree = "<group>"; };
 		9AB155C129747DAC0052F21E /* CodeScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeScanner.swift; sourceTree = "<group>"; };
 		9AB155C329747F5C0052F21E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9AB78EB6297740D00047FDFA /* DetailHealthcheckView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailHealthcheckView.swift; sourceTree = "<group>"; };
 		9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDomainDNSView.swift; sourceTree = "<group>"; };
 		9AD5DF5D2975B5DB007928F6 /* HealthcheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckView.swift; sourceTree = "<group>"; };
 		9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckStatsView.swift; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 				9AD5DF662975ECD3007928F6 /* Sheets */,
 				9AD5DF5F2975B6E3007928F6 /* Items */,
 				9AD5DF5D2975B5DB007928F6 /* HealthcheckView.swift */,
+				9AB78EB6297740D00047FDFA /* DetailHealthcheckView.swift */,
 			);
 			path = Healthcheck;
 			sourceTree = "<group>";
@@ -323,6 +326,7 @@
 				9A003502293101350065E1F3 /* LogView.swift in Sources */,
 				9AACEBA62918577D009B506D /* SetupPrefs.swift in Sources */,
 				9AACEB9F2918524B009B506D /* LoginView.swift in Sources */,
+				9AB78EB7297740D00047FDFA /* DetailHealthcheckView.swift in Sources */,
 				9A8D5BE429197355006B8A74 /* DetailDomainView.swift in Sources */,
 				9AC2EDEC291ADFAF00140CD9 /* NewDomainDNSView.swift in Sources */,
 				9A0034FC2930F9200065E1F3 /* TabbView.swift in Sources */,
@@ -459,7 +463,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -478,7 +482,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -493,7 +497,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -512,7 +516,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
