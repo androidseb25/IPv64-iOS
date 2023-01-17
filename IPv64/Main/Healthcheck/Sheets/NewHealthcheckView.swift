@@ -63,7 +63,7 @@ struct NewHealthcheckView: View {
                         Button(action: {
                             if (healthName.count > 0) {
                                 Task {
-                                    let res = await api.PostDomain(add_healthcheck: healthName, alarm_count: Int(healthAlarmCount), alarm_unit: healthAlarmUnit)
+                                    let res = await api.PostHealth(add_healthcheck: healthName, alarm_count: Int(healthAlarmCount), alarm_unit: healthAlarmUnit)
                                     print(res)
                                     if (res?.info == "success") {
                                         activeSheet = .error
