@@ -218,7 +218,9 @@ struct HealthCheckResult: Codable {
 
 struct HealthCheck: Codable {
     // healthstatus == 1 = Active; 2 = Paused; 3 = Warning; 4 = Alarm;
+    var name: String?
     var healthstatus: Int? = 0
+    var healthtoken: String?
     var add_time: String?
     var last_update_time: String?
     var alarm_time: String?
@@ -234,12 +236,14 @@ struct HealthCheck: Codable {
 
     // 1
     // Define healthcheck Domain
-    let healthcheckDomain: String
+    let keyInd: String
 
     // 2
     // Define coding key for decoding use
     enum CodingKeys: String, CodingKey {
+        case name = "name"
         case healthstatus = "healthstatus"
+        case healthtoken = "healthtoken"
         case add_time = "add_time"
         case last_update_time = "last_update_time"
         case alarm_time = "alarm_time"
@@ -251,7 +255,7 @@ struct HealthCheck: Codable {
         case grace_count = "grace_count"
         case grace_unit = "grace_unit"
         case pings_total = "pings_total"
-        case healthcheckDomain = "healthcheckDomain"
+        case keyInd = "keyInd"
         case events = "events"
     }
 
@@ -261,7 +265,9 @@ struct HealthCheck: Codable {
 
         // 3
         // Decode
+        name = try container.decode(String.self, forKey: CodingKeys.name)
         healthstatus = try container.decode(Int.self, forKey: CodingKeys.healthstatus)
+        healthtoken = try container.decode(String.self, forKey: CodingKeys.healthtoken)
         add_time = try container.decode(String.self, forKey: CodingKeys.add_time)
         last_update_time = try container.decode(String.self, forKey: CodingKeys.last_update_time)
         alarm_time = try container.decode(String.self, forKey: CodingKeys.alarm_time)
@@ -277,7 +283,7 @@ struct HealthCheck: Codable {
 
         // 4
         // Extract healthcheckDomain from coding path
-        healthcheckDomain = container.codingPath.first!.stringValue
+        keyInd = container.codingPath.first!.stringValue
     }
 }
 

@@ -68,6 +68,21 @@ struct HealthcheckView: View {
         print(errorTyp)
     }
     
+    fileprivate func startPauseHealthCheck(isPause: Bool) {
+        Task {
+            if (isPause) {
+                let res = await api.PostPauseHealth(healthtoken: startPauseHealthToken)
+                startPauseHealthToken = ""
+                print(res)
+            } else {
+                let res = await api.PostStartHealth(healthtoken: startPauseHealthToken)
+                startPauseHealthToken = ""
+                print(res)
+            }
+            GetHealthChecks()
+        }
+    }
+    
     var body: some View {
         ZStack {
             NavigationView {
@@ -79,47 +94,52 @@ struct HealthcheckView: View {
                             .listRowBackground(Color.clear)
                         
                         Section {
-                            ForEach((healthcheckList?.domain.sorted { $0.healthcheckDomain.lowercased() < $1.healthcheckDomain.lowercased() }) ?? [], id: \.healthcheckDomain) { healthCheckDomain in
-                                HStack {
-                                    Image(systemName: "circle.fill")
-                                        .resizable()
-                                        .scaledToFill()
-                                        .foregroundColor(SetDotColor(statusId: healthCheckDomain.healthstatus!))
-                                        .frame(width: 8, height: 8)
-                                    Text(healthCheckDomain.healthcheckDomain)
-                                    Spacer()
-                                    HStack(spacing: 3) {
-                                        let lastXPills = GetLastXMonitorPills(count: 8, domain: healthCheckDomain).reversed()
-                                        ForEach(lastXPills, id:\.self) { color in
-                                            RoundedRectangle(cornerRadius: 5).fill(color)
-                                                .frame(width: 5, height: 20)
+                            ForEach((healthcheckList?.domain.sorted { $0.name!.lowercased() < $1.name!.lowercased() }) ?? [], id: \.name) { hcd in
+                                LazyVStack {
+                                    HStack {
+                                        Image(systemName: "circle.fill")
+                                            .resizable()
+                                            .scaledToFill()
+                                            .foregroundColor(SetDotColor(statusId: hcd.healthstatus!))
+                                            .frame(width: 8, height: 8)
+                                        Text(hcd.name!)
+                                        Spacer()
+                                        HStack(spacing: 3) {
+                                            let lastXPills = GetLastXMonitorPills(count: 8, domain: hcd).reversed()
+                                            ForEach(lastXPills, id:\.self) { color in
+                                                RoundedRectangle(cornerRadius: 5).fill(color)
+                                                    .frame(width: 5, height: 20)
+                                            }
                                         }
+                                        .padding(.trailing, 5)
                                     }
-                                    .padding(.trailing, 5)
-                                }
-                                .swipeActions(edge: .trailing) {
-                                    Button(role: .destructive, action: {
-                                        deleteHealth = healthCheckDomain.healthcheckDomain
-                                        deleteHealthcheck()
-                                    }) {
-                                        Label("Löschen", systemImage: "trash")
-                                    }
-                                    .tint(.red)
-                                    if (healthCheckDomain.healthstatus != StatusTypes.pause.statusId) {
+                                    .id(UUID())
+                                    .swipeActions(edge: .trailing) {
                                         Button(role: .destructive, action: {
-                                            startPauseHealthToken = ""
+                                            deleteHealth = hcd.healthtoken!
+                                            deleteHealthcheck()
                                         }) {
-                                            Label("Pause", systemImage: "pause.circle")
+                                            Label("Löschen", systemImage: "trash")
                                         }
-                                        .tint(.teal)
-                                    }
-                                    if (healthCheckDomain.healthstatus == StatusTypes.pause.statusId) {
-                                        Button(role: .destructive, action: {
-                                            startPauseHealthToken = ""
-                                        }) {
-                                            Label("Start", systemImage: "play.circle")
+                                        .tint(.red)
+                                        if (hcd.healthstatus! != StatusTypes.pause.statusId) {
+                                            Button(role: .destructive, action: {
+                                                startPauseHealthToken = hcd.healthtoken!
+                                                startPauseHealthCheck(isPause: true)
+                                            }) {
+                                                Label("Pause", systemImage: "pause.circle")
+                                            }
+                                            .tint(.teal)
                                         }
-                                        .tint(.green)
+                                        if (hcd.healthstatus! == StatusTypes.pause.statusId) {
+                                            Button(role: .destructive, action: {
+                                                startPauseHealthToken = hcd.healthtoken!
+                                                startPauseHealthCheck(isPause: false)
+                                            }) {
+                                                Label("Start", systemImage: "play.circle")
+                                            }
+                                            .tint(.green)
+                                        }
                                     }
                                 }
                             }
@@ -142,6 +162,9 @@ struct HealthcheckView: View {
                 }
                 .navigationTitle("Healthcheck")
             }
+            .refreshable {
+                GetHealthChecks()
+            }
             .accentColor(Color("AccentColor"))
             .sheet(item: $activeSheet) { item in
                 showActiveSheet(item: item)
@@ -155,10 +178,6 @@ struct HealthcheckView: View {
             }
         }
         .onAppear {
-            activeCount = 0
-            warningCount = 0
-            alarmCount = 0
-            pausedCount = 0
             GetHealthChecks()
         }
     }
@@ -177,20 +196,12 @@ struct HealthcheckView: View {
                             print(deleteHealth)
                             let res = await api.DeleteHealth(health: deleteHealth)
                             print(res)
-                            activeCount = 0
-                            warningCount = 0
-                            alarmCount = 0
-                            pausedCount = 0
                             GetHealthChecks()
                         }
                     } else {
                         if (errorTyp?.status == 401) {
                             SetupPrefs.setPreference(mKey: "APIKEY", mValue: "")
                         } else {
-                            activeCount = 0
-                            warningCount = 0
-                            alarmCount = 0
-                            pausedCount = 0
                             GetHealthChecks()
                         }
                     }
@@ -201,32 +212,39 @@ struct HealthcheckView: View {
     }
     
     fileprivate func GetHealthChecks() {
-        Task {
-            healthcheckList = await api.GetHealthchecks()
-            let status = healthcheckList?.status
-            if (status == nil) {
-                throw NetworkError.NoNetworkConnection
-            }
-            if (!status!.contains("401") && healthcheckList?.domain.count == 0) {
-                activeSheet = .error
-                errorTyp = ErrorTypes.tooManyRequests
-            } else if (status!.contains("401")) {
-                activeSheet = .error
-                errorTyp = ErrorTypes.unauthorized
-            } else {
-                activeSheet = nil
-                errorTyp = nil
-                print(healthcheckList)
-                if (healthcheckList != nil) {
-                    Array((healthcheckList?.domain.sorted { $0.healthcheckDomain.lowercased() < $1.healthcheckDomain.lowercased() })!).forEach { healthCheckDomain in
-                        if (healthCheckDomain.healthstatus == StatusTypes.active.statusId) {
-                            activeCount += 1
-                        } else if (healthCheckDomain.healthstatus == StatusTypes.warning.statusId) {
-                            warningCount += 1
-                        } else if (healthCheckDomain.healthstatus == StatusTypes.alarm.statusId) {
-                            alarmCount += 1
-                        } else if (healthCheckDomain.healthstatus == StatusTypes.pause.statusId) {
-                            pausedCount += 1
+        api.isLoading = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            Task {
+                activeCount = 0
+                warningCount = 0
+                alarmCount = 0
+                pausedCount = 0
+                healthcheckList = await api.GetHealthchecks()
+                let status = healthcheckList?.status
+                if (status == nil) {
+                    throw NetworkError.NoNetworkConnection
+                }
+                if (!status!.contains("401") && healthcheckList?.domain.count == 0) {
+                    activeSheet = .error
+                    errorTyp = ErrorTypes.tooManyRequests
+                } else if (status!.contains("401")) {
+                    activeSheet = .error
+                    errorTyp = ErrorTypes.unauthorized
+                } else {
+                    activeSheet = nil
+                    errorTyp = nil
+                    print(healthcheckList)
+                    if (healthcheckList != nil) {
+                        Array((healthcheckList?.domain.sorted { $0.name!.lowercased() < $1.name!.lowercased() })!).forEach { hcd in
+                            if (hcd.healthstatus == StatusTypes.active.statusId) {
+                                activeCount += 1
+                            } else if (hcd.healthstatus == StatusTypes.warning.statusId) {
+                                warningCount += 1
+                            } else if (hcd.healthstatus == StatusTypes.alarm.statusId) {
+                                alarmCount += 1
+                            } else if (hcd.healthstatus == StatusTypes.pause.statusId) {
+                                pausedCount += 1
+                            }
                         }
                     }
                 }
