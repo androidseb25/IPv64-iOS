@@ -159,6 +159,197 @@ struct AccountClass: Codable {
     }
 }
 
+struct HealthCheckResult: Codable {
+
+    var domain: [HealthCheck] = []
+    var info: String?
+    var status: String?
+    var get_account_info: String?
+    
+    // Define DynamicCodingKeys type needed for creating
+    // decoding container from JSONDecoder
+    private struct DynamicCodingKeys: CodingKey {
+        // Use for string-keyed dictionary
+        var stringValue: String
+        init?(stringValue: String) {
+            self.stringValue = stringValue
+        }
+
+        // Use for integer-keyed dictionary
+        var intValue: Int?
+        init?(intValue: Int) {
+            // We are not using this, thus just return nil
+            return nil
+        }
+        
+    }
+
+    init(from decoder: Decoder) throws {
+
+        // 1
+        // Create a decoding container using DynamicCodingKeys
+        // The container will contain all the JSON first level key
+        let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
+
+        var tempArray = [HealthCheck]()
+
+        // 2
+        // Loop through each key (healthcheck Domain) in container
+        for key in container.allKeys {
+            print(key)
+            // Decode healthchecks using key & keep decoded healthcheck object in tempArray
+            if (key.stringValue == "info") {
+                info = try container.decode(String.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
+            } else if (key.stringValue == "status") {
+                status = try container.decode(String.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
+            } else if (key.stringValue == "get_account_info") {
+                get_account_info = try container.decode(String.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
+            } else {
+                let decodedObject = try container.decode(HealthCheck.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
+                tempArray.append(decodedObject)
+            }
+        }
+
+        // 3
+        // Finish decoding all HealthCheck objects. Thus assign tempArray to array.
+        domain = tempArray
+    }
+}
+
+struct HealthCheck: Codable {
+    // healthstatus == 1 = Active; 2 = Paused; 3 = Warning; 4 = Alarm;
+    var name: String?
+    var healthstatus: Int? = 0
+    var healthtoken: String?
+    var add_time: String?
+    var last_update_time: String?
+    var alarm_time: String?
+    var alarm_down: Int? = 0
+    var alarm_up: Int? = 0
+    var integration_id: Int? = 0
+    var alarm_count: Int? = 0
+    var alarm_unit: Int? = 0
+    var grace_count: Int? = 0
+    var grace_unit: Int? = 0
+    var pings_total: Int? = 0
+    var events: [HealthEvents] = []
+
+    // 1
+    // Define healthcheck Domain
+    let keyInd: String
+
+    // 2
+    // Define coding key for decoding use
+    enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case healthstatus = "healthstatus"
+        case healthtoken = "healthtoken"
+        case add_time = "add_time"
+        case last_update_time = "last_update_time"
+        case alarm_time = "alarm_time"
+        case alarm_down = "alarm_down"
+        case alarm_up = "alarm_up"
+        case integration_id = "integration_id"
+        case alarm_count = "alarm_count"
+        case alarm_unit = "alarm_unit"
+        case grace_count = "grace_count"
+        case grace_unit = "grace_unit"
+        case pings_total = "pings_total"
+        case keyInd = "keyInd"
+        case events = "events"
+    }
+
+    init(from decoder: Decoder) throws {
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // 3
+        // Decode
+        name = try container.decode(String.self, forKey: CodingKeys.name)
+        healthstatus = try container.decode(Int.self, forKey: CodingKeys.healthstatus)
+        healthtoken = try container.decode(String.self, forKey: CodingKeys.healthtoken)
+        add_time = try container.decode(String.self, forKey: CodingKeys.add_time)
+        last_update_time = try container.decode(String.self, forKey: CodingKeys.last_update_time)
+        alarm_time = try container.decode(String.self, forKey: CodingKeys.alarm_time)
+        alarm_down = try container.decode(Int.self, forKey: CodingKeys.alarm_down)
+        alarm_up = try container.decode(Int.self, forKey: CodingKeys.alarm_up)
+        integration_id = try container.decode(Int.self, forKey: CodingKeys.integration_id)
+        alarm_count = try container.decode(Int.self, forKey: CodingKeys.alarm_count)
+        alarm_unit = try container.decode(Int.self, forKey: CodingKeys.alarm_unit)
+        grace_count = try container.decode(Int.self, forKey: CodingKeys.grace_count)
+        grace_unit = try container.decode(Int.self, forKey: CodingKeys.grace_unit)
+        pings_total = try container.decode(Int.self, forKey: CodingKeys.pings_total)
+        events = try container.decode([HealthEvents].self, forKey: CodingKeys.events)
+
+        // 4
+        // Extract healthcheckDomain from coding path
+        keyInd = container.codingPath.first!.stringValue
+    }
+}
+
+struct HealthEvents: Codable {
+    var event_time: String?
+    var status: Int?
+    var text: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case event_time = "event_time"
+        case status = "status"
+        case text = "text"
+    }
+}
+
+struct StatusTyp {
+    var statusId: Int?
+    var name: String?
+    var icon: String?
+    var color: Color?
+    
+    enum CodingKeys: String, CodingKey {
+        case statusId = "statusId"
+        case name = "name"
+        case icon = "icon"
+        case color = "color"
+    }
+}
+
+struct AlarmUnit: Codable {
+    var id: Int?
+    var text: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case text = "text"
+    }
+}
+
+struct AlarmUnitTypes {
+    static var minutes: AlarmUnit {
+        AlarmUnit(id: 1, text: "Minuten")
+    }
+    static var stunden: AlarmUnit {
+        AlarmUnit(id: 2, text: "Stunden")
+    }
+    static var tage: AlarmUnit {
+        AlarmUnit(id: 3, text: "Tage")
+    }
+}
+
+struct StatusTypes {
+    static var active: StatusTyp {
+        StatusTyp(statusId: 1, name: "Aktiv", icon: "checkmark.circle", color: .green)
+    }
+    static var pause: StatusTyp {
+        StatusTyp(statusId: 2, name: "Pause", icon: "pause.circle", color: .teal)
+    }
+    static var warning: StatusTyp {
+        StatusTyp(statusId: 3, name: "Warnung", icon: "exclamationmark.triangle.fill", color: .orange)
+    }
+    static var alarm: StatusTyp {
+        StatusTyp(statusId: 4, name: "Alarm", icon: "light.beacon.max.fill", color: .red)
+    }
+}
+
 struct ErrorTyp: Codable {
     var icon: String?
     var iconColor: Color?
@@ -227,6 +418,16 @@ struct ErrorTypes {
             status: 202
         )
     }
+    static var deletehealth: ErrorTyp {
+        ErrorTyp(
+            icon: "trash.fill",
+            iconColor: .red,
+            navigationTitle: "Wirklick löschen?",
+            errorTitle: "Willst du wirklich den Healthcheck löschen?",
+            errorDescription: "Dein Healthcheck wird mit allen dazugehörigen Events unverzüglich gelöscht.",
+            status: 202
+        )
+    }
     static var dnsRecordSuccesfullyCreated: ErrorTyp {
         ErrorTyp(
             icon: "checkmark.icloud.fill",
@@ -265,6 +466,16 @@ struct ErrorTypes {
             errorTitle: "Verbindung zum Server fehlgeschlagen!",
             errorDescription: "Es konnte keine Verbindung zum Server hergestellt werden!",
             status: 500
+        )
+    }
+    static var healthcheckCreatedSuccesfully: ErrorTyp {
+        ErrorTyp(
+            icon: "waveform.path.ecg",
+            iconColor: .green,
+            navigationTitle: "Erfolgreich",
+            errorTitle: "Healthcheck wurde erfolgreich erstellt!",
+            errorDescription: "Dein neuer Healthcheck ist nun online!",
+            status: 201
         )
     }
 }

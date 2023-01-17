@@ -21,7 +21,7 @@ struct AccountView: View {
                 let dateDate = dateDBFormatter.date(from: accountInfos.reg_date ?? "0001-01-01 00:00:00")
                 let dateString = itemFormatter.string(from: dateDate ?? Date())
                 let apiLimit = thousendSeperator.string(from: (accountInfos.account_class?.api_limit! ?? Int(0 as NSNumber)) as NSNumber)
-                let apiUpdates = thousendSeperator.string(from: (accountInfos.api_updates! ?? Int(0 as NSNumber)) as NSNumber)
+                let apiUpdates = thousendSeperator.string(from: (accountInfos.api_updates ?? Int(0 as NSNumber)) as NSNumber)
                 Form {
                     Section("") {
                         Group {
@@ -127,6 +127,7 @@ struct AccountView: View {
                                 }
                                 .tint(.blue)
                             }
+                            .tint(Color("primaryText"))
                             Button(action: {
                                 withAnimation {
                                     showApiKey.toggle()
@@ -153,6 +154,7 @@ struct AccountView: View {
                                 }
                                 .tint(.blue)
                             }
+                            .tint(Color("primaryText"))
                         }
                     }
                 }

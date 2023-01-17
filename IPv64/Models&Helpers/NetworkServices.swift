@@ -345,4 +345,173 @@ class NetworkServices: ObservableObject {
         }
     }
     
+    
+    @MainActor
+    func GetHealthchecks() async -> HealthCheckResult? {
+        let urlString = "\(apiUrl)?get_healthchecks&events"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            print(data)
+            var result = try JsonDecoder.decode(HealthCheckResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to GetHealthchecks", error)
+            return nil
+        }
+    }
+    
+    @MainActor func PostHealth(add_healthcheck: String, alarm_count: Int, alarm_unit: Int) async -> AddDomainResult? {
+        let urlString = "\(apiUrl)"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            request.httpBody = "add_healthcheck=\(add_healthcheck)&alarm_count=\(alarm_count)&alarm_unit=\(alarm_unit)".data(using: .utf8)
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            print(data)
+            let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to PostHealth", error)
+            return nil
+        }
+    }
+    
+    
+    @MainActor func PostPauseHealth(healthtoken: String) async -> AddDomainResult? {
+        let urlString = "\(apiUrl)"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            request.httpBody = "pause_healthcheck=\(healthtoken)".data(using: .utf8)
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            print(data)
+            let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to PostPauseHealth", error)
+            return nil
+        }
+    }
+    
+    
+    @MainActor func PostStartHealth(healthtoken: String) async -> AddDomainResult? {
+        let urlString = "\(apiUrl)"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            request.httpBody = "start_healthcheck=\(healthtoken)".data(using: .utf8)
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            print(data)
+            let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to PostPauseHealth", error)
+            return nil
+        }
+    }
+    
+    
+    @MainActor func DeleteHealth(health: String) async -> AddDomainResult? {
+        let urlString = "\(apiUrl)"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            var request = URLRequest(url: url)
+            request.httpMethod = "DELETE"
+            //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField:"Content-Type");
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            request.httpBody = "del_healthcheck=\(health)".data(using: .utf8)
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            print(data)
+            let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to Post Domain", error)
+            return nil
+        }
+    }
+    
 }
