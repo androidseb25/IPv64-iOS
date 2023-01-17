@@ -94,51 +94,55 @@ struct HealthcheckView: View {
                             .listRowBackground(Color.clear)
                         
                         Section {
-                            ForEach((healthcheckList?.domain.sorted { $0.name!.lowercased() < $1.name!.lowercased() }) ?? [], id: \.name) { hcd in
-                                LazyVStack {
-                                    HStack {
-                                        Image(systemName: "circle.fill")
-                                            .resizable()
-                                            .scaledToFill()
-                                            .foregroundColor(SetDotColor(statusId: hcd.healthstatus!))
-                                            .frame(width: 8, height: 8)
-                                        Text(hcd.name!)
-                                        Spacer()
-                                        HStack(spacing: 3) {
-                                            let lastXPills = GetLastXMonitorPills(count: 8, domain: hcd).reversed()
-                                            ForEach(lastXPills, id:\.self) { color in
-                                                RoundedRectangle(cornerRadius: 5).fill(color)
-                                                    .frame(width: 5, height: 20)
+                            if (healthcheckList?.domain.count == 0) {
+                                Text("Keine Daten gefunden!")
+                            } else {
+                                ForEach((healthcheckList?.domain.sorted { $0.name!.lowercased() < $1.name!.lowercased() }) ?? [], id: \.name) { hcd in
+                                    LazyVStack {
+                                        HStack {
+                                            Image(systemName: "circle.fill")
+                                                .resizable()
+                                                .scaledToFill()
+                                                .foregroundColor(SetDotColor(statusId: hcd.healthstatus!))
+                                                .frame(width: 8, height: 8)
+                                            Text(hcd.name!)
+                                            Spacer()
+                                            HStack(spacing: 3) {
+                                                let lastXPills = GetLastXMonitorPills(count: 8, domain: hcd).reversed()
+                                                ForEach(lastXPills, id:\.self) { color in
+                                                    RoundedRectangle(cornerRadius: 5).fill(color)
+                                                        .frame(width: 5, height: 20)
+                                                }
                                             }
+                                            .padding(.trailing, 5)
                                         }
-                                        .padding(.trailing, 5)
-                                    }
-                                    .id(UUID())
-                                    .swipeActions(edge: .trailing) {
-                                        Button(role: .destructive, action: {
-                                            deleteHealth = hcd.healthtoken!
-                                            deleteHealthcheck()
-                                        }) {
-                                            Label("Löschen", systemImage: "trash")
-                                        }
-                                        .tint(.red)
-                                        if (hcd.healthstatus! != StatusTypes.pause.statusId) {
+                                        .id(UUID())
+                                        .swipeActions(edge: .trailing) {
                                             Button(role: .destructive, action: {
-                                                startPauseHealthToken = hcd.healthtoken!
-                                                startPauseHealthCheck(isPause: true)
+                                                deleteHealth = hcd.healthtoken!
+                                                deleteHealthcheck()
                                             }) {
-                                                Label("Pause", systemImage: "pause.circle")
+                                                Label("Löschen", systemImage: "trash")
                                             }
-                                            .tint(.teal)
-                                        }
-                                        if (hcd.healthstatus! == StatusTypes.pause.statusId) {
-                                            Button(role: .destructive, action: {
-                                                startPauseHealthToken = hcd.healthtoken!
-                                                startPauseHealthCheck(isPause: false)
-                                            }) {
-                                                Label("Start", systemImage: "play.circle")
+                                            .tint(.red)
+                                            if (hcd.healthstatus! != StatusTypes.pause.statusId) {
+                                                Button(role: .destructive, action: {
+                                                    startPauseHealthToken = hcd.healthtoken!
+                                                    startPauseHealthCheck(isPause: true)
+                                                }) {
+                                                    Label("Pause", systemImage: "pause.circle")
+                                                }
+                                                .tint(.teal)
                                             }
-                                            .tint(.green)
+                                            if (hcd.healthstatus! == StatusTypes.pause.statusId) {
+                                                Button(role: .destructive, action: {
+                                                    startPauseHealthToken = hcd.healthtoken!
+                                                    startPauseHealthCheck(isPause: false)
+                                                }) {
+                                                    Label("Start", systemImage: "play.circle")
+                                                }
+                                                .tint(.green)
+                                            }
                                         }
                                     }
                                 }
@@ -220,11 +224,12 @@ struct HealthcheckView: View {
                 alarmCount = 0
                 pausedCount = 0
                 healthcheckList = await api.GetHealthchecks()
+                print(healthcheckList)
                 let status = healthcheckList?.status
                 if (status == nil) {
                     throw NetworkError.NoNetworkConnection
                 }
-                if (!status!.contains("401") && healthcheckList?.domain.count == 0) {
+                if (status!.contains("429") && healthcheckList?.domain.count == 0) {
                     activeSheet = .error
                     errorTyp = ErrorTypes.tooManyRequests
                 } else if (status!.contains("401")) {

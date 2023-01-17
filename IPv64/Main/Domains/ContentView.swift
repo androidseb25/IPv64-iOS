@@ -47,11 +47,12 @@ struct ContentView: View {
         Task {
             do {
                 let response = await api.GetDomains()
+                print(response)
                 let status = response?.status
                 if (status == nil) {
                     throw NetworkError.NoNetworkConnection
                 }
-                if (!status!.contains("401") && response?.subdomains == nil) {
+                if (status!.contains("429") && response?.subdomains == nil) {
                     activeSheet = .error
                     errorTyp = ErrorTypes.tooManyRequests
                 } else if (status!.contains("401")) {
