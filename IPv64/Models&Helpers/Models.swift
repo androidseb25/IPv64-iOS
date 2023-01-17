@@ -218,12 +218,12 @@ struct HealthCheckResult: Codable {
 
 struct HealthCheck: Codable {
     // healthstatus == 1 = Active; 2 = Paused; 3 = Warning; 4 = Alarm;
-    var name: String?
+    var name: String? = ""
     var healthstatus: Int? = 0
-    var healthtoken: String?
-    var add_time: String?
-    var last_update_time: String?
-    var alarm_time: String?
+    var healthtoken: String? = ""
+    var add_time: String? = ""
+    var last_update_time: String? = ""
+    var alarm_time: String? = ""
     var alarm_down: Int? = 0
     var alarm_up: Int? = 0
     var integration_id: Int? = 0
@@ -236,7 +236,7 @@ struct HealthCheck: Codable {
 
     // 1
     // Define healthcheck Domain
-    let keyInd: String
+    var keyInd: String = ""
 
     // 2
     // Define coding key for decoding use
@@ -284,6 +284,24 @@ struct HealthCheck: Codable {
         // 4
         // Extract healthcheckDomain from coding path
         keyInd = container.codingPath.first!.stringValue
+    }
+    
+    init(name: String? = "", healthstatus: Int? = 0, healthtoken: String? = "", add_time: String? = "", last_update_time: String? = "", alarm_time: String? = "", alarm_down: Int? = 0, alarm_up: Int? = 0, integration_id: Int? = 0, alarm_count: Int? = 0, alarm_unit: Int? = 0, grace_count: Int? = 0, grace_unit: Int? = 0, pings_total: Int? = 0, events: [HealthEvents] = []) {
+        self.name = name
+        self.healthstatus = healthstatus
+        self.healthtoken = healthtoken
+        self.add_time = add_time
+        self.last_update_time = last_update_time
+        self.alarm_time = alarm_time
+        self.alarm_down = alarm_down
+        self.alarm_up = alarm_up
+        self.integration_id = integration_id
+        self.alarm_count = alarm_count
+        self.alarm_unit = alarm_unit
+        self.grace_count = grace_count
+        self.grace_unit = grace_unit
+        self.pings_total = pings_total
+        self.events = events
     }
 }
 

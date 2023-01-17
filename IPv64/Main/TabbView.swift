@@ -9,6 +9,9 @@ import SwiftUI
 
 struct TabbView: View {
     
+    @AppStorage("AccountInfos") var accountInfos: String = ""
+    @AppStorage("DomainResult") var listOfDomainsString: String = ""
+    
     @State var selectedView = 1
     @State var activeSheet: ActiveSheet? = nil
     @State private var showWhatsNew = false

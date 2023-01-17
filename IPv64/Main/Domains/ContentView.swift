@@ -11,6 +11,7 @@ import CoreData
 struct ContentView: View {
     
     @AppStorage("AccountInfos") var accountInfos: String = ""
+    @AppStorage("DomainResult") var listOfDomainsString: String = ""
     
     @ObservedObject var api: NetworkServices = NetworkServices()
     @State var myIP: MyIP = MyIP(ip: "")
@@ -43,34 +44,46 @@ struct ContentView: View {
         }
     }
     
-    fileprivate func loadDomains() {
-        Task {
-            do {
-                let response = await api.GetDomains()
-                print(response)
-                let status = response?.status
-                if (status == nil) {
-                    throw NetworkError.NoNetworkConnection
+    fileprivate func loadDomains(isRefresh: Bool) {
+        do {
+            if (listOfDomainsString.isEmpty || isRefresh) {
+                Task {
+                    let response = await api.GetDomains()
+                    print(response)
+                    let status = response?.status
+                    if (status == nil) {
+                        throw NetworkError.NoNetworkConnection
+                    }
+                    if (status!.contains("429") && response?.subdomains == nil) {
+                        activeSheet = .error
+                        errorTyp = ErrorTypes.tooManyRequests
+                    } else if (status!.contains("401")) {
+                        activeSheet = .error
+                        errorTyp = ErrorTypes.unauthorized
+                    } else {
+                        activeSheet = nil
+                        errorTyp = nil
+                        listOfDomains = response!
+                    }
+                    let jsonEncoder = JSONEncoder()
+                    let jsonData = try jsonEncoder.encode(response)
+                    let json = String(data: jsonData, encoding: String.Encoding.utf8)
+                    listOfDomainsString = json!
+                    //loadAccountInfos()
+                    print(listOfDomains)
                 }
-                if (status!.contains("429") && response?.subdomains == nil) {
-                    activeSheet = .error
-                    errorTyp = ErrorTypes.tooManyRequests
-                } else if (status!.contains("401")) {
-                    activeSheet = .error
-                    errorTyp = ErrorTypes.unauthorized
-                } else {
-                    activeSheet = nil
-                    errorTyp = nil
-                    listOfDomains = response!
-                }
-                loadAccountInfos()
-                print(listOfDomains)
-            } catch let error {
-                print(error)
-                activeSheet = .error
-                errorTyp = ErrorTypes.websiteRequestError
+            } else {
+                let jsonDecoder = JSONDecoder()
+                print(listOfDomainsString)
+                let jsonData = listOfDomainsString.data(using: .utf8)
+                listOfDomains = try jsonDecoder.decode(DomainResult.self, from: jsonData!)
             }
+        } catch let error {
+            print(error)
+            activeSheet = .error
+            errorTyp = ErrorTypes.websiteRequestError
         }
+        loadIpAddress()
     }
     
     fileprivate func loadIpAddress() {
@@ -112,7 +125,7 @@ struct ContentView: View {
                                     NavigationLink(destination: DetailDomainView(domainName: domain, domain: domainOb!, myIp: myIP, deleteThisDNSRecord: $deleteThisDNSRecord ).onDisappear {
                                         if (deleteThisDNSRecord) {
                                             deleteThisDNSRecord = false
-                                            loadDomains()
+                                            loadDomains(isRefresh: true)
                                         }
                                     }) {
                                         HStack(alignment: .center) {
@@ -141,7 +154,7 @@ struct ContentView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .refreshable {
-                    loadDomains()
+                    loadDomains(isRefresh: true)
                 }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -173,8 +186,7 @@ struct ContentView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
-            loadDomains()
-            loadIpAddress()
+            loadDomains(isRefresh: false)
         }
         .fullScreenCover(isPresented: $showLoginView) {
             LoginView()
@@ -187,7 +199,7 @@ struct ContentView: View {
         case .add:
             NewDomainView()
                 .onDisappear {
-                    loadDomains()
+                    loadDomains(isRefresh: true)
                 }
         case .help:
             HelpView()
@@ -200,7 +212,7 @@ struct ContentView: View {
                             print(delDomain)
                             let res = await api.DeleteDomain(domain: delDomain)
                             print(res)
-                            loadDomains()
+                            loadDomains(isRefresh: true)
                         }
                     } else {
                         if (errorTyp?.status == 401) {
@@ -209,7 +221,7 @@ struct ContentView: View {
                                 showLoginView.toggle()
                             }
                         } else {
-                            loadDomains()
+                            loadDomains(isRefresh: false)
                         }
                     }
                 }
