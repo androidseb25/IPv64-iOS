@@ -45,7 +45,6 @@ struct DetailHealthcheckView: View {
             colorArr.append(SetDotColor(statusId: event.status!))
         }
         
-        print(colorArr)
         return colorArr
     }
     
@@ -58,10 +57,22 @@ struct DetailHealthcheckView: View {
             healthArr.append(event)
         }
         
-        print(healthArr)
         return healthArr
     }
     
+    fileprivate func GetUnit(unitId: Int) -> String {
+        if (unitId == AlarmUnitTypes.minutes.id) {
+            return AlarmUnitTypes.minutes.text!
+        } else if (unitId == AlarmUnitTypes.stunden.id) {
+            return AlarmUnitTypes.stunden.text!
+        } else {
+            return AlarmUnitTypes.tage.text!
+        }
+    }
+    
+    fileprivate func GetHealthUpdateUrl() -> String {
+        return "https://ipv64.net/health.php?token=" + (healthcheck?.healthtoken!)!
+    }
     
     var body: some View {
         ZStack {
@@ -87,6 +98,57 @@ struct DetailHealthcheckView: View {
                 .listRowInsets(EdgeInsets(top: 15, leading: 0, bottom: 0, trailing: 0))
                 .listRowBackground(Color.clear)
                 .id(UUID())
+                Section("Healthcheck Einstellungen") {
+                    HStack {
+                        Text("Zeitraum")
+                        Spacer()
+                        Text("\(healthcheck!.alarm_count!) \(GetUnit(unitId: healthcheck!.alarm_unit!))")
+                            .foregroundColor(.gray)
+                    }
+                    HStack {
+                        Text("Karenzzeit")
+                        Spacer()
+                        Text("\(healthcheck!.grace_count!) \(GetUnit(unitId: healthcheck!.grace_unit!))")
+                            .foregroundColor(.gray)
+                    }
+                    HStack {
+                        Text("Benachrichtung bei DOWN")
+                        Spacer()
+                        Text(healthcheck!.alarm_down! != 0 ? "aktiv" : "deaktiviert")
+                            .foregroundColor(.gray)
+                    }
+                    .foregroundColor(.red)
+                    HStack {
+                        Text("Benachrichtung bei UP")
+                        Spacer()
+                        Text(healthcheck!.alarm_up! != 0 ? "aktiv" : "deaktiviert")
+                            .foregroundColor(.gray)
+                    }
+                    .foregroundColor(.green)
+                    let dateDateCreated = dateDBFormatter.date(from: (healthcheck?.add_time)!)
+                    let dateCreatedString = itemFormatter.string(from: dateDateCreated ?? Date())
+                    HStack {
+                        Text("erstellt am")
+                        Spacer()
+                        Text(dateCreatedString)
+                            .foregroundColor(.gray)
+                    }
+                    HStack {
+                        Text("Health Update URL:")
+                        Spacer()
+                        Text(GetHealthUpdateUrl())
+                            .foregroundColor(.gray)
+                            .lineLimit(1)
+                    }
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .none, action: {
+                            UIPasteboard.general.string = GetHealthUpdateUrl()
+                        }) {
+                            Label("Health Update URL", systemImage: "doc.on.doc")
+                        }
+                        .tint(.blue)
+                    }
+                }
                 Section("Logs") {
                     let list = GetLastXMonitor(count: Int(pillCount), domain: healthcheck!)
                     ForEach(list, id:\.event_time) { event in
@@ -129,9 +191,6 @@ struct DetailHealthcheckView: View {
             }
             .sheet(item: $activeSheet) { item in
                 showActiveSheet(item: item)
-            }
-            .onAppear {
-                print(healthcheck)
             }
             if api.isLoading {
                 VStack() {

@@ -108,8 +108,8 @@ struct HealthcheckView: View {
                                                     .frame(width: 8, height: 8)
                                                 Text(hcd.name!)
                                                 Spacer()
-                                                HStack(spacing: 3) {
-                                                    let lastXPills = GetLastXMonitorPills(count: 8, domain: hcd).reversed()
+                                                HStack(spacing: 4) {
+                                                    let lastXPills = GetLastXMonitorPills(count: 10, domain: hcd).reversed()
                                                     ForEach(lastXPills, id:\.self) { color in
                                                         RoundedRectangle(cornerRadius: 5).fill(color)
                                                             .frame(width: 5, height: 20)
