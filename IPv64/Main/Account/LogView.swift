@@ -11,17 +11,23 @@ struct LogView: View {
     
     @ObservedObject var api: NetworkServices = NetworkServices()
     @State var myLogs: Logs = Logs(logs: [])
+    @State var activeSheet: ActiveSheet? = nil
+    @State var errorTyp: ErrorTyp? = .none
     
     var body: some View {
         ZStack {
             VStack {
                 Form {
                     Section("Letzten 10 Logs") {
-                        ForEach(myLogs.logs!.prefix(10), id: \.id) { log in
+                        let logList = (myLogs.logs ?? []).prefix(10)
+                        ForEach(logList, id: \.id) { log in
                             LogItemView(log: log)
                         }
                     }
                 }
+            }
+            .sheet(item: $activeSheet) { item in
+                showActiveSheet(item: item)
             }
             
             if api.isLoading {
@@ -33,11 +39,33 @@ struct LogView: View {
             }
         }
         .onAppear {
-            Task {
-                myLogs = await api.GetLogs()!
-            }
+            GetLogs()
         }
         .navigationTitle("Logs")
+    }
+    
+    fileprivate func GetLogs() {
+        Task {
+            myLogs = await api.GetLogs()!
+        }
+    }
+    
+    @ViewBuilder
+    func showActiveSheet(item: ActiveSheet?) -> some View {
+        switch item {
+        case .error:
+            ErrorSheetView(errorTyp: $errorTyp, deleteThisDomain: .constant(false))
+                .interactiveDismissDisabled(errorTyp?.status == 202 ? false : true)
+                .onDisappear {
+                    if (errorTyp?.status == 401) {
+                        SetupPrefs.setPreference(mKey: "APIKEY", mValue: "")
+                    } else {
+                        GetLogs()
+                    }
+                }
+        default:
+            EmptyView()
+        }
     }
 }
 

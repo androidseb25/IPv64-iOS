@@ -53,9 +53,6 @@ struct NewDomainDNSView: View {
                     }
                 }
                 .navigationTitle("Neuer DNS-Record")
-                .sheet(item: $activeSheet) { item in
-                    showActiveSheet(item: item)
-                }
                 .toolbar {
                     ToolbarItem {
                         Button(action: {
@@ -93,6 +90,9 @@ struct NewDomainDNSView: View {
                     .background(Color.black.opacity(0.3).ignoresSafeArea())
                 }
             }
+        }
+        .sheet(item: $activeSheet) { item in
+            showActiveSheet(item: item)
         }
     }
     

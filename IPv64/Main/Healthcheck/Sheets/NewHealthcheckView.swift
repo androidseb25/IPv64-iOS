@@ -10,6 +10,7 @@ import SwiftUI
 struct NewHealthcheckView: View {
     
     @Environment(\.presentationMode) var presentationMode
+    @Binding var newItem: Bool
     @ObservedObject var api: NetworkServices = NetworkServices()
     @State var activeSheet: ActiveSheet? = nil
     @State var errorTyp: ErrorTyp? = nil
@@ -68,6 +69,7 @@ struct NewHealthcheckView: View {
                                     if (res?.info == "success") {
                                         activeSheet = .error
                                         errorTyp = ErrorTypes.healthcheckCreatedSuccesfully
+                                        newItem = true
                                     } else if (res?.info == "error") {
                                         activeSheet = .error
                                     } else if (res?.info == "Updateintervall overcommited") {
@@ -121,6 +123,6 @@ struct NewHealthcheckView: View {
 
 struct NewHealthcheckView_Previews: PreviewProvider {
     static var previews: some View {
-        NewHealthcheckView()
+        NewHealthcheckView(newItem: .constant(false))
     }
 }
