@@ -6,8 +6,13 @@
 //
 
 import SwiftUI
+import Introspect
 
 struct ProfilView: View {
+    
+    @AppStorage("AccountInfos") var accountInfos: String = ""
+    @AppStorage("DomainResult") var listOfDomainsString: String = ""
+    
     @Environment(\.openURL) var openURL
     
     @State var showLoginView = false
@@ -39,6 +44,8 @@ struct ProfilView: View {
                     Section {
                         Button(action: {
                             SetupPrefs.setPreference(mKey: "APIKEY", mValue: "")
+                            accountInfos = ""
+                            listOfDomainsString = ""
                             withAnimation {
                                 showLoginView.toggle()
                             }
@@ -50,6 +57,10 @@ struct ProfilView: View {
                     .listRowBackground(Color.red.opacity(0.15))
                 }
                 .navigationTitle("Account")
+            }
+            .introspectNavigationController { navigationController in
+                navigationController.splitViewController?.preferredPrimaryColumnWidthFraction = 1
+                navigationController.splitViewController?.maximumPrimaryColumnWidth = 400
             }
             .accentColor(Color("AccentColor"))
         }

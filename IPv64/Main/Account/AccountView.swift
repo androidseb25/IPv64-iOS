@@ -11,6 +11,8 @@ struct AccountView: View {
     
     @AppStorage("AccountInfos") var accountInfosJson: String = ""
     @ObservedObject var api: NetworkServices = NetworkServices()
+    @State var activeSheet: ActiveSheet? = nil
+    @State var errorTyp: ErrorTyp? = .none
     @State var accountInfos: AccountInfo = AccountInfo()
     @State var showDynHash = false
     @State var showApiKey = false
@@ -40,7 +42,7 @@ struct AccountView: View {
                             HStack {
                                 Text("E-Mail")
                                 Spacer()
-                                Text((accountInfos.email)!)
+                                Text(accountInfos.email ?? "")
                                     .foregroundColor(.gray)
                             }
                             HStack {
@@ -159,6 +161,9 @@ struct AccountView: View {
                     }
                 }
             }
+            .sheet(item: $activeSheet) { item in
+                showActiveSheet(item: item)
+            }
             
             if api.isLoading {
                 VStack() {
@@ -169,16 +174,50 @@ struct AccountView: View {
             }
         }
         .onAppear {
-            Task {
-                accountInfos = await api.GetAccountStatus() ?? AccountInfo()
-                print(accountInfos)
+            GetAccountInfos()
+        }
+        .navigationTitle("Account Status")
+    }
+    
+    fileprivate func GetAccountInfos() {
+        Task {
+            accountInfos = await api.GetAccountStatus() ?? AccountInfo()
+            print(accountInfos)
+            let status = accountInfos.status
+            if (status == nil) {
+                throw NetworkError.NoNetworkConnection
+            }
+            if (status!.contains("429") && accountInfos.email == nil) {
+                activeSheet = .error
+                errorTyp = ErrorTypes.tooManyRequests
+            } else if (status!.contains("401")) {
+                activeSheet = .error
+                errorTyp = ErrorTypes.unauthorized
+            } else {
                 let jsonEncoder = JSONEncoder()
                 let jsonData = try jsonEncoder.encode(accountInfos)
                 let json = String(data: jsonData, encoding: String.Encoding.utf8)
                 accountInfosJson = json!
             }
         }
-        .navigationTitle("Account Status")
+    }
+    
+    @ViewBuilder
+    func showActiveSheet(item: ActiveSheet?) -> some View {
+        switch item {
+        case .error:
+            ErrorSheetView(errorTyp: $errorTyp, deleteThisDomain: .constant(false))
+                .interactiveDismissDisabled(errorTyp?.status == 202 ? false : true)
+                .onDisappear {
+                    if (errorTyp?.status == 401) {
+                        SetupPrefs.setPreference(mKey: "APIKEY", mValue: "")
+                    } else {
+                        GetAccountInfos()
+                    }
+                }
+        default:
+            EmptyView()
+        }
     }
     
     fileprivate func GetColor(cur: Int, max: Int) -> Color {

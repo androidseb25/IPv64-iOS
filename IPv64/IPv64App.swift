@@ -38,6 +38,9 @@ struct IPv64App: App {
         UINavigationBar.appearance().titleTextAttributes = [.font : smallTitleFont]
     }
     
+    @State var activeSheet: ActiveSheet? = nil
+    @State private var showWhatsNew = false
+    
     var body: some Scene {
         WindowGroup {
             let apikey = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
@@ -45,7 +48,30 @@ struct IPv64App: App {
                 LoginView()
             } else {
                 TabbView()
+                    .sheet(item: $activeSheet) { item in
+                        showActiveSheet(item: item)
+                    }
+                    .onAppear {
+                        let lastBuildNumber = SetupPrefs.readPreference(mKey: "LASTBUILDNUMBER", mDefaultValue: "0") as! String
+                        let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+                        if Int(lastBuildNumber) != Int(Bundle.main.buildNumber) && !token.isEmpty {
+                            withAnimation {
+                                showWhatsNew = true
+                                activeSheet = .whatsnew
+                            }
+                        }
+                    }
             }
+        }
+    }
+    
+    @ViewBuilder
+    private func showActiveSheet(item: ActiveSheet?) -> some View {
+        switch item {
+        case .whatsnew:
+            WhatsNewView(activeSheet: $activeSheet, isPresented: $showWhatsNew)
+        default:
+            EmptyView()
         }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Introspect
 
 struct HealthcheckView: View {
     
@@ -25,6 +26,9 @@ struct HealthcheckView: View {
     
     @State var deleteHealth = ""
     @State var startPauseHealthToken = ""
+    
+    @State private var refeshUUID = UUID()
+    @State private var isNewItem = false
     
     fileprivate func loadAccountInfos() {
         Task {
@@ -171,6 +175,11 @@ struct HealthcheckView: View {
                     GetHealthChecks()
                 }
             }
+            .introspectNavigationController { navigationController in
+                navigationController.splitViewController?.preferredPrimaryColumnWidthFraction = 1
+                navigationController.splitViewController?.maximumPrimaryColumnWidth = 400
+            }
+            .id(refeshUUID)
             .accentColor(Color("AccentColor"))
             .sheet(item: $activeSheet) { item in
                 showActiveSheet(item: item)
@@ -192,13 +201,20 @@ struct HealthcheckView: View {
     func showActiveSheet(item: ActiveSheet?) -> some View {
         switch item {
         case .add:
-            NewHealthcheckView()
+            NewHealthcheckView(newItem: $isNewItem)
+                .onDisappear {
+                    if (isNewItem) {
+                        isNewItem = false
+                        GetHealthChecks()
+                    }
+                }
         case .error:
             ErrorSheetView(errorTyp: $errorTyp, deleteThisDomain: $deleteThisHealth)
                 .interactiveDismissDisabled(errorTyp?.status == 202 ? false : true)
                 .onDisappear {
                     if (deleteThisHealth) {
                         Task {
+                            refeshUUID = UUID()
                             print(deleteHealth)
                             let res = await api.DeleteHealth(health: deleteHealth)
                             print(res)

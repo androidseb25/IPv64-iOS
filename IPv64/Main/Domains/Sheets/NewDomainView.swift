@@ -10,6 +10,7 @@ import SwiftUI
 struct NewDomainView: View {
     
     @Environment(\.presentationMode) var presentationMode
+    @Binding var newItem: Bool
     @ObservedObject var api: NetworkServices = NetworkServices()
     @State var activeSheet: ActiveSheet? = nil
     @State var errorTyp: ErrorTyp? = nil
@@ -55,9 +56,6 @@ struct NewDomainView: View {
                     }
                 }
                 .navigationTitle("Neue Domain")
-                .sheet(item: $activeSheet) { item in
-                    showActiveSheet(item: item)
-                }
                 .toolbar {
                     ToolbarItem {
                         Button(action: {
@@ -70,6 +68,7 @@ struct NewDomainView: View {
                                     if (res?.info == "success") {
                                         activeSheet = .error
                                         errorTyp = ErrorTypes.domainCreatedSuccesfully
+                                        newItem = true
                                     } else if (res?.info == "error") {
                                         activeSheet = .error
                                         errorTyp = ErrorTypes.domainNotAvailable
@@ -94,6 +93,9 @@ struct NewDomainView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.black.opacity(0.3).ignoresSafeArea())
                 }
+            }
+            .sheet(item: $activeSheet) { item in
+                showActiveSheet(item: item)
             }
         }
     }
@@ -123,6 +125,6 @@ struct NewDomainView: View {
 
 struct NewDomainView_Previews: PreviewProvider {
     static var previews: some View {
-        NewDomainView()
+        NewDomainView(newItem: .constant(false))
     }
 }

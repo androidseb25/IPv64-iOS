@@ -7,11 +7,14 @@
 
 import SwiftUI
 import CoreData
+import Introspect
 
 struct ContentView: View {
     
     @AppStorage("AccountInfos") var accountInfos: String = ""
     @AppStorage("DomainResult") var listOfDomainsString: String = ""
+    
+    @Environment(\.presentationMode) var presentationMode
     
     @ObservedObject var api: NetworkServices = NetworkServices()
     @State var myIP: MyIP = MyIP(ip: "")
@@ -24,6 +27,7 @@ struct ContentView: View {
     @State var deleteThisDomain = false
     @State var deleteThisDNSRecord: Bool = false
     @State var showLoginView = false
+    @State private var isNewItem = false
     
     fileprivate func loadAccountInfos() {
         Task {
@@ -111,71 +115,77 @@ struct ContentView: View {
         print(errorTyp)
     }
     
-    var body: some View {
-        ZStack {
-            NavigationView {
-                VStack {
-                    Form {
-                        Section("Domainen") {
-                            if (listOfDomains.subdomains == nil) {
-                                Text("Keine Daten gefunden!")
-                            } else {
-                                ForEach(Array(listOfDomains.subdomains!.keys.sorted { $0.lowercased() < $1.lowercased() }), id: \.self) { domain in
-                                    let domainOb = listOfDomains.subdomains![domain]
-                                    NavigationLink(destination: DetailDomainView(domainName: domain, domain: domainOb!, myIp: myIP, deleteThisDNSRecord: $deleteThisDNSRecord ).onDisappear {
-                                        if (deleteThisDNSRecord) {
-                                            deleteThisDNSRecord = false
-                                            loadDomains(isRefresh: true)
-                                        }
-                                    }) {
-                                        HStack(alignment: .center) {
-                                            Image(systemName: "circle.fill")
-                                                .resizable()
-                                                .scaledToFill()
-                                                .foregroundColor(SetDotColor(domain: domainOb!))
-                                                .frame(width: 8, height: 8)
-                                            Text(domain)
-                                        }
-                                        .frame(alignment: .center)
-                                        .swipeActions(edge: .trailing) {
-                                            Button(role: .destructive, action: {
-                                                delDomain = domain
-                                                deleteDomain()
-                                            }) {
-                                                Label("Löschen", systemImage: "trash")
-                                            }
-                                        }
-                                        .tint(.red)
+    fileprivate func extractedFunc() -> some View {
+        return NavigationView {
+            VStack {
+                Form {
+                    Section("Domainen") {
+                        if (listOfDomains.subdomains == nil) {
+                            Text("Keine Daten gefunden!")
+                        } else {
+                            ForEach(Array(listOfDomains.subdomains!.keys.sorted { $0.lowercased() < $1.lowercased() }), id: \.self) { domain in
+                                let domainOb = listOfDomains.subdomains![domain]
+                                NavigationLink(destination: DetailDomainView(domainName: domain, domain: domainOb!, myIp: myIP, deleteThisDNSRecord: $deleteThisDNSRecord ).onDisappear {
+                                    if (deleteThisDNSRecord) {
+                                        deleteThisDNSRecord = false
+                                        presentationMode.wrappedValue.dismiss()
+                                        loadDomains(isRefresh: true)
                                     }
+                                }) {
+                                    HStack(alignment: .center) {
+                                        Image(systemName: "circle.fill")
+                                            .resizable()
+                                            .scaledToFill()
+                                            .foregroundColor(SetDotColor(domain: domainOb!))
+                                            .frame(width: 8, height: 8)
+                                        Text(domain)
+                                    }
+                                    .frame(alignment: .center)
+                                    .swipeActions(edge: .trailing) {
+                                        Button(role: .destructive, action: {
+                                            delDomain = domain
+                                            deleteDomain()
+                                        }) {
+                                            Label("Löschen", systemImage: "trash")
+                                        }
+                                    }
+                                    .tint(.red)
                                 }
                             }
                         }
                     }
                 }
-                .frame(maxWidth: .infinity)
-                .refreshable {
-                    loadDomains(isRefresh: true)
-                }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            withAnimation {
-                                activeSheet = .add
-                            }
-                        }) {
-                            Image(systemName: "plus.circle")
-                                .symbolRenderingMode(.hierarchical)
-                                .foregroundColor(Color("primaryText"))
+            }
+            .frame(maxWidth: .infinity)
+            .refreshable {
+                loadDomains(isRefresh: true)
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        withAnimation {
+                            activeSheet = .add
                         }
-                        .foregroundColor(.black)
+                    }) {
+                        Image(systemName: "plus.circle")
+                            .symbolRenderingMode(.hierarchical)
+                            .foregroundColor(Color("primaryText"))
                     }
-                }
-                .navigationTitle("Domains")
-                .sheet(item: $activeSheet) { item in
-                    showActiveSheet(item: item)
+                    .foregroundColor(.black)
                 }
             }
-            .accentColor(Color("AccentColor"))
+            .navigationTitle("Domains")
+        }
+        .introspectNavigationController { navigationController in
+            navigationController.splitViewController?.preferredPrimaryColumnWidthFraction = 1
+            navigationController.splitViewController?.maximumPrimaryColumnWidth = 400
+        }
+        .accentColor(Color("AccentColor"))
+    }
+    
+    var body: some View {
+        ZStack {
+            extractedFunc()
             if api.isLoading {
                 VStack() {
                     Spinner(isAnimating: true, style: .large, color: .white)
@@ -183,6 +193,9 @@ struct ContentView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color.black.opacity(0.3).ignoresSafeArea())
             }
+        }
+        .sheet(item: $activeSheet) { item in
+            showActiveSheet(item: item)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
@@ -197,9 +210,12 @@ struct ContentView: View {
     func showActiveSheet(item: ActiveSheet?) -> some View {
         switch item {
         case .add:
-            NewDomainView()
+            NewDomainView(newItem: $isNewItem)
                 .onDisappear {
-                    loadDomains(isRefresh: true)
+                    if (isNewItem) {
+                        isNewItem = false
+                        loadDomains(isRefresh: true)
+                    }
                 }
         case .help:
             HelpView()

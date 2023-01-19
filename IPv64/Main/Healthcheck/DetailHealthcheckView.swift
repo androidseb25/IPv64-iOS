@@ -38,8 +38,8 @@ struct DetailHealthcheckView: View {
     
     fileprivate func GetLastXMonitorPills(count: Int, domain: HealthCheck) -> [Color] {
         
-        print("COUNT: \(domain.events.suffix(count).count) PillCount: \(count)")
-        let lastEvents = domain.events.suffix(count)
+        print("COUNT: \(domain.events.prefix(count).count) PillCount: \(count)")
+        let lastEvents = domain.events.prefix(count)
         var colorArr: [Color] = []
         lastEvents.forEach { event in
             colorArr.append(SetDotColor(statusId: event.status!))
@@ -50,8 +50,8 @@ struct DetailHealthcheckView: View {
     
     fileprivate func GetLastXMonitor(count: Int, domain: HealthCheck) -> [HealthEvents] {
         
-        print("COUNT: \(domain.events.suffix(count).count) HealthCount: \(count)")
-        let lastEvents = domain.events.suffix(count)
+        print("COUNT: \(domain.events.prefix(count).count) HealthCount: \(count)")
+        let lastEvents = domain.events.prefix(count)
         var healthArr: [HealthEvents] = []
         lastEvents.forEach { event in
             healthArr.append(event)

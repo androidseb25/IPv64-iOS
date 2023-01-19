@@ -18,8 +18,9 @@ struct HealthcheckStatsItem: View {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(statusType.name!)
-                            .font(.system(.title2, design: .rounded))
                             .bold()
+                            .lineLimit(1)
+                            .font(.system(.title2, design: .rounded))
                         Text("\(count)")
                             .font(.system(.title, design: .rounded))
                     }

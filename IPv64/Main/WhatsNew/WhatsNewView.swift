@@ -16,6 +16,7 @@ struct WhatsNewView: View {
         WhatsNewObj(imageName: "ant.circle", title: "Fehlerbehebung", subtitle: "Es wurden in diesem Update ein Paar Fehler behoben, die zur Steigerung der Performance und der Nutzbarkeit dienen"),
         WhatsNewObj(imageName: "waveform.path.ecg", title: "Healthcheck", subtitle: "Es gibt jetzt die neue Funktion Healthcheck zum überwachen deiner Systeme"),
         WhatsNewObj(imageName: "waveform.path.ecg", title: "Healthcheck - Details", subtitle: "Der Healthcheck kann nun die Logs in den Details anzeigen"),
+        WhatsNewObj(imageName: "ipad.and.iphone", title: "iPad Support", subtitle: "Die App sieht nun auch auf dem iPad ziemlich sexy aus."),
     ]
     
     var body: some View {
