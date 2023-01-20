@@ -60,6 +60,8 @@ struct IPv64App: App {
                                 activeSheet = .whatsnew
                             }
                         }
+                        AppIntent.allowSiri()
+                        AppIntent.status()
                     }
             }
         }

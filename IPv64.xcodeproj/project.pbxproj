@@ -32,12 +32,55 @@
 		9AACEBAA2918609F009B506D /* NewDomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA92918609F009B506D /* NewDomainView.swift */; };
 		9AB155C229747DAC0052F21E /* CodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB155C129747DAC0052F21E /* CodeScanner.swift */; };
 		9AB78EB7297740D00047FDFA /* DetailHealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB78EB6297740D00047FDFA /* DetailHealthcheckView.swift */; };
+		9ABB37A1297B172A00FC9B74 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ABB37A0297B172A00FC9B74 /* Intents.framework */; };
+		9ABB37A4297B172A00FC9B74 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABB37A3297B172A00FC9B74 /* IntentHandler.swift */; };
+		9ABB37AC297B172A00FC9B74 /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ABB37AB297B172A00FC9B74 /* IntentsUI.framework */; };
+		9ABB37AF297B172A00FC9B74 /* IntentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABB37AE297B172A00FC9B74 /* IntentViewController.swift */; };
+		9ABB37B2297B172A00FC9B74 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9ABB37B0297B172A00FC9B74 /* MainInterface.storyboard */; };
+		9ABB37B6297B172A00FC9B74 /* HealthcheckIntentsUI.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9ABB37AA297B172A00FC9B74 /* HealthcheckIntentsUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9ABB37B9297B172A00FC9B74 /* HealthcheckIntents.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9ABB379E297B172A00FC9B74 /* HealthcheckIntents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9ABB37C2297B175000FC9B74 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 9ABB37C1297B175000FC9B74 /* Intents.intentdefinition */; };
+		9ABB37C4297B183200FC9B74 /* HealthcheckIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABB37C3297B183200FC9B74 /* HealthcheckIntentHandler.swift */; };
+		9ABB37C5297B1B6000FC9B74 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 9ABB37C1297B175000FC9B74 /* Intents.intentdefinition */; };
+		9ABB37C7297B1C9800FC9B74 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABB37C6297B1C9800FC9B74 /* AppIntent.swift */; };
 		9AC2EDEC291ADFAF00140CD9 /* NewDomainDNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */; };
 		9AD5DF5E2975B5DB007928F6 /* HealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF5D2975B5DB007928F6 /* HealthcheckView.swift */; };
 		9AD5DF612975BAC3007928F6 /* HealthcheckStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */; };
 		9AD5DF632975BAD7007928F6 /* HealthcheckStatsItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF622975BAD7007928F6 /* HealthcheckStatsItem.swift */; };
 		9AD5DF652975ECC1007928F6 /* NewHealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF642975ECC1007928F6 /* NewHealthcheckView.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9ABB37B4297B172A00FC9B74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9AACEB80291851E1009B506D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9ABB37A9297B172A00FC9B74;
+			remoteInfo = HealthcheckIntentsUI;
+		};
+		9ABB37B7297B172A00FC9B74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9AACEB80291851E1009B506D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9ABB379D297B172A00FC9B74;
+			remoteInfo = HealthcheckIntents;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9ABB37C0297B172A00FC9B74 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9ABB37B6297B172A00FC9B74 /* HealthcheckIntentsUI.appex in Embed Foundation Extensions */,
+				9ABB37B9297B172A00FC9B74 /* HealthcheckIntents.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		9A0034FB2930F9200065E1F3 /* TabbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbView.swift; sourceTree = "<group>"; };
@@ -66,6 +109,19 @@
 		9AB155C129747DAC0052F21E /* CodeScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeScanner.swift; sourceTree = "<group>"; };
 		9AB155C329747F5C0052F21E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9AB78EB6297740D00047FDFA /* DetailHealthcheckView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailHealthcheckView.swift; sourceTree = "<group>"; };
+		9ABB3799297B16BD00FC9B74 /* IPv64.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IPv64.entitlements; sourceTree = "<group>"; };
+		9ABB379E297B172A00FC9B74 /* HealthcheckIntents.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HealthcheckIntents.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9ABB37A0297B172A00FC9B74 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		9ABB37A3297B172A00FC9B74 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
+		9ABB37A5297B172A00FC9B74 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9ABB37AA297B172A00FC9B74 /* HealthcheckIntentsUI.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HealthcheckIntentsUI.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9ABB37AB297B172A00FC9B74 /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
+		9ABB37AE297B172A00FC9B74 /* IntentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentViewController.swift; sourceTree = "<group>"; };
+		9ABB37B1297B172A00FC9B74 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		9ABB37B3297B172A00FC9B74 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9ABB37C1297B175000FC9B74 /* Intents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = Intents.intentdefinition; sourceTree = "<group>"; };
+		9ABB37C3297B183200FC9B74 /* HealthcheckIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckIntentHandler.swift; sourceTree = "<group>"; };
+		9ABB37C6297B1C9800FC9B74 /* AppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
 		9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDomainDNSView.swift; sourceTree = "<group>"; };
 		9AD5DF5D2975B5DB007928F6 /* HealthcheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckView.swift; sourceTree = "<group>"; };
 		9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckStatsView.swift; sourceTree = "<group>"; };
@@ -79,6 +135,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A08D1D82979AB47002CF0E8 /* Introspect in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9ABB379B297B172A00FC9B74 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9ABB37A1297B172A00FC9B74 /* Intents.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9ABB37A7297B172A00FC9B74 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9ABB37AC297B172A00FC9B74 /* IntentsUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,6 +251,9 @@
 			isa = PBXGroup;
 			children = (
 				9AACEB8A291851E1009B506D /* IPv64 */,
+				9ABB37A2297B172A00FC9B74 /* HealthcheckIntents */,
+				9ABB37AD297B172A00FC9B74 /* HealthcheckIntentsUI */,
+				9ABB379F297B172A00FC9B74 /* Frameworks */,
 				9AACEB89291851E1009B506D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -187,6 +262,8 @@
 			isa = PBXGroup;
 			children = (
 				9AACEB88291851E1009B506D /* IPv64.app */,
+				9ABB379E297B172A00FC9B74 /* HealthcheckIntents.appex */,
+				9ABB37AA297B172A00FC9B74 /* HealthcheckIntentsUI.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -194,6 +271,7 @@
 		9AACEB8A291851E1009B506D /* IPv64 */ = {
 			isa = PBXGroup;
 			children = (
+				9ABB3799297B16BD00FC9B74 /* IPv64.entitlements */,
 				9AB155C329747F5C0052F21E /* Info.plist */,
 				9A7CDCE2296DEBF700237D5B /* Models&Helpers */,
 				9A7CDCE1296DEBE800237D5B /* HelperViews */,
@@ -202,6 +280,7 @@
 				9AACEB8B291851E1009B506D /* IPv64App.swift */,
 				9AACEB8F291851E2009B506D /* Assets.xcassets */,
 				9AACEB96291851E2009B506D /* IPv64.xcdatamodeld */,
+				9ABB37C6297B1C9800FC9B74 /* AppIntent.swift */,
 			);
 			path = IPv64;
 			sourceTree = "<group>";
@@ -212,6 +291,36 @@
 				9AACEB92291851E2009B506D /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		9ABB379F297B172A00FC9B74 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9ABB37A0297B172A00FC9B74 /* Intents.framework */,
+				9ABB37AB297B172A00FC9B74 /* IntentsUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9ABB37A2297B172A00FC9B74 /* HealthcheckIntents */ = {
+			isa = PBXGroup;
+			children = (
+				9ABB37A3297B172A00FC9B74 /* IntentHandler.swift */,
+				9ABB37A5297B172A00FC9B74 /* Info.plist */,
+				9ABB37C1297B175000FC9B74 /* Intents.intentdefinition */,
+				9ABB37C3297B183200FC9B74 /* HealthcheckIntentHandler.swift */,
+			);
+			path = HealthcheckIntents;
+			sourceTree = "<group>";
+		};
+		9ABB37AD297B172A00FC9B74 /* HealthcheckIntentsUI */ = {
+			isa = PBXGroup;
+			children = (
+				9ABB37AE297B172A00FC9B74 /* IntentViewController.swift */,
+				9ABB37B0297B172A00FC9B74 /* MainInterface.storyboard */,
+				9ABB37B3297B172A00FC9B74 /* Info.plist */,
+			);
+			path = HealthcheckIntentsUI;
 			sourceTree = "<group>";
 		};
 		9AD5DF5C2975B5C8007928F6 /* Healthcheck */ = {
@@ -252,10 +361,13 @@
 				9AACEB84291851E1009B506D /* Sources */,
 				9AACEB85291851E1009B506D /* Frameworks */,
 				9AACEB86291851E1009B506D /* Resources */,
+				9ABB37C0297B172A00FC9B74 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				9ABB37B5297B172A00FC9B74 /* PBXTargetDependency */,
+				9ABB37B8297B172A00FC9B74 /* PBXTargetDependency */,
 			);
 			name = IPv64;
 			packageProductDependencies = (
@@ -265,6 +377,40 @@
 			productReference = 9AACEB88291851E1009B506D /* IPv64.app */;
 			productType = "com.apple.product-type.application";
 		};
+		9ABB379D297B172A00FC9B74 /* HealthcheckIntents */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9ABB37BD297B172A00FC9B74 /* Build configuration list for PBXNativeTarget "HealthcheckIntents" */;
+			buildPhases = (
+				9ABB379A297B172A00FC9B74 /* Sources */,
+				9ABB379B297B172A00FC9B74 /* Frameworks */,
+				9ABB379C297B172A00FC9B74 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HealthcheckIntents;
+			productName = HealthcheckIntents;
+			productReference = 9ABB379E297B172A00FC9B74 /* HealthcheckIntents.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		9ABB37A9297B172A00FC9B74 /* HealthcheckIntentsUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9ABB37BA297B172A00FC9B74 /* Build configuration list for PBXNativeTarget "HealthcheckIntentsUI" */;
+			buildPhases = (
+				9ABB37A6297B172A00FC9B74 /* Sources */,
+				9ABB37A7297B172A00FC9B74 /* Frameworks */,
+				9ABB37A8297B172A00FC9B74 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HealthcheckIntentsUI;
+			productName = HealthcheckIntentsUI;
+			productReference = 9ABB37AA297B172A00FC9B74 /* HealthcheckIntentsUI.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -272,11 +418,17 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1410;
+				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1410;
 				TargetAttributes = {
 					9AACEB87291851E1009B506D = {
 						CreatedOnToolsVersion = 14.1;
+					};
+					9ABB379D297B172A00FC9B74 = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					9ABB37A9297B172A00FC9B74 = {
+						CreatedOnToolsVersion = 14.2;
 					};
 				};
 			};
@@ -297,6 +449,8 @@
 			projectRoot = "";
 			targets = (
 				9AACEB87291851E1009B506D /* IPv64 */,
+				9ABB379D297B172A00FC9B74 /* HealthcheckIntents */,
+				9ABB37A9297B172A00FC9B74 /* HealthcheckIntentsUI */,
 			);
 		};
 /* End PBXProject section */
@@ -308,6 +462,21 @@
 			files = (
 				9AACEB93291851E2009B506D /* Preview Assets.xcassets in Resources */,
 				9AACEB90291851E2009B506D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9ABB379C297B172A00FC9B74 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9ABB37A8297B172A00FC9B74 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9ABB37B2297B172A00FC9B74 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,9 +498,11 @@
 				9AB155C229747DAC0052F21E /* CodeScanner.swift in Sources */,
 				9AACEB8E291851E1009B506D /* ContentView.swift in Sources */,
 				9AACEB8C291851E1009B506D /* IPv64App.swift in Sources */,
+				9ABB37C7297B1C9800FC9B74 /* AppIntent.swift in Sources */,
 				9AD5DF5E2975B5DB007928F6 /* HealthcheckView.swift in Sources */,
 				9A5A359F29756EFA006F27EB /* WhatsNewItemView.swift in Sources */,
 				9A003502293101350065E1F3 /* LogView.swift in Sources */,
+				9ABB37C5297B1B6000FC9B74 /* Intents.intentdefinition in Sources */,
 				9AACEBA62918577D009B506D /* SetupPrefs.swift in Sources */,
 				9AACEB9F2918524B009B506D /* LoginView.swift in Sources */,
 				9AB78EB7297740D00047FDFA /* DetailHealthcheckView.swift in Sources */,
@@ -348,7 +519,49 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9ABB379A297B172A00FC9B74 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9ABB37C2297B175000FC9B74 /* Intents.intentdefinition in Sources */,
+				9ABB37A4297B172A00FC9B74 /* IntentHandler.swift in Sources */,
+				9ABB37C4297B183200FC9B74 /* HealthcheckIntentHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9ABB37A6297B172A00FC9B74 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9ABB37AF297B172A00FC9B74 /* IntentViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9ABB37B5297B172A00FC9B74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9ABB37A9297B172A00FC9B74 /* HealthcheckIntentsUI */;
+			targetProxy = 9ABB37B4297B172A00FC9B74 /* PBXContainerItemProxy */;
+		};
+		9ABB37B8297B172A00FC9B74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9ABB379D297B172A00FC9B74 /* HealthcheckIntents */;
+			targetProxy = 9ABB37B7297B172A00FC9B74 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		9ABB37B0297B172A00FC9B74 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9ABB37B1297B172A00FC9B74 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		9AACEB99291851E2009B506D /* Debug */ = {
@@ -468,8 +681,10 @@
 		9AACEB9C291851E2009B506D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
@@ -480,6 +695,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Die App benötigt diese Berechtigung um den QR Code auszulesen.";
+				INFOPLIST_KEY_NSSiriUsageDescription = "Wird benötigt um den Status deines Healthchecks abzufragen.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -503,8 +719,10 @@
 		9AACEB9D291851E2009B506D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
@@ -515,6 +733,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Die App benötigt diese Berechtigung um den QR Code auszulesen.";
+				INFOPLIST_KEY_NSSiriUsageDescription = "Wird benötigt um den Status deines Healthchecks abzufragen.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -529,6 +748,110 @@
 				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9ABB37BB297B172A00FC9B74 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HealthcheckIntentsUI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = HealthcheckIntentsUI;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.HealthcheckIntentsUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9ABB37BC297B172A00FC9B74 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HealthcheckIntentsUI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = HealthcheckIntentsUI;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.HealthcheckIntentsUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9ABB37BE297B172A00FC9B74 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HealthcheckIntents/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = HealthcheckIntents;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.HealthcheckIntents;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9ABB37BF297B172A00FC9B74 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HealthcheckIntents/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = HealthcheckIntents;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.HealthcheckIntents;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -552,6 +875,24 @@
 			buildConfigurations = (
 				9AACEB9C291851E2009B506D /* Debug */,
 				9AACEB9D291851E2009B506D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9ABB37BA297B172A00FC9B74 /* Build configuration list for PBXNativeTarget "HealthcheckIntentsUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9ABB37BB297B172A00FC9B74 /* Debug */,
+				9ABB37BC297B172A00FC9B74 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9ABB37BD297B172A00FC9B74 /* Build configuration list for PBXNativeTarget "HealthcheckIntents" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9ABB37BE297B172A00FC9B74 /* Debug */,
+				9ABB37BF297B172A00FC9B74 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
