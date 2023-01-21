@@ -10,7 +10,7 @@ import Foundation
 class SetupPrefs {
     
     static let preferences = UserDefaults(suiteName:"group.ipv64.net")
-    static let preferencesStandard = UserDefaults(suiteName:"group.ipv64.net")
+    static let preferencesStandard = UserDefaults.standard
     
     static func setPreference(mKey: String, mValue: Any) {
         preferences!.set(mValue, forKey: mKey)
@@ -26,10 +26,10 @@ class SetupPrefs {
     }
     
     static func readPreferenceStandard(mKey: String, mDefaultValue: Any) -> Any {
-        if preferencesStandard!.object(forKey: mKey) == nil {
+        if preferencesStandard.object(forKey: mKey) == nil {
             return mDefaultValue;
         } else {
-            return preferencesStandard!.object(forKey: mKey) as Any
+            return preferencesStandard.object(forKey: mKey) as Any
         }
     }
     

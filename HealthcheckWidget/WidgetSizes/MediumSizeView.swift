@@ -69,7 +69,7 @@ struct MediumSizeView : View {
                         Spacer()
                     }
                 }
-                .padding(.top, secondColumn.count == 1 ? 3 : 0)
+                .padding(.top, secondColumn.count == 1 ? 0 : 0)
             }
             .padding()
         }
