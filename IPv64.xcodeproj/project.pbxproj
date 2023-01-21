@@ -49,6 +49,7 @@
 		9ABB37F2297B533200FC9B74 /* NetworkServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA0291853C9009B506D /* NetworkServices.swift */; };
 		9ABB37F3297B544800FC9B74 /* SetupPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA52918577D009B506D /* SetupPrefs.swift */; };
 		9ABB37F4297B5CB800FC9B74 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA7291857AF009B506D /* SpinnerView.swift */; };
+		9ABB37F8297C6BDB00FC9B74 /* EditHealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABB37F7297C6BDB00FC9B74 /* EditHealthcheckView.swift */; };
 		9AC2EDEC291ADFAF00140CD9 /* NewDomainDNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */; };
 		9AD5DF5E2975B5DB007928F6 /* HealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF5D2975B5DB007928F6 /* HealthcheckView.swift */; };
 		9AD5DF612975BAC3007928F6 /* HealthcheckStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */; };
@@ -121,6 +122,7 @@
 		9ABB37EA297B2C2A00FC9B74 /* LargeSizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeSizeView.swift; sourceTree = "<group>"; };
 		9ABB37F5297B659200FC9B74 /* IPv64.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IPv64.entitlements; sourceTree = "<group>"; };
 		9ABB37F6297B65BF00FC9B74 /* HealthcheckWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HealthcheckWidgetExtension.entitlements; sourceTree = "<group>"; };
+		9ABB37F7297C6BDB00FC9B74 /* EditHealthcheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditHealthcheckView.swift; sourceTree = "<group>"; };
 		9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDomainDNSView.swift; sourceTree = "<group>"; };
 		9AD5DF5D2975B5DB007928F6 /* HealthcheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckView.swift; sourceTree = "<group>"; };
 		9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckStatsView.swift; sourceTree = "<group>"; };
@@ -339,6 +341,7 @@
 		9AD5DF662975ECD3007928F6 /* Sheets */ = {
 			isa = PBXGroup;
 			children = (
+				9ABB37F7297C6BDB00FC9B74 /* EditHealthcheckView.swift */,
 				9AD5DF642975ECC1007928F6 /* NewHealthcheckView.swift */,
 			);
 			path = Sheets;
@@ -455,6 +458,7 @@
 				9AACEBA1291853C9009B506D /* NetworkServices.swift in Sources */,
 				9A8D5C0529199141006B8A74 /* HelpView.swift in Sources */,
 				9A0034FE2930F9460065E1F3 /* ProfilView.swift in Sources */,
+				9ABB37F8297C6BDB00FC9B74 /* EditHealthcheckView.swift in Sources */,
 				9AD5DF612975BAC3007928F6 /* HealthcheckStatsView.swift in Sources */,
 				9AD5DF652975ECC1007928F6 /* NewHealthcheckView.swift in Sources */,
 				9AACEBA8291857AF009B506D /* SpinnerView.swift in Sources */,

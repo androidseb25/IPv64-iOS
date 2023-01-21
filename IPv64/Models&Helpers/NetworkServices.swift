@@ -514,4 +514,36 @@ class NetworkServices: ObservableObject {
         }
     }
     
+    @MainActor
+    func GetIntegrations() async -> IntegrationResult? {
+        let urlString = "\(apiUrl)?get_integrations"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            print(data)
+            var result = try JsonDecoder.decode(IntegrationResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to GetIntegrations", error)
+            return nil
+        }
+    }
+    
 }
