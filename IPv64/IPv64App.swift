@@ -36,42 +36,31 @@ struct IPv64App: App {
         /// set the rounded font
         UINavigationBar.appearance().largeTitleTextAttributes = [.font: titleFont]
         UINavigationBar.appearance().titleTextAttributes = [.font : smallTitleFont]
+        
+        var lastBuildNumber = SetupPrefs.readPreference(mKey: "LASTBUILDNUMBER", mDefaultValue: "0") as! String
+        var token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+        let lastBuildNumberStandart = SetupPrefs.readPreferenceStandard(mKey: "LASTBUILDNUMBER", mDefaultValue: "0") as! String
+        let tokenStandart = SetupPrefs.readPreferenceStandard(mKey: "APIKEY", mDefaultValue: "") as! String
+        
+        if (token.isEmpty) {
+            token = tokenStandart
+            SetupPrefs.setPreference(mKey: "APIKEY", mValue: token)
+        }
+        if (lastBuildNumber.isEmpty || lastBuildNumber == "0") {
+            lastBuildNumber = lastBuildNumberStandart
+            SetupPrefs.setPreference(mKey: "LASTBUILDNUMBER", mValue: token)
+        }
     }
-    
-    @State var activeSheet: ActiveSheet? = nil
-    @State private var showWhatsNew = false
     
     var body: some Scene {
         WindowGroup {
             let apikey = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            
             if (apikey.count == 0) {
                 LoginView()
             } else {
                 TabbView()
-                    .sheet(item: $activeSheet) { item in
-                        showActiveSheet(item: item)
-                    }
-                    .onAppear {
-                        let lastBuildNumber = SetupPrefs.readPreference(mKey: "LASTBUILDNUMBER", mDefaultValue: "0") as! String
-                        let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-                        if Int(lastBuildNumber) != Int(Bundle.main.buildNumber) && !token.isEmpty {
-                            withAnimation {
-                                showWhatsNew = true
-                                activeSheet = .whatsnew
-                            }
-                        }
-                    }
             }
-        }
-    }
-    
-    @ViewBuilder
-    private func showActiveSheet(item: ActiveSheet?) -> some View {
-        switch item {
-        case .whatsnew:
-            WhatsNewView(activeSheet: $activeSheet, isPresented: $showWhatsNew)
-        default:
-            EmptyView()
         }
     }
 }
