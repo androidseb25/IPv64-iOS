@@ -11,6 +11,7 @@ import Introspect
 struct HealthcheckView: View {
     
     @AppStorage("AccountInfos") var accountInfos: String = ""
+    @AppStorage("HealthcheckList") var healthCheckList: String = ""
     @ObservedObject var api: NetworkServices = NetworkServices()
     
     @State var activeSheet: ActiveSheet? = nil
@@ -258,6 +259,10 @@ struct HealthcheckView: View {
                     errorTyp = nil
                     print(healthcheckList)
                     if (healthcheckList != nil) {
+                        let jsonEncoder = JSONEncoder()
+                        let jsonData = try jsonEncoder.encode(healthcheckList)
+                        let json = String(data: jsonData, encoding: String.Encoding.utf8)
+                        healthCheckList = json!
                         Array((healthcheckList?.domain.sorted { $0.name!.lowercased() < $1.name!.lowercased() })!).forEach { hcd in
                             if (hcd.healthstatus == StatusTypes.active.statusId) {
                                 activeCount += 1

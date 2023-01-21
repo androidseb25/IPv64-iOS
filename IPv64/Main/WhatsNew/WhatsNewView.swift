@@ -14,9 +14,7 @@ struct WhatsNewView: View {
     
     var whatsNewList = [
         WhatsNewObj(imageName: "ant.circle", title: "Fehlerbehebung", subtitle: "Es wurden in diesem Update ein Paar Fehler behoben, die zur Steigerung der Performance und der Nutzbarkeit dienen"),
-        WhatsNewObj(imageName: "waveform.path.ecg", title: "Healthcheck", subtitle: "Es gibt jetzt die neue Funktion Healthcheck zum überwachen deiner Systeme"),
-        WhatsNewObj(imageName: "waveform.path.ecg", title: "Healthcheck - Details", subtitle: "Der Healthcheck kann nun die Logs in den Details anzeigen"),
-        WhatsNewObj(imageName: "ipad.and.iphone", title: "iPad Support", subtitle: "Die App sieht nun auch auf dem iPad ziemlich sexy aus."),
+        WhatsNewObj(imageName: "rectangle.3.group", title: "Widgets", subtitle: "Es gibt jetzt folgende Widgetgrößen klein (2x Healthcheck), Medium (4x Healthchecks), groß (10x Healthchecks). Bitte beachtet das die Widgets alle 15min sich aktualisieren um die API Calls zu reduzieren")
     ]
     
     var body: some View {
