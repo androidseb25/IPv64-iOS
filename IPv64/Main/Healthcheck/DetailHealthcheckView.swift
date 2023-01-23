@@ -10,6 +10,7 @@ import SwiftUI
 struct DetailHealthcheckView: View {
     
     @Environment(\.presentationMode) var presentationMode
+    @AppStorage("IntegrationList") var integrationListS: String = ""
     
     @State var healthcheck: HealthCheck?
     
@@ -17,7 +18,33 @@ struct DetailHealthcheckView: View {
     @State var activeSheet: ActiveSheet? = nil
     @State var errorTyp: ErrorTyp? = .none
     
+    @State var updatedItem = false
+    
     @State var pillCount = 15
+    
+    fileprivate func GetIntegrationName() -> String {
+        do {
+            if (healthcheck!.integration_id == 0) {
+                return "keine"
+            }
+            
+            let jsonDecoder = JSONDecoder()
+            print(integrationListS)
+            let jsonData = integrationListS.data(using: .utf8)
+            let integrationList = try jsonDecoder.decode([Integration].self, from: jsonData!)
+            var integrationName = "Unbekannt"
+            integrationList.forEach { inte in
+                if (inte.integration_id == healthcheck!.integration_id) {
+                    integrationName = inte.integration_name!
+                }
+            }
+            
+            return integrationName
+        } catch {
+            print("Error \(error.localizedDescription)")
+        }
+        return ""
+    }
     
     fileprivate func SetDotColor(statusId: Int) -> Color {
         if (statusId == StatusTypes.active.statusId) {
@@ -71,7 +98,7 @@ struct DetailHealthcheckView: View {
     }
     
     fileprivate func GetHealthUpdateUrl() -> String {
-        return "https://ipv64.net/health.php?token=" + (healthcheck?.healthtoken!)!
+        return "https://ipv64.net/health.php?token=" + (healthcheck?.healthtoken)!
     }
     
     var body: some View {
@@ -102,26 +129,32 @@ struct DetailHealthcheckView: View {
                     HStack {
                         Text("Zeitraum")
                         Spacer()
-                        Text("\(healthcheck!.alarm_count!) \(GetUnit(unitId: healthcheck!.alarm_unit!))")
+                        Text("\(healthcheck!.alarm_count) \(GetUnit(unitId: healthcheck!.alarm_unit))")
                             .foregroundColor(.gray)
                     }
                     HStack {
                         Text("Karenzzeit")
                         Spacer()
-                        Text("\(healthcheck!.grace_count!) \(GetUnit(unitId: healthcheck!.grace_unit!))")
+                        Text("\(healthcheck!.grace_count) \(GetUnit(unitId: healthcheck!.grace_unit))")
+                            .foregroundColor(.gray)
+                    }
+                    HStack {
+                        Text("Benachrichtungsmethode")
+                        Spacer()
+                        Text(GetIntegrationName())
                             .foregroundColor(.gray)
                     }
                     HStack {
                         Text("Benachrichtung bei DOWN")
                         Spacer()
-                        Text(healthcheck!.alarm_down! != 0 ? "aktiv" : "deaktiviert")
+                        Text(healthcheck!.alarm_down != 0 ? "aktiv" : "deaktiviert")
                             .foregroundColor(.gray)
                     }
                     .foregroundColor(.red)
                     HStack {
                         Text("Benachrichtung bei UP")
                         Spacer()
-                        Text(healthcheck!.alarm_up! != 0 ? "aktiv" : "deaktiviert")
+                        Text(healthcheck!.alarm_up != 0 ? "aktiv" : "deaktiviert")
                             .foregroundColor(.gray)
                     }
                     .foregroundColor(.green)
@@ -179,14 +212,14 @@ struct DetailHealthcheckView: View {
             .navigationTitle((healthcheck?.name)!)
             .toolbar {
                 ToolbarItem {
-                    /*Button(action: {
-                     //activeSheet = .adddns
-                     }) {
-                     Image(systemName: "square.and.pencil")
-                     .symbolRenderingMode(.hierarchical)
-                     .foregroundColor(Color("primaryText"))
-                     }
-                     .foregroundColor(.black)*/
+                    Button(action: {
+                        activeSheet = .edit
+                    }) {
+                        Image(systemName: "square.and.pencil")
+                            .symbolRenderingMode(.hierarchical)
+                            .foregroundColor(Color("primaryText"))
+                    }
+                    .foregroundColor(.black)
                 }
             }
             .sheet(item: $activeSheet) { item in
@@ -205,6 +238,16 @@ struct DetailHealthcheckView: View {
     @ViewBuilder
     func showActiveSheet(item: ActiveSheet?) -> some View {
         switch item {
+        case .edit:
+            EditHealthcheckView(healthcheck: healthcheck!, updatedItem: $updatedItem)
+                .onDisappear {
+                    if (updatedItem) {
+                        updatedItem = false
+                        withAnimation {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                }
         case .error:
             ErrorSheetView(errorTyp: $errorTyp, deleteThisDomain: .constant(false))
                 .interactiveDismissDisabled(errorTyp?.status == 202 ? false : true)
@@ -243,99 +286,7 @@ struct DetailHealthcheckView: View {
 
 struct DetailHealthcheckView_Previews: PreviewProvider {
     static var previews: some View {
-        let hcd = HealthCheck(
-            name: Optional("Test"),
-            healthstatus: Optional(2),
-            healthtoken: Optional("GQRNzAVLgTpneo1jy0MYJcPhx2KUCHfa"),
-            add_time: Optional("2023-01-16 21:23:55"),
-            last_update_time: Optional("2023-01-17 18:04:41"),
-            alarm_time: Optional("2023-01-17 18:05:41"),
-            alarm_down: Optional(0),
-            alarm_up: Optional(0),
-            integration_id: Optional(0),
-            alarm_count: Optional(1),
-            alarm_unit: Optional(1),
-            grace_count: Optional(1),
-            grace_unit: Optional(1),
-            pings_total: Optional(1),
-            events: [
-                HealthEvents(
-                    event_time: Optional("2023-01-17 18:06:42"),
-                    status: Optional(4),
-                    text: Optional("ALARM: Der Alarm wurde ausgelöst.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-17 18:05:42"),
-                    status: Optional(3),
-                    text: Optional("WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-17 13:55:21"),
-                    status: Optional(4),
-                    text: Optional("ALARM: Der Alarm wurde ausgelöst.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-17 13:54:21"),
-                    status: Optional(3),
-                    text: Optional("WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-17 10:05:55"),
-                    status: Optional(4),
-                    text: Optional("ALARM: Der Alarm wurde ausgelöst.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-17 10:04:53"),
-                    status: Optional(3),
-                    text: Optional("WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-17 09:54:50"),
-                    status: Optional(3),
-                    text: Optional("WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-17 09:51:35"),
-                    status: Optional(4),
-                    text: Optional("ALARM: Der Alarm wurde ausgelöst.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-17 09:50:35"),
-                    status: Optional(3),
-                    text: Optional("WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-17 09:47:30"),
-                    status: Optional(3),
-                    text: Optional("WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-16 21:26:42"),
-                    status: Optional(4),
-                    text: Optional("ALARM: Der Alarm wurde ausgelöst.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-16 21:25:42"),
-                    status: Optional(3),
-                    text: Optional("WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-16 21:24:40"),
-                    status: Optional(0),
-                    text: Optional("Healthcheck Einstellungen übernommen.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-16 21:24:38"),
-                    status: Optional(0),
-                    text: Optional("Healthcheck Einstellungen übernommen.")
-                ),
-                HealthEvents(
-                    event_time: Optional("2023-01-16 21:24:06"),
-                    status: Optional(1),
-                    text: Optional("GET Request von 88.70.111.13 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15")
-                )
-            ]
-        )
+        let hcd = DummyData.Healthcheck
         NavigationView {
             DetailHealthcheckView(healthcheck: hcd)
         }

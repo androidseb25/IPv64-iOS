@@ -225,20 +225,20 @@ struct HealthCheckResult: Codable {
 
 struct HealthCheck: Codable {
     // healthstatus == 1 = Active; 2 = Paused; 3 = Warning; 4 = Alarm;
-    var name: String? = ""
-    var healthstatus: Int? = 0
-    var healthtoken: String? = ""
+    var name: String = ""
+    var healthstatus: Int = 0
+    var healthtoken: String = ""
     var add_time: String? = ""
     var last_update_time: String? = ""
     var alarm_time: String? = ""
-    var alarm_down: Int? = 0
-    var alarm_up: Int? = 0
-    var integration_id: Int? = 0
-    var alarm_count: Int? = 0
-    var alarm_unit: Int? = 0
-    var grace_count: Int? = 0
-    var grace_unit: Int? = 0
-    var pings_total: Int? = 0
+    var alarm_down: Int = 0
+    var alarm_up: Int = 0
+    var integration_id: Int = 0
+    var alarm_count: Int = 0
+    var alarm_unit: Int = 0
+    var grace_count: Int = 0
+    var grace_unit: Int = 0
+    var pings_total: Int = 0
     var events: [HealthEvents] = []
 
     // 1
@@ -293,7 +293,7 @@ struct HealthCheck: Codable {
         keyInd = container.codingPath.first!.stringValue
     }
     
-    init(name: String? = "", healthstatus: Int? = 0, healthtoken: String? = "", add_time: String? = "", last_update_time: String? = "", alarm_time: String? = "", alarm_down: Int? = 0, alarm_up: Int? = 0, integration_id: Int? = 0, alarm_count: Int? = 0, alarm_unit: Int? = 0, grace_count: Int? = 0, grace_unit: Int? = 0, pings_total: Int? = 0, events: [HealthEvents] = []) {
+    init(name: String = "", healthstatus: Int = 0, healthtoken: String = "", add_time: String? = "", last_update_time: String? = "", alarm_time: String? = "", alarm_down: Int = 0, alarm_up: Int = 0, integration_id: Int = 0, alarm_count: Int = 0, alarm_unit: Int = 0, grace_count: Int = 0, grace_unit: Int = 0, pings_total: Int = 0, events: [HealthEvents] = []) {
         self.name = name
         self.healthstatus = healthstatus
         self.healthtoken = healthtoken
@@ -335,6 +335,104 @@ struct StatusTyp {
         case name = "name"
         case icon = "icon"
         case color = "color"
+    }
+}
+
+struct IntegrationResult: Codable {
+
+    var integration: [Integration] = []
+    var service: String?
+    var info: String?
+    var status: String?
+    var get_account_info: String?
+    
+    // Define DynamicCodingKeys type needed for creating
+    // decoding container from JSONDecoder
+    private struct DynamicCodingKeys: CodingKey {
+        // Use for string-keyed dictionary
+        var stringValue: String
+        init?(stringValue: String) {
+            self.stringValue = stringValue
+        }
+
+        // Use for integer-keyed dictionary
+        var intValue: Int?
+        init?(intValue: Int) {
+            // We are not using this, thus just return nil
+            return nil
+        }
+        
+    }
+
+    init(from decoder: Decoder) throws {
+
+        // 1
+        // Create a decoding container using DynamicCodingKeys
+        // The container will contain all the JSON first level key
+        let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
+
+        var tempArray = [Integration]()
+
+        // 2
+        // Loop through each key (healthcheck Domain) in container
+        for key in container.allKeys {
+            print(key)
+            // Decode healthchecks using key & keep decoded healthcheck object in tempArray
+            if (key.stringValue == "info") {
+                info = try container.decode(String.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
+            } else if (key.stringValue == "status") {
+                status = try container.decode(String.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
+            } else if (key.stringValue == "get_account_info") {
+                get_account_info = try container.decode(String.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
+            } else {
+                let decodedObject = try container.decode(Integration.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
+                tempArray.append(decodedObject)
+            }
+        }
+
+        // 3
+        // Finish decoding all HealthCheck objects. Thus assign tempArray to array.
+        integration = tempArray
+    }
+    
+    init(integration: [Integration] = [], info: String = "", status: String = "", get_account_info: String = "") {
+        self.integration = integration
+        self.info = info
+        self.status = status
+        self.get_account_info = get_account_info
+    }
+}
+
+struct Integration: Codable {
+    var integration: String?
+    var integration_id: Int = 0
+    var integration_name: String?
+    var add_time: String?
+    var last_used: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case integration = "integration"
+        case integration_id = "integration_id"
+        case integration_name = "integration_name"
+        case add_time = "add_time"
+        case last_used = "last_used"
+    }
+    
+    init(from decoder: Decoder) throws {
+        print(decoder)
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // 3
+        // Decode
+        integration = try container.decode(String.self, forKey: CodingKeys.integration)
+        integration_id = try container.decode(Int.self, forKey: CodingKeys.integration_id)
+        integration_name = try container.decode(String.self, forKey: CodingKeys.integration_name)
+        add_time = try container.decode(String.self, forKey: CodingKeys.add_time)
+        last_used = try container.decode(String.self, forKey: CodingKeys.last_used)
+
+        // 4
+        // Extract healthcheckDomain from coding path
+        //keyInd = container.codingPath.first!.stringValue
     }
 }
 
@@ -503,6 +601,16 @@ struct ErrorTypes {
             status: 201
         )
     }
+    static var healthcheckUpdatedSuccesfully: ErrorTyp {
+        ErrorTyp(
+            icon: "waveform.path.ecg",
+            iconColor: .green,
+            navigationTitle: "Erfolgreich",
+            errorTitle: "Healthcheck erfolgreich aktualisiert!",
+            errorDescription: "Dein Healthcheck wurde erfolgreich aktualisiert!",
+            status: 201
+        )
+    }
 }
 
 struct WhatsNewObj : Codable {
@@ -536,7 +644,7 @@ extension UIDevice {
 
 
 enum ActiveSheet: Identifiable {
-    case detail, add, adddns, help, error, qrcode, whatsnew
+    case detail, add, adddns, help, error, qrcode, whatsnew, edit
     
     var id: Int {
         hashValue
@@ -630,4 +738,5 @@ struct DummyData {
         }
         return list
     }
+    
 }
