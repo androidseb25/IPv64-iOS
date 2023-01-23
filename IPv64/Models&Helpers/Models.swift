@@ -160,7 +160,7 @@ struct AccountClass: Codable {
 }
 
 struct HealthCheckResult: Codable {
-
+    
     var domain: [HealthCheck] = []
     var info: String?
     var status: String?
@@ -174,7 +174,7 @@ struct HealthCheckResult: Codable {
         init?(stringValue: String) {
             self.stringValue = stringValue
         }
-
+        
         // Use for integer-keyed dictionary
         var intValue: Int?
         init?(intValue: Int) {
@@ -183,16 +183,16 @@ struct HealthCheckResult: Codable {
         }
         
     }
-
+    
     init(from decoder: Decoder) throws {
-
+        
         // 1
         // Create a decoding container using DynamicCodingKeys
         // The container will contain all the JSON first level key
         let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
-
+        
         var tempArray = [HealthCheck]()
-
+        
         // 2
         // Loop through each key (healthcheck Domain) in container
         for key in container.allKeys {
@@ -209,7 +209,7 @@ struct HealthCheckResult: Codable {
                 tempArray.append(decodedObject)
             }
         }
-
+        
         // 3
         // Finish decoding all HealthCheck objects. Thus assign tempArray to array.
         domain = tempArray
@@ -240,11 +240,11 @@ struct HealthCheck: Codable {
     var grace_unit: Int = 0
     var pings_total: Int = 0
     var events: [HealthEvents] = []
-
+    
     // 1
     // Define healthcheck Domain
     var keyInd: String = ""
-
+    
     // 2
     // Define coding key for decoding use
     enum CodingKeys: String, CodingKey {
@@ -265,11 +265,11 @@ struct HealthCheck: Codable {
         case keyInd = "keyInd"
         case events = "events"
     }
-
+    
     init(from decoder: Decoder) throws {
-
+        
         let container = try decoder.container(keyedBy: CodingKeys.self)
-
+        
         // 3
         // Decode
         name = try container.decode(String.self, forKey: CodingKeys.name)
@@ -287,7 +287,7 @@ struct HealthCheck: Codable {
         grace_unit = try container.decode(Int.self, forKey: CodingKeys.grace_unit)
         pings_total = try container.decode(Int.self, forKey: CodingKeys.pings_total)
         events = try container.decode([HealthEvents].self, forKey: CodingKeys.events)
-
+        
         // 4
         // Extract healthcheckDomain from coding path
         keyInd = container.codingPath.first!.stringValue
@@ -339,7 +339,7 @@ struct StatusTyp {
 }
 
 struct IntegrationResult: Codable {
-
+    
     var integration: [Integration] = []
     var service: String?
     var info: String?
@@ -354,7 +354,7 @@ struct IntegrationResult: Codable {
         init?(stringValue: String) {
             self.stringValue = stringValue
         }
-
+        
         // Use for integer-keyed dictionary
         var intValue: Int?
         init?(intValue: Int) {
@@ -363,16 +363,16 @@ struct IntegrationResult: Codable {
         }
         
     }
-
+    
     init(from decoder: Decoder) throws {
-
+        
         // 1
         // Create a decoding container using DynamicCodingKeys
         // The container will contain all the JSON first level key
         let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
-
+        
         var tempArray = [Integration]()
-
+        
         // 2
         // Loop through each key (healthcheck Domain) in container
         for key in container.allKeys {
@@ -389,7 +389,7 @@ struct IntegrationResult: Codable {
                 tempArray.append(decodedObject)
             }
         }
-
+        
         // 3
         // Finish decoding all HealthCheck objects. Thus assign tempArray to array.
         integration = tempArray
@@ -421,7 +421,7 @@ struct Integration: Codable {
     init(from decoder: Decoder) throws {
         print(decoder)
         let container = try decoder.container(keyedBy: CodingKeys.self)
-
+        
         // 3
         // Decode
         integration = try container.decode(String.self, forKey: CodingKeys.integration)
@@ -429,7 +429,7 @@ struct Integration: Codable {
         integration_name = try container.decode(String.self, forKey: CodingKeys.integration_name)
         add_time = try container.decode(String.self, forKey: CodingKeys.add_time)
         last_used = try container.decode(String.self, forKey: CodingKeys.last_used)
-
+        
         // 4
         // Extract healthcheckDomain from coding path
         //keyInd = container.codingPath.first!.stringValue
@@ -739,4 +739,40 @@ struct DummyData {
         return list
     }
     
+}
+
+struct Functions {
+    static func getOrientationWidth() -> CGFloat {
+        
+        if !UIDevice.isIPad {
+            return .infinity
+        }
+        
+        if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight {
+            return UIScreen.main.bounds.width / 2.3
+        } else {
+            return UIScreen.main.bounds.width / 1
+        }
+    }
+}
+
+// Our custom view modifier to track rotation and
+// call our action
+struct DeviceRotationViewModifier: ViewModifier {
+    let action: (UIDeviceOrientation) -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .onAppear()
+            .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+                action(UIDevice.current.orientation)
+            }
+    }
+}
+
+// A View wrapper to make the modifier easier to use
+extension View {
+    func onRotate(perform action: @escaping (UIDeviceOrientation) -> Void) -> some View {
+        self.modifier(DeviceRotationViewModifier(action: action))
+    }
 }

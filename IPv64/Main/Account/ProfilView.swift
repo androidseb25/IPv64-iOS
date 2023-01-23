@@ -12,10 +12,13 @@ struct ProfilView: View {
     
     @AppStorage("AccountInfos") var accountInfos: String = ""
     @AppStorage("DomainResult") var listOfDomainsString: String = ""
+    @AppStorage("BIOMETRIC_ENABLED") var isBiometricEnabled: Bool = false
     
     @Environment(\.openURL) var openURL
     
     @State var showLoginView = false
+    @State var enableBio = false
+    @ObservedObject private var bio = Biometrics()
     
     var body: some View {
         VStack {
@@ -25,6 +28,23 @@ struct ProfilView: View {
                         NavigationLink("Account Status", destination: AccountView())
                         NavigationLink("Logs", destination: LogView())
                         NavigationLink("Meine IP", destination: IPView())
+                    }
+                    Section("Sicherheit") {
+                        Button(action: { withAnimation { enableBio.toggle() } }) {
+                            HStack {
+                                Text("Bildschirmsperre \(enableBio ? "deaktivieren" : "aktivieren")")
+                                Spacer()
+                                Toggle("", isOn: $enableBio)
+                                    .labelsHidden()
+                                    .tint(Color("ip64_color"))
+                                    .onChange(of: enableBio) { isBio in
+                                        withAnimation {
+                                            isBiometricEnabled = isBio
+                                        }
+                                    }
+                            }
+                        }
+                        .tint(Color("primaryText"))
                     }
                     Section("Sonstiges") {
                         NavigationLink("Über", destination: HelpView())
@@ -57,6 +77,9 @@ struct ProfilView: View {
                     .listRowBackground(Color.red.opacity(0.15))
                 }
                 .navigationTitle("Account")
+                .onAppear {
+                    enableBio = isBiometricEnabled
+                }
             }
             .introspectNavigationController { navigationController in
                 navigationController.splitViewController?.preferredPrimaryColumnWidthFraction = 1
