@@ -14,7 +14,7 @@ struct WhatsNewView: View {
     
     var whatsNewList = [
         WhatsNewObj(imageName: "ant.circle", title: "Fehlerbehebung", subtitle: "Es wurden in diesem Update ein Paar Fehler behoben, die zur Steigerung der Performance und der Nutzbarkeit dienen"),
-        WhatsNewObj(imageName: "rectangle.3.group", title: "Widgets", subtitle: "Es gibt jetzt folgende Widgetgrößen klein (2x Healthchecks), Medium (4x Healthchecks), groß (10x Healthchecks). Bitte beachtet das die Widgets sich alle 15min aktualisieren, um die API Calls zu reduzieren")
+        WhatsNewObj(imageName: "square.and.pencil", title: "Bearbeiten von Healthchecks", subtitle: "Ihr könnt nun Healthchecks bearbeiten")
     ]
     
     var body: some View {

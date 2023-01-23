@@ -127,7 +127,7 @@ struct HealthcheckView: View {
                                             .id(UUID())
                                             .swipeActions(edge: .trailing) {
                                                 Button(role: .destructive, action: {
-                                                    deleteHealth = hcd.healthtoken!
+                                                    deleteHealth = hcd.healthtoken
                                                     deleteHealthcheck()
                                                 }) {
                                                     Label("Löschen", systemImage: "trash")
@@ -135,7 +135,7 @@ struct HealthcheckView: View {
                                                 .tint(.red)
                                                 if (hcd.healthstatus != StatusTypes.pause.statusId) {
                                                     Button(role: .destructive, action: {
-                                                        startPauseHealthToken = hcd.healthtoken!
+                                                        startPauseHealthToken = hcd.healthtoken
                                                         startPauseHealthCheck(isPause: true)
                                                     }) {
                                                         Label("Pause", systemImage: "pause.circle")
@@ -144,7 +144,7 @@ struct HealthcheckView: View {
                                                 }
                                                 if (hcd.healthstatus == StatusTypes.pause.statusId) {
                                                     Button(role: .destructive, action: {
-                                                        startPauseHealthToken = hcd.healthtoken!
+                                                        startPauseHealthToken = hcd.healthtoken
                                                         startPauseHealthCheck(isPause: false)
                                                     }) {
                                                         Label("Start", systemImage: "play.circle")

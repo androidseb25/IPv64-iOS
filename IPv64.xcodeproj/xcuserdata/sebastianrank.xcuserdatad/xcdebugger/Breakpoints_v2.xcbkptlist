@@ -14,10 +14,58 @@
             filePath = "IPv64/Main/Healthcheck/DetailHealthcheckView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
             landmarkName = "GetIntegrationName()"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B38BC0CE-CB9B-4520-BFA5-F9A4567D612E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "IPv64/Models&amp;Helpers/NetworkServices.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "580"
+            endingLineNumber = "580"
+            landmarkName = "PostEditHealthcheck(healthcheck:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B38BC0CE-CB9B-4520-BFA5-F9A4567D612E - 830d590f2f84ed52"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for IPv64.NetworkServices.PostEditHealthcheck(healthcheck: IPv64.HealthCheck) async -&gt; Swift.Optional&lt;IPv64.AddDomainResult&gt;"
+                  moduleName = "IPv64"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sebastianrank/Programmierung/XCode/IPv64/IPv64/Models&amp;Helpers/NetworkServices.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "580"
+                  endingLineNumber = "580"
+                  offsetFromSymbolStart = "1632">
+               </Location>
+               <Location
+                  uuid = "B38BC0CE-CB9B-4520-BFA5-F9A4567D612E - 54d45debc5fd2954"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for IPv64.NetworkServices.PostEditHealthcheck(healthcheck: IPv64.HealthCheck) async -&gt; Swift.Optional&lt;IPv64.AddDomainResult&gt;"
+                  moduleName = "IPv64"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sebastianrank/Programmierung/XCode/IPv64/IPv64/Models&amp;Helpers/NetworkServices.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "580"
+                  endingLineNumber = "580"
+                  offsetFromSymbolStart = "432">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
