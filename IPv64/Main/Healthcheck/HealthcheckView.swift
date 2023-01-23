@@ -12,6 +12,7 @@ struct HealthcheckView: View {
     
     @AppStorage("AccountInfos") var accountInfos: String = ""
     @AppStorage("HealthcheckList") var healthCheckList: String = ""
+    @AppStorage("IntegrationList") var integrationListS: String = ""
     @ObservedObject var api: NetworkServices = NetworkServices()
     
     @State var activeSheet: ActiveSheet? = nil
@@ -19,6 +20,7 @@ struct HealthcheckView: View {
     @State var showSheet = false
     @State var deleteThisHealth = false
     @State var healthcheckList: HealthCheckResult? = nil
+    @State var integrationList: IntegrationResult? = nil
     
     @State var activeCount = 0
     @State var warningCount = 0
@@ -102,16 +104,16 @@ struct HealthcheckView: View {
                             if (healthcheckList?.domain.count == 0) {
                                 Text("Keine Daten gefunden!")
                             } else {
-                                ForEach((healthcheckList?.domain.sorted { $0.name!.lowercased() < $1.name!.lowercased() }) ?? [], id: \.name) { hcd in
+                                ForEach((healthcheckList?.domain.sorted { $0.name.lowercased() < $1.name.lowercased() }) ?? [], id: \.name) { hcd in
                                     NavigationLink(destination: DetailHealthcheckView(healthcheck: hcd)) {
                                         LazyVStack {
                                             HStack {
                                                 Image(systemName: "circle.fill")
                                                     .resizable()
                                                     .scaledToFill()
-                                                    .foregroundColor(SetDotColor(statusId: hcd.healthstatus!))
+                                                    .foregroundColor(SetDotColor(statusId: hcd.healthstatus))
                                                     .frame(width: 8, height: 8)
-                                                Text(hcd.name!)
+                                                Text(hcd.name)
                                                 Spacer()
                                                 HStack(spacing: 4) {
                                                     let lastXPills = GetLastXMonitorPills(count: 10, domain: hcd).reversed()
@@ -125,24 +127,24 @@ struct HealthcheckView: View {
                                             .id(UUID())
                                             .swipeActions(edge: .trailing) {
                                                 Button(role: .destructive, action: {
-                                                    deleteHealth = hcd.healthtoken!
+                                                    deleteHealth = hcd.healthtoken
                                                     deleteHealthcheck()
                                                 }) {
                                                     Label("Löschen", systemImage: "trash")
                                                 }
                                                 .tint(.red)
-                                                if (hcd.healthstatus! != StatusTypes.pause.statusId) {
+                                                if (hcd.healthstatus != StatusTypes.pause.statusId) {
                                                     Button(role: .destructive, action: {
-                                                        startPauseHealthToken = hcd.healthtoken!
+                                                        startPauseHealthToken = hcd.healthtoken
                                                         startPauseHealthCheck(isPause: true)
                                                     }) {
                                                         Label("Pause", systemImage: "pause.circle")
                                                     }
                                                     .tint(.teal)
                                                 }
-                                                if (hcd.healthstatus! == StatusTypes.pause.statusId) {
+                                                if (hcd.healthstatus == StatusTypes.pause.statusId) {
                                                     Button(role: .destructive, action: {
-                                                        startPauseHealthToken = hcd.healthtoken!
+                                                        startPauseHealthToken = hcd.healthtoken
                                                         startPauseHealthCheck(isPause: false)
                                                     }) {
                                                         Label("Start", systemImage: "play.circle")
@@ -263,7 +265,7 @@ struct HealthcheckView: View {
                         let jsonData = try jsonEncoder.encode(healthcheckList)
                         let json = String(data: jsonData, encoding: String.Encoding.utf8)
                         healthCheckList = json!
-                        Array((healthcheckList?.domain.sorted { $0.name!.lowercased() < $1.name!.lowercased() })!).forEach { hcd in
+                        Array((healthcheckList?.domain.sorted { $0.name.lowercased() < $1.name.lowercased() })!).forEach { hcd in
                             if (hcd.healthstatus == StatusTypes.active.statusId) {
                                 activeCount += 1
                             } else if (hcd.healthstatus == StatusTypes.warning.statusId) {
@@ -275,6 +277,34 @@ struct HealthcheckView: View {
                             }
                         }
                     }
+                    GetIntegrations()
+                }
+            }
+        }
+    }
+    
+    fileprivate func GetIntegrations() {
+        Task {
+            integrationList = await api.GetIntegrations()
+            let status = integrationList?.status
+            if (status == nil) {
+                throw NetworkError.NoNetworkConnection
+            }
+            if (status!.contains("429") && integrationList?.integration.count == 0) {
+                activeSheet = .error
+                errorTyp = ErrorTypes.tooManyRequests
+            } else if (status!.contains("401")) {
+                activeSheet = .error
+                errorTyp = ErrorTypes.unauthorized
+            } else {
+                activeSheet = nil
+                errorTyp = nil
+                print(integrationList)
+                if (integrationList != nil) {
+                    let jsonEncoder = JSONEncoder()
+                    let jsonData = try jsonEncoder.encode(integrationList?.integration)
+                    let json = String(data: jsonData, encoding: String.Encoding.utf8)
+                    integrationListS = json!
                 }
             }
         }

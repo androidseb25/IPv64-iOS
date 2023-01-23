@@ -20,7 +20,7 @@ struct SmallSizeView : View {
             VStack {
                 ForEach(entry.healthcheck.prefix(2), id: \.healthtoken) { it in
                     LazyVStack(alignment: .leading, spacing: 0) {
-                        Text(it.name!)
+                        Text(it.name)
                             .font(.system(.title3, design: .rounded))
                             .lineLimit(1)
                         Spacer()
