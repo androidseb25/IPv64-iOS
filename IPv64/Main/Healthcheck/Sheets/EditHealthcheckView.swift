@@ -17,6 +17,7 @@ struct EditHealthcheckView: View {
     @State var errorTyp: ErrorTyp? = nil
     @State var showSheet = false
     @State var healthcheck: HealthCheck
+    @Binding var updatedItem: Bool
     @State var alarmCount = 0.0
     @State var graceCount = 0.0
     @State var notifyDown = false
@@ -51,45 +52,41 @@ struct EditHealthcheckView: View {
                         Section("Zeitraum") {
                             Text("\(Int(alarmCount)) \(GetUnit(unit: healthcheck.alarm_unit))")
                             Slider(value: $alarmCount, in: 1...60, step: 1.0)
-                            Picker(selection: $healthcheck.alarm_unit, label: Text("Zeitraum")
-                                .font(.system(.callout))
-                                .padding(.horizontal, 5)) {
-                                    ForEach(0 ..< AlarmUnitList.count) {
-                                        Text(AlarmUnitList[$0].text!)
-                                            .tag(AlarmUnitList[$0].id!)
-                                    }
+                            Picker(selection: $healthcheck.alarm_unit, label: Text("Zeitraum")) {
+                                ForEach(0 ..< AlarmUnitList.count) {
+                                    Text(AlarmUnitList[$0].text!)
+                                        .tag(AlarmUnitList[$0].id!)
                                 }
+                            }
                         }
                         Section("Karenzzeit") {
                             Text("\(Int(graceCount)) \(GetUnit(unit: healthcheck.grace_unit))")
                             Slider(value: $graceCount, in: 1...60, step: 1.0)
-                            Picker(selection: $healthcheck.grace_unit, label: Text("Zeitraum")
-                                .font(.system(.callout))
-                                .padding(.horizontal, 5)) {
-                                    ForEach(0 ..< AlarmUnitList.count) {
-                                        Text(AlarmUnitList[$0].text!)
-                                            .tag(AlarmUnitList[$0].id!)
-                                    }
+                            Picker(selection: $healthcheck.grace_unit, label: Text("Zeitraum")) {
+                                ForEach(0 ..< AlarmUnitList.count) {
+                                    Text(AlarmUnitList[$0].text!)
+                                        .tag(AlarmUnitList[$0].id!)
                                 }
+                            }
                         }
                         Section("Benachrichtigung") {
                             let intList = integrationList
-                            Picker(selection: $healthcheck.grace_unit, label: Text("Benachrichtungsmethode")
-                                .font(.system(.callout))
-                                .padding(.horizontal, 5)) {
-                                    ForEach(0 ..< intList.count) {
-                                        Text(intList[$0].integration!)
-                                            .tag(intList[$0].integration_id)
-                                    }
+                            Picker(selection: $healthcheck.integration_id, label: Text("Benachrichtungsmethode")) {
+                                ForEach(0 ..< intList.count) {
+                                    Text(intList[$0].integration_name!)
+                                        .tag(intList[$0].integration_id)
                                 }
-                            Toggle("Benachrichtung bei DOWN", isOn: $notifyDown)
-                                .tint(.red)
-                            Toggle("Benachrichtung bei UP", isOn: $notifyUp)
-                                .tint(.green)
+                            }
+                            Toggle(isOn: $notifyDown) {
+                                Text("Benachrichtung bei DOWN")
+                            }.tint(.red)
+                            Toggle(isOn: $notifyUp) {
+                                Text("Benachrichtung bei UP")
+                            }.tint(.green)
                         }
                     }
                 }
-                .navigationTitle(healthcheck.name)
+                .navigationTitle("Bearbeiten")
                 .sheet(item: $activeSheet) { item in
                     showActiveSheet(item: item)
                 }
@@ -97,20 +94,26 @@ struct EditHealthcheckView: View {
                     ToolbarItem {
                         Button(action: {
                             if (healthcheck.name.count > 0) {
-                                /*Task {
-                                    let res = await api.PostHealth(add_healthcheck: healthName, alarm_count: Int(healthAlarmCount), alarm_unit: healthAlarmUnit)
+                                Task {
+                                    healthcheck.alarm_count = Int(alarmCount)
+                                    healthcheck.grace_count = Int(graceCount)
+                                    healthcheck.alarm_down = notifyDown ? 1 : 0
+                                    healthcheck.alarm_up = notifyUp ? 1 : 0
+                                    let res = await api.PostEditHealthcheck(healthcheck: healthcheck)
                                     print(res)
-                                    if (res?.info == "success") {
-                                        activeSheet = .error
-                                        errorTyp = ErrorTypes.healthcheckCreatedSuccesfully
-                                        newItem = true
-                                    } else if (res?.info == "error") {
-                                        activeSheet = .error
-                                    } else if (res?.info == "Updateintervall overcommited") {
-                                        activeSheet = .error
-                                        errorTyp = ErrorTypes.tooManyRequests
+                                    withAnimation {
+                                        if (res?.info == "success") {
+                                            activeSheet = .error
+                                            errorTyp = ErrorTypes.healthcheckUpdatedSuccesfully
+                                            updatedItem = true
+                                        } else if (res?.info == "error") {
+                                            activeSheet = .error
+                                        } else if (res?.info == "Updateintervall overcommited") {
+                                            activeSheet = .error
+                                            errorTyp = ErrorTypes.tooManyRequests
+                                        }
                                     }
-                                }*/
+                                }
                             }
                         }) {
                             Image(systemName: "paperplane")
@@ -119,13 +122,6 @@ struct EditHealthcheckView: View {
                         }
                         .foregroundColor(.black)
                     }
-                }
-                if api.isLoading {
-                    VStack() {
-                        Spinner(isAnimating: true, style: .large, color: .white)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.black.opacity(0.3).ignoresSafeArea())
                 }
             }
             .onAppear {
@@ -143,6 +139,13 @@ struct EditHealthcheckView: View {
                 }
             }
             .tint(Color("ip64_color"))
+            if api.isLoading {
+                VStack() {
+                    Spinner(isAnimating: true, style: .large, color: .white)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.black.opacity(0.3).ignoresSafeArea())
+            }
         }
     }
     
@@ -150,10 +153,6 @@ struct EditHealthcheckView: View {
     @ViewBuilder
     func showActiveSheet(item: ActiveSheet?) -> some View {
         switch item {
-        case .add:
-            EmptyView()
-        case .detail:
-            EmptyView()
         case .error:
             ErrorSheetView(errorTyp: $errorTyp, deleteThisDomain: .constant(false))
                 .interactiveDismissDisabled(true)
@@ -172,10 +171,10 @@ struct EditHealthcheckView: View {
 
 struct EditHealthcheckView_Previews: PreviewProvider {
     static var previews: some View {
-        EditHealthcheckView(healthcheck: DummyData.Healthcheck)
+        EditHealthcheckView(healthcheck: DummyData.Healthcheck, updatedItem: .constant(false))
             .preferredColorScheme(.light)
             .previewDisplayName("Light Mode")
-        EditHealthcheckView(healthcheck: DummyData.Healthcheck)
+        EditHealthcheckView(healthcheck: DummyData.Healthcheck, updatedItem: .constant(false))
             .preferredColorScheme(.dark)
             .previewDisplayName("Dark Mode")
     }

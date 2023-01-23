@@ -227,7 +227,7 @@ struct HealthCheck: Codable {
     // healthstatus == 1 = Active; 2 = Paused; 3 = Warning; 4 = Alarm;
     var name: String = ""
     var healthstatus: Int = 0
-    var healthtoken: String? = ""
+    var healthtoken: String = ""
     var add_time: String? = ""
     var last_update_time: String? = ""
     var alarm_time: String? = ""
@@ -293,7 +293,7 @@ struct HealthCheck: Codable {
         keyInd = container.codingPath.first!.stringValue
     }
     
-    init(name: String = "", healthstatus: Int = 0, healthtoken: String? = "", add_time: String? = "", last_update_time: String? = "", alarm_time: String? = "", alarm_down: Int = 0, alarm_up: Int = 0, integration_id: Int = 0, alarm_count: Int = 0, alarm_unit: Int = 0, grace_count: Int = 0, grace_unit: Int = 0, pings_total: Int = 0, events: [HealthEvents] = []) {
+    init(name: String = "", healthstatus: Int = 0, healthtoken: String = "", add_time: String? = "", last_update_time: String? = "", alarm_time: String? = "", alarm_down: Int = 0, alarm_up: Int = 0, integration_id: Int = 0, alarm_count: Int = 0, alarm_unit: Int = 0, grace_count: Int = 0, grace_unit: Int = 0, pings_total: Int = 0, events: [HealthEvents] = []) {
         self.name = name
         self.healthstatus = healthstatus
         self.healthtoken = healthtoken
@@ -406,12 +406,14 @@ struct IntegrationResult: Codable {
 struct Integration: Codable {
     var integration: String?
     var integration_id: Int = 0
+    var integration_name: String?
     var add_time: String?
     var last_used: String?
     
     enum CodingKeys: String, CodingKey {
         case integration = "integration"
         case integration_id = "integration_id"
+        case integration_name = "integration_name"
         case add_time = "add_time"
         case last_used = "last_used"
     }
@@ -423,6 +425,8 @@ struct Integration: Codable {
         // 3
         // Decode
         integration = try container.decode(String.self, forKey: CodingKeys.integration)
+        integration_id = try container.decode(Int.self, forKey: CodingKeys.integration_id)
+        integration_name = try container.decode(String.self, forKey: CodingKeys.integration_name)
         add_time = try container.decode(String.self, forKey: CodingKeys.add_time)
         last_used = try container.decode(String.self, forKey: CodingKeys.last_used)
 
@@ -594,6 +598,16 @@ struct ErrorTypes {
             navigationTitle: "Erfolgreich",
             errorTitle: "Healthcheck wurde erfolgreich erstellt!",
             errorDescription: "Dein neuer Healthcheck ist nun online!",
+            status: 201
+        )
+    }
+    static var healthcheckUpdatedSuccesfully: ErrorTyp {
+        ErrorTyp(
+            icon: "waveform.path.ecg",
+            iconColor: .green,
+            navigationTitle: "Erfolgreich",
+            errorTitle: "Healthcheck erfolgreich aktualisiert!",
+            errorDescription: "Dein Healthcheck wurde erfolgreich aktualisiert!",
             status: 201
         )
     }

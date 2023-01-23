@@ -18,6 +18,8 @@ struct DetailHealthcheckView: View {
     @State var activeSheet: ActiveSheet? = nil
     @State var errorTyp: ErrorTyp? = .none
     
+    @State var updatedItem = false
+    
     @State var pillCount = 15
     
     fileprivate func GetIntegrationName() -> String {
@@ -30,10 +32,10 @@ struct DetailHealthcheckView: View {
             print(integrationListS)
             let jsonData = integrationListS.data(using: .utf8)
             let integrationList = try jsonDecoder.decode([Integration].self, from: jsonData!)
-            var integrationName = "unbekannt"
+            var integrationName = "Unbekannt"
             integrationList.forEach { inte in
                 if (inte.integration_id == healthcheck!.integration_id) {
-                    integrationName = inte.integration!
+                    integrationName = inte.integration_name!
                 }
             }
             
@@ -96,7 +98,7 @@ struct DetailHealthcheckView: View {
     }
     
     fileprivate func GetHealthUpdateUrl() -> String {
-        return "https://ipv64.net/health.php?token=" + (healthcheck?.healthtoken!)!
+        return "https://ipv64.net/health.php?token=" + (healthcheck?.healthtoken)!
     }
     
     var body: some View {
@@ -237,7 +239,15 @@ struct DetailHealthcheckView: View {
     func showActiveSheet(item: ActiveSheet?) -> some View {
         switch item {
         case .edit:
-            EditHealthcheckView(healthcheck: healthcheck!)
+            EditHealthcheckView(healthcheck: healthcheck!, updatedItem: $updatedItem)
+                .onDisappear {
+                    if (updatedItem) {
+                        updatedItem = false
+                        withAnimation {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                }
         case .error:
             ErrorSheetView(errorTyp: $errorTyp, deleteThisDomain: .constant(false))
                 .interactiveDismissDisabled(errorTyp?.status == 202 ? false : true)
