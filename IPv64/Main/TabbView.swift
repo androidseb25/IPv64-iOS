@@ -9,26 +9,32 @@ import SwiftUI
 
 struct TabbView: View {
     
+    @AppStorage("BIOMETRIC_ENABLED") var isBiometricEnabled: Bool = false
     @AppStorage("AccountInfos") var accountInfos: String = ""
     @AppStorage("DomainResult") var listOfDomainsString: String = ""
     @AppStorage("SelectedView") var selectedView: Int = 1
     
+    @Binding var showDomains: Bool
+    @State private var showPlaceholder = false
     @State var activeSheet: ActiveSheet? = nil
     @State private var showWhatsNew = false
     
     var body: some View {
         TabView(selection: $selectedView) {
             ContentView()
+                .redacted(reason: showPlaceholder ? .placeholder : .init())
                 .tabItem {
                     Label("Domains", systemImage: "network")
                 }
                 .tag(1)
             HealthcheckView()
+                .redacted(reason: showPlaceholder ? .placeholder : .init())
                 .tabItem {
                     Label("Healthcheck", systemImage: "waveform.path.ecg")
                 }
                 .tag(2)
             ProfilView()
+                .redacted(reason: showPlaceholder ? .placeholder : .init())
                 .tabItem {
                     Label("Account", systemImage: "person.circle")
                 }
@@ -64,6 +70,39 @@ struct TabbView: View {
             print("open tab \(tabId)")
             selectedView = tabId
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            print("Moving to the background! didBecomeActiveNotification")
+            withAnimation {
+                showPlaceholder = false
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            print("Moving to the background! willResignActiveNotification")
+            withAnimation {
+                if (isBiometricEnabled) {
+                    showPlaceholder = true
+                }
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
+            print("Moving to the background! willTerminateNotification")
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            print("Moving to the background! willEnterForegroundNotification")
+            withAnimation {
+                showPlaceholder = false
+                showDomains = false
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+            withAnimation {
+                //                    if UIDevice.current.userInterfaceIdiom == .pad {
+                /*DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                 _ = Functions().getGridCount(width: geo!.size.width, gridItem: $columnsGrid)
+                 }*/
+                //                    }
+            }
+        }
     }
     
     @ViewBuilder
@@ -79,6 +118,6 @@ struct TabbView: View {
 
 struct TabbView_Previews: PreviewProvider {
     static var previews: some View {
-        TabbView()
+        TabbView(showDomains: .constant(true))
     }
 }

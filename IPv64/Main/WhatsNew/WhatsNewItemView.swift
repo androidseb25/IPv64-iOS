@@ -17,7 +17,8 @@ struct WhatsNewItemView: View {
                 Image(systemName: whatsNewItem.imageName)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 35, height: 35)
+                    .frame(width: 30, height: 30)
+                    .symbolRenderingMode(.hierarchical)
                     .padding(.horizontal)
                     .foregroundColor(Color("ip64_color"))
                 VStack(alignment: .leading, spacing: 5) {

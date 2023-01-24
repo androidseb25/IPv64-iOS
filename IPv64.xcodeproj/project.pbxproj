@@ -30,6 +30,8 @@
 		9AACEBA62918577D009B506D /* SetupPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA52918577D009B506D /* SetupPrefs.swift */; };
 		9AACEBA8291857AF009B506D /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA7291857AF009B506D /* SpinnerView.swift */; };
 		9AACEBAA2918609F009B506D /* NewDomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA92918609F009B506D /* NewDomainView.swift */; };
+		9AAEF655297F089D00726849 /* Biometrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAEF654297F089D00726849 /* Biometrics.swift */; };
+		9AAEF657297F0D3800726849 /* LockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAEF656297F0D3800726849 /* LockView.swift */; };
 		9AB155C229747DAC0052F21E /* CodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB155C129747DAC0052F21E /* CodeScanner.swift */; };
 		9AB78EB7297740D00047FDFA /* DetailHealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB78EB6297740D00047FDFA /* DetailHealthcheckView.swift */; };
 		9ABB37CF297B26A600FC9B74 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ABB37CE297B26A600FC9B74 /* WidgetKit.framework */; };
@@ -105,6 +107,8 @@
 		9AACEBA52918577D009B506D /* SetupPrefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupPrefs.swift; sourceTree = "<group>"; };
 		9AACEBA7291857AF009B506D /* SpinnerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
 		9AACEBA92918609F009B506D /* NewDomainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDomainView.swift; sourceTree = "<group>"; };
+		9AAEF654297F089D00726849 /* Biometrics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Biometrics.swift; sourceTree = "<group>"; };
+		9AAEF656297F0D3800726849 /* LockView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockView.swift; sourceTree = "<group>"; };
 		9AB155C129747DAC0052F21E /* CodeScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeScanner.swift; sourceTree = "<group>"; };
 		9AB155C329747F5C0052F21E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9AB78EB6297740D00047FDFA /* DetailHealthcheckView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailHealthcheckView.swift; sourceTree = "<group>"; };
@@ -202,6 +206,7 @@
 				9A7CDCE0296DEBD400237D5B /* Sheets */,
 				9AACEB9E2918524B009B506D /* LoginView.swift */,
 				9A0034FB2930F9200065E1F3 /* TabbView.swift */,
+				9AAEF656297F0D3800726849 /* LockView.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -234,6 +239,7 @@
 		9A7CDCE2296DEBF700237D5B /* Models&Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				9AAEF654297F089D00726849 /* Biometrics.swift */,
 				9AACEBA52918577D009B506D /* SetupPrefs.swift */,
 				9AACEBA0291853C9009B506D /* NetworkServices.swift */,
 				9AACEBA329185411009B506D /* Models.swift */,
@@ -473,12 +479,14 @@
 				9AACEBA62918577D009B506D /* SetupPrefs.swift in Sources */,
 				9AACEB9F2918524B009B506D /* LoginView.swift in Sources */,
 				9AB78EB7297740D00047FDFA /* DetailHealthcheckView.swift in Sources */,
+				9AAEF657297F0D3800726849 /* LockView.swift in Sources */,
 				9A8D5BE429197355006B8A74 /* DetailDomainView.swift in Sources */,
 				9AC2EDEC291ADFAF00140CD9 /* NewDomainDNSView.swift in Sources */,
 				9A0034FC2930F9200065E1F3 /* TabbView.swift in Sources */,
 				9A0035002930FD010065E1F3 /* IPView.swift in Sources */,
 				9A0035042931062B0065E1F3 /* LogItemView.swift in Sources */,
 				9A8D5BE229196290006B8A74 /* ErrorSheetView.swift in Sources */,
+				9AAEF655297F089D00726849 /* Biometrics.swift in Sources */,
 				9ABB37DE297B26A700FC9B74 /* HealthcheckWidget.intentdefinition in Sources */,
 				9A5A359E29756EFA006F27EB /* WhatsNewView.swift in Sources */,
 				9AACEBAA2918609F009B506D /* NewDomainView.swift in Sources */,
@@ -638,7 +646,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -647,6 +655,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Die App benötigt diese Berechtigung um den QR Code auszulesen.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Die App benötigt diese Berechtigung um die Inhalte freizugeben, wenn aktiviert.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -658,7 +667,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -675,7 +684,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -684,6 +693,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Die App benötigt diese Berechtigung um den QR Code auszulesen.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Die App benötigt diese Berechtigung um die Inhalte freizugeben, wenn aktiviert.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -695,7 +705,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

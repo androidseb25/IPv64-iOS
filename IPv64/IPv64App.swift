@@ -10,6 +10,9 @@ import SwiftUI
 @main
 struct IPv64App: App {
     
+    @AppStorage("BIOMETRIC_ENABLED") var isBiometricEnabled: Bool = false
+    @State var isBio = false
+    
     init() {
         var titleFont = UIFont.preferredFont(forTextStyle: .largeTitle) /// the default large title font
         titleFont = UIFont(
@@ -59,7 +62,11 @@ struct IPv64App: App {
             if (apikey.count == 0) {
                 LoginView()
             } else {
-                TabbView()
+                if isBiometricEnabled {
+                    LockView()
+                } else {
+                    TabbView(showDomains: .constant(true))
+                }
             }
         }
     }

@@ -95,7 +95,7 @@ struct LoginView: View {
                     }
                 }
             } else {
-                TabbView()
+                TabbView(showDomains: .constant(true))
             }
         }
     }
