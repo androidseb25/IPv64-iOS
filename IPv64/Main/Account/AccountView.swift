@@ -101,6 +101,14 @@ struct AccountView: View {
                                 Text("\(apiUpdates ?? "0") / \(apiLimit ?? "0")")
                                     .foregroundColor(GetColor(cur: accountInfos.api_updates ?? 0, max: accountInfos.account_class?.api_limit ?? 0))
                             }
+                            let sms = accountInfos.sms_count ?? 0
+                            let smsMax = accountInfos.account_class?.sms_limit ?? 0
+                            HStack {
+                                Text("SMS Limit")
+                                Spacer()
+                                Text("\(sms) / \(smsMax)")
+                                    .foregroundColor(GetColor(cur: sms, max: smsMax))
+                            }
                         }
                         Group {
                             Button(action: {

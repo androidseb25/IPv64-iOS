@@ -113,6 +113,7 @@ struct AccountInfo: Codable {
     var healthchecks: Int? = 0
     var healthchecks_updates: Int? = 0
     var api_updates: Int? = 0
+    var sms_count: Int? = 0
     var account_class: AccountClass? = AccountClass()
     var info: String? = ""
     var status: String? = ""
@@ -130,6 +131,7 @@ struct AccountInfo: Codable {
         case healthchecks = "healthchecks"
         case healthchecks_updates = "healthchecks_updates"
         case api_updates = "api_updates"
+        case sms_count = "sms_count"
         case account_class = "account_class"
         case info = "info"
         case status = "status"
@@ -146,6 +148,7 @@ struct AccountClass: Codable {
     var healthcheck_update_limit: Int? = 0
     var dyndns_ttl: Int? = 0
     var api_limit: Int? = 0
+    var sms_limit: Int? = 0
     
     enum CodingKeys: String, CodingKey {
         case class_name = "class_name"
@@ -156,6 +159,7 @@ struct AccountClass: Codable {
         case healthcheck_update_limit = "healthcheck_update_limit"
         case dyndns_ttl = "dyndns_ttl"
         case api_limit = "api_limit"
+        case sms_limit = "sms_limit"
     }
 }
 
