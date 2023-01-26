@@ -706,6 +706,31 @@ struct DummyData {
         events: [
             HealthEvents(
                 event_time: "2023-01-01 00:45:00",
+                status: 1,
+                text: "123456789"
+            ),
+            HealthEvents(
+                event_time: "2023-01-01 01:00:00",
+                status: 4,
+                text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."
+            ),
+            HealthEvents(
+                event_time: "2023-01-01 00:45:00",
+                status: 3,
+                text: "123456789"
+            ),
+            HealthEvents(
+                event_time: "2023-01-01 00:45:00",
+                status: 0,
+                text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"
+            ),
+            HealthEvents(
+                event_time: "2023-01-01 00:00:00",
+                status: 1,
+                text: Optional("Healthcheck Einstellungen übernommen.")
+            ),
+            HealthEvents(
+                event_time: "2023-01-01 00:45:00",
                 status: 4,
                 text: "123456789"
             ),
@@ -716,7 +741,7 @@ struct DummyData {
             ),
             HealthEvents(
                 event_time: "2023-01-01 00:45:00",
-                status: 2,
+                status: 0,
                 text: "123456789"
             ),
             HealthEvents(
@@ -726,8 +751,13 @@ struct DummyData {
             ),
             HealthEvents(
                 event_time: "2023-01-01 00:00:00",
-                status: 0,
+                status: 4,
                 text: Optional("Healthcheck Einstellungen übernommen.")
+            ),
+            HealthEvents(
+                event_time: "2023-01-01 00:45:00",
+                status: 3,
+                text: "123456789"
             )
         ]
     )

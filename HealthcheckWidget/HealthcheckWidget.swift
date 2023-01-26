@@ -15,7 +15,9 @@ struct Provider: IntentTimelineProvider {
     
     func placeholder(in context: Context) -> SimpleEntry {
         var count = 2
-        if context.family == .systemSmall {
+        if context.family == .accessoryRectangular {
+            count = 1
+        } else if context.family == .systemSmall {
             count = 2
         } else if context.family == .systemMedium {
             count = 4
@@ -29,7 +31,9 @@ struct Provider: IntentTimelineProvider {
     
     func getSnapshot(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (SimpleEntry) -> ()) {
         var count = 2
-        if context.family == .systemSmall {
+        if context.family == .accessoryRectangular {
+            count = 1
+        } else if context.family == .systemSmall {
             count = 2
         } else if context.family == .systemMedium {
             count = 4
@@ -48,7 +52,9 @@ struct Provider: IntentTimelineProvider {
             let hcd = DummyData.HealthcheckListCustom(customCount: 2)
             let hcr = await api.GetHealthchecks() ?? HealthCheckResult(domain: hcd)
             var count = 2
-            if context.family == .systemSmall {
+            if context.family == .accessoryRectangular {
+                count = 1
+            } else if context.family == .systemSmall {
                 count = 2
             } else if context.family == .systemMedium {
                 count = 4
@@ -85,6 +91,9 @@ struct HealthcheckWidgetEntryView : View {
         case .systemLarge:
             LargeSizeView(entry: entry)
                 .widgetURL(URL(string: "ipv64://tab/2"))
+        case .accessoryRectangular:
+            AccessoryRectangleView(entry: entry)
+                .widgetURL(URL(string: "ipv64://tab/2"))
         default:
             Text("Not implemented!")
         }
@@ -94,11 +103,28 @@ struct HealthcheckWidgetEntryView : View {
 struct HealthcheckWidget: Widget {
     let kind: String = "HealthcheckWidget"
     
+    private var supportedFamilies: [WidgetFamily] {
+        if #available(iOSApplicationExtension 16.0, *) {
+            return [
+                .systemSmall,
+                .systemMedium,
+                .systemLarge,
+                .accessoryRectangular
+            ]
+        } else {
+            return [
+                .systemSmall,
+                .systemMedium,
+                .systemLarge
+            ]
+        }
+    }
+    
     var body: some WidgetConfiguration {
         IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
             HealthcheckWidgetEntryView(entry: entry)
         }
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        .supportedFamilies(supportedFamilies)
         .configurationDisplayName("Meine Healthchecks")
         .description("Hier werden dir deine Healthchecks angezeigt.")
     }
