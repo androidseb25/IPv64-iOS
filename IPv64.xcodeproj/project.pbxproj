@@ -57,6 +57,7 @@
 		9AD5DF612975BAC3007928F6 /* HealthcheckStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */; };
 		9AD5DF632975BAD7007928F6 /* HealthcheckStatsItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF622975BAD7007928F6 /* HealthcheckStatsItem.swift */; };
 		9AD5DF652975ECC1007928F6 /* NewHealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF642975ECC1007928F6 /* NewHealthcheckView.swift */; };
+		9AE5E22E298302280019D524 /* AccessoryInlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE5E22D298302280019D524 /* AccessoryInlineView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +133,7 @@
 		9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckStatsView.swift; sourceTree = "<group>"; };
 		9AD5DF622975BAD7007928F6 /* HealthcheckStatsItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckStatsItem.swift; sourceTree = "<group>"; };
 		9AD5DF642975ECC1007928F6 /* NewHealthcheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHealthcheckView.swift; sourceTree = "<group>"; };
+		9AE5E22D298302280019D524 /* AccessoryInlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessoryInlineView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -317,6 +319,7 @@
 		9ABB37EF297B2FEA00FC9B74 /* WidgetSizes */ = {
 			isa = PBXGroup;
 			children = (
+				9AE5E22D298302280019D524 /* AccessoryInlineView.swift */,
 				9ABB37E6297B2BFF00FC9B74 /* MediumSizeView.swift */,
 				9ABB37E8297B2C1600FC9B74 /* SmallSizeView.swift */,
 				9ABB37EA297B2C2A00FC9B74 /* LargeSizeView.swift */,
@@ -509,6 +512,7 @@
 				9ABB37D6297B26A600FC9B74 /* HealthcheckWidgetLiveActivity.swift in Sources */,
 				9ABB37EE297B2CD900FC9B74 /* MediumSizeView.swift in Sources */,
 				9ABB37F4297B5CB800FC9B74 /* SpinnerView.swift in Sources */,
+				9AE5E22E298302280019D524 /* AccessoryInlineView.swift in Sources */,
 				9ABB37DD297B26A700FC9B74 /* HealthcheckWidget.intentdefinition in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
