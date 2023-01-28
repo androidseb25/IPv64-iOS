@@ -14,6 +14,15 @@
 		9A0035042931062B0065E1F3 /* LogItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0035032931062B0065E1F3 /* LogItemView.swift */; };
 		9A003506293129930065E1F3 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A003505293129930065E1F3 /* AccountView.swift */; };
 		9A08D1D82979AB47002CF0E8 /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 9A08D1D72979AB47002CF0E8 /* Introspect */; };
+		9A3313FC29844E4D009E47F5 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A3313FB29844E4D009E47F5 /* Intents.framework */; };
+		9A3313FF29844E4D009E47F5 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3313FE29844E4D009E47F5 /* IntentHandler.swift */; };
+		9A33140329844E4D009E47F5 /* HealthcheckIntents.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9A3313FA29844E4D009E47F5 /* HealthcheckIntents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9A33140729844F1B009E47F5 /* HealthcheckWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 9ABB37D9297B26A600FC9B74 /* HealthcheckWidget.intentdefinition */; };
+		9A33140829845032009E47F5 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3313FE29844E4D009E47F5 /* IntentHandler.swift */; };
+		9A33140929845AF1009E47F5 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3313FE29844E4D009E47F5 /* IntentHandler.swift */; };
+		9A33140A29845F21009E47F5 /* NetworkServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA0291853C9009B506D /* NetworkServices.swift */; };
+		9A33140B29845F41009E47F5 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA329185411009B506D /* Models.swift */; };
+		9A33140C29845F4B009E47F5 /* SetupPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA52918577D009B506D /* SetupPrefs.swift */; };
 		9A5A359E29756EFA006F27EB /* WhatsNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5A359C29756EFA006F27EB /* WhatsNewView.swift */; };
 		9A5A359F29756EFA006F27EB /* WhatsNewItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5A359D29756EFA006F27EB /* WhatsNewItemView.swift */; };
 		9A8D5BE229196290006B8A74 /* ErrorSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5BE129196290006B8A74 /* ErrorSheetView.swift */; };
@@ -57,9 +66,17 @@
 		9AD5DF612975BAC3007928F6 /* HealthcheckStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */; };
 		9AD5DF632975BAD7007928F6 /* HealthcheckStatsItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF622975BAD7007928F6 /* HealthcheckStatsItem.swift */; };
 		9AD5DF652975ECC1007928F6 /* NewHealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF642975ECC1007928F6 /* NewHealthcheckView.swift */; };
+		9AE5E22E298302280019D524 /* AccessoryInlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE5E22D298302280019D524 /* AccessoryInlineView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		9A33140129844E4D009E47F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9AACEB80291851E1009B506D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9A3313F929844E4D009E47F5;
+			remoteInfo = HealthcheckIntents;
+		};
 		9ABB37DF297B26A700FC9B74 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9AACEB80291851E1009B506D /* Project object */;
@@ -77,6 +94,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				9ABB37E1297B26A700FC9B74 /* HealthcheckWidgetExtension.appex in Embed Foundation Extensions */,
+				9A33140329844E4D009E47F5 /* HealthcheckIntents.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,11 +108,16 @@
 		9A003501293101350065E1F3 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		9A0035032931062B0065E1F3 /* LogItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItemView.swift; sourceTree = "<group>"; };
 		9A003505293129930065E1F3 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
+		9A3313FA29844E4D009E47F5 /* HealthcheckIntents.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HealthcheckIntents.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A3313FB29844E4D009E47F5 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		9A3313FE29844E4D009E47F5 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
+		9A33140029844E4D009E47F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9A5A359C29756EFA006F27EB /* WhatsNewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsNewView.swift; sourceTree = "<group>"; };
 		9A5A359D29756EFA006F27EB /* WhatsNewItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsNewItemView.swift; sourceTree = "<group>"; };
 		9A8D5BE129196290006B8A74 /* ErrorSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorSheetView.swift; sourceTree = "<group>"; };
 		9A8D5BE329197355006B8A74 /* DetailDomainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailDomainView.swift; sourceTree = "<group>"; };
 		9A8D5C0429199141006B8A74 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		9AA1F99F29847A5B00170C69 /* HealthcheckIntents.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HealthcheckIntents.entitlements; sourceTree = "<group>"; };
 		9AACEB88291851E1009B506D /* IPv64.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IPv64.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AACEB8B291851E1009B506D /* IPv64App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPv64App.swift; sourceTree = "<group>"; };
 		9AACEB8D291851E1009B506D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -132,9 +155,18 @@
 		9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckStatsView.swift; sourceTree = "<group>"; };
 		9AD5DF622975BAD7007928F6 /* HealthcheckStatsItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckStatsItem.swift; sourceTree = "<group>"; };
 		9AD5DF642975ECC1007928F6 /* NewHealthcheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHealthcheckView.swift; sourceTree = "<group>"; };
+		9AE5E22D298302280019D524 /* AccessoryInlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessoryInlineView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9A3313F729844E4D009E47F5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A3313FC29844E4D009E47F5 /* Intents.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9AACEB85291851E1009B506D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -155,6 +187,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9A3313FD29844E4D009E47F5 /* HealthcheckIntents */ = {
+			isa = PBXGroup;
+			children = (
+				9AA1F99F29847A5B00170C69 /* HealthcheckIntents.entitlements */,
+				9A3313FE29844E4D009E47F5 /* IntentHandler.swift */,
+				9A33140029844E4D009E47F5 /* Info.plist */,
+			);
+			path = HealthcheckIntents;
+			sourceTree = "<group>";
+		};
 		9A5A359B29756EFA006F27EB /* WhatsNew */ = {
 			isa = PBXGroup;
 			children = (
@@ -253,6 +295,7 @@
 				9ABB37F6297B65BF00FC9B74 /* HealthcheckWidgetExtension.entitlements */,
 				9AACEB8A291851E1009B506D /* IPv64 */,
 				9ABB37D2297B26A600FC9B74 /* HealthcheckWidget */,
+				9A3313FD29844E4D009E47F5 /* HealthcheckIntents */,
 				9ABB37CD297B26A600FC9B74 /* Frameworks */,
 				9AACEB89291851E1009B506D /* Products */,
 			);
@@ -263,6 +306,7 @@
 			children = (
 				9AACEB88291851E1009B506D /* IPv64.app */,
 				9ABB37CC297B26A600FC9B74 /* HealthcheckWidgetExtension.appex */,
+				9A3313FA29844E4D009E47F5 /* HealthcheckIntents.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -296,6 +340,7 @@
 			children = (
 				9ABB37CE297B26A600FC9B74 /* WidgetKit.framework */,
 				9ABB37D0297B26A600FC9B74 /* SwiftUI.framework */,
+				9A3313FB29844E4D009E47F5 /* Intents.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -317,6 +362,7 @@
 		9ABB37EF297B2FEA00FC9B74 /* WidgetSizes */ = {
 			isa = PBXGroup;
 			children = (
+				9AE5E22D298302280019D524 /* AccessoryInlineView.swift */,
 				9ABB37E6297B2BFF00FC9B74 /* MediumSizeView.swift */,
 				9ABB37E8297B2C1600FC9B74 /* SmallSizeView.swift */,
 				9ABB37EA297B2C2A00FC9B74 /* LargeSizeView.swift */,
@@ -356,6 +402,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		9A3313F929844E4D009E47F5 /* HealthcheckIntents */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9A33140629844E4D009E47F5 /* Build configuration list for PBXNativeTarget "HealthcheckIntents" */;
+			buildPhases = (
+				9A3313F629844E4D009E47F5 /* Sources */,
+				9A3313F729844E4D009E47F5 /* Frameworks */,
+				9A3313F829844E4D009E47F5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HealthcheckIntents;
+			productName = HealthcheckIntents;
+			productReference = 9A3313FA29844E4D009E47F5 /* HealthcheckIntents.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		9AACEB87291851E1009B506D /* IPv64 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9AACEB9B291851E2009B506D /* Build configuration list for PBXNativeTarget "IPv64" */;
@@ -369,6 +432,7 @@
 			);
 			dependencies = (
 				9ABB37E0297B26A700FC9B74 /* PBXTargetDependency */,
+				9A33140229844E4D009E47F5 /* PBXTargetDependency */,
 			);
 			name = IPv64;
 			packageProductDependencies = (
@@ -405,6 +469,9 @@
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1410;
 				TargetAttributes = {
+					9A3313F929844E4D009E47F5 = {
+						CreatedOnToolsVersion = 14.2;
+					};
 					9AACEB87291851E1009B506D = {
 						CreatedOnToolsVersion = 14.1;
 					};
@@ -431,11 +498,19 @@
 			targets = (
 				9AACEB87291851E1009B506D /* IPv64 */,
 				9ABB37CB297B26A600FC9B74 /* HealthcheckWidgetExtension */,
+				9A3313F929844E4D009E47F5 /* HealthcheckIntents */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		9A3313F829844E4D009E47F5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9AACEB86291851E1009B506D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -457,6 +532,18 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9A3313F629844E4D009E47F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A33140A29845F21009E47F5 /* NetworkServices.swift in Sources */,
+				9A33140C29845F4B009E47F5 /* SetupPrefs.swift in Sources */,
+				9A3313FF29844E4D009E47F5 /* IntentHandler.swift in Sources */,
+				9A33140729844F1B009E47F5 /* HealthcheckWidget.intentdefinition in Sources */,
+				9A33140B29845F41009E47F5 /* Models.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9AACEB84291851E1009B506D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -491,6 +578,7 @@
 				9A5A359E29756EFA006F27EB /* WhatsNewView.swift in Sources */,
 				9AACEBAA2918609F009B506D /* NewDomainView.swift in Sources */,
 				9AACEB98291851E2009B506D /* IPv64.xcdatamodeld in Sources */,
+				9A33140929845AF1009E47F5 /* IntentHandler.swift in Sources */,
 				9AACEBA429185411009B506D /* Models.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -505,10 +593,12 @@
 				9ABB37F2297B533200FC9B74 /* NetworkServices.swift in Sources */,
 				9ABB37F0297B314400FC9B74 /* Models.swift in Sources */,
 				9ABB37ED297B2CD900FC9B74 /* LargeSizeView.swift in Sources */,
+				9A33140829845032009E47F5 /* IntentHandler.swift in Sources */,
 				9ABB37F3297B544800FC9B74 /* SetupPrefs.swift in Sources */,
 				9ABB37D6297B26A600FC9B74 /* HealthcheckWidgetLiveActivity.swift in Sources */,
 				9ABB37EE297B2CD900FC9B74 /* MediumSizeView.swift in Sources */,
 				9ABB37F4297B5CB800FC9B74 /* SpinnerView.swift in Sources */,
+				9AE5E22E298302280019D524 /* AccessoryInlineView.swift in Sources */,
 				9ABB37DD297B26A700FC9B74 /* HealthcheckWidget.intentdefinition in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -516,6 +606,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		9A33140229844E4D009E47F5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9A3313F929844E4D009E47F5 /* HealthcheckIntents */;
+			targetProxy = 9A33140129844E4D009E47F5 /* PBXContainerItemProxy */;
+		};
 		9ABB37E0297B26A700FC9B74 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9ABB37CB297B26A600FC9B74 /* HealthcheckWidgetExtension */;
@@ -524,6 +619,60 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		9A33140429844E4D009E47F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = HealthcheckIntents/HealthcheckIntents.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HealthcheckIntents/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = HealthcheckIntents;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.HealthcheckIntents;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9A33140529844E4D009E47F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = HealthcheckIntents/HealthcheckIntents.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HealthcheckIntents/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = HealthcheckIntents;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.HealthcheckIntents;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		9AACEB99291851E2009B506D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -646,7 +795,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -667,7 +816,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.5;
+				MARKETING_VERSION = 1.1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -684,7 +833,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -705,7 +854,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.5;
+				MARKETING_VERSION = 1.1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -775,6 +924,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9A33140629844E4D009E47F5 /* Build configuration list for PBXNativeTarget "HealthcheckIntents" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9A33140429844E4D009E47F5 /* Debug */,
+				9A33140529844E4D009E47F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9AACEB83291851E1009B506D /* Build configuration list for PBXProject "IPv64" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

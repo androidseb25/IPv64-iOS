@@ -12,7 +12,7 @@ import SwiftUI
 struct LargeSizeView : View {
     @Environment(\.widgetFamily) var widgetFamily
     
-    var entry: Provider.Entry
+    var entry: ProviderStatic.Entry
     
     var body: some View {
         ZStack {
@@ -125,11 +125,11 @@ struct LargeSizeView : View {
 struct LargeSizeViewPreviews: PreviewProvider {
     static var previews: some View {
         let hc = DummyData.HealthcheckListCustom(customCount: 9)
-        LargeSizeView(entry: SimpleEntry(date: Date(), configuration: ConfigurationIntent(), healthcheck: hc))
+        LargeSizeView(entry: SimpleEntryStatic(date: Date(), healthcheck: hc))
             .previewContext(WidgetPreviewContext(family: .systemLarge))
             .preferredColorScheme(.light)
             .previewDisplayName("Light Mode")
-        LargeSizeView(entry: SimpleEntry(date: Date(), configuration: ConfigurationIntent(), healthcheck: hc))
+        LargeSizeView(entry: SimpleEntryStatic(date: Date(), healthcheck: hc))
             .previewContext(WidgetPreviewContext(family: .systemLarge))
             .preferredColorScheme(.dark)
             .previewDisplayName("Dark Mode")
