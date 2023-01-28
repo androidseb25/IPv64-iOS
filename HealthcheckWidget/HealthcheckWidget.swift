@@ -51,6 +51,86 @@ struct Provider: IntentTimelineProvider {
             let api = NetworkServices()
             let hcd = DummyData.HealthcheckListCustom(customCount: 2)
             let hcr = await api.GetHealthchecks() ?? HealthCheckResult(domain: hcd)
+
+            let sorted = hcr.domain.sorted { $0.name > $1.name }
+            let shrinkedEventList = Array(sorted)
+            if (configuration.healthcheckSymbol1 != nil) {
+                var health = shrinkedEventList.first { $0.healthtoken == configuration.healthcheckSymbol1?.identifier }
+                if (health == nil) {
+                    configuration.healthcheckSymbol1 = nil
+                } else {
+                    var healthStatus = HealthcheckSymbol(identifier: health!.healthtoken, display: health!.name)
+                    healthStatus.events = []
+                    health!.events.forEach { e in
+                        let event = EventSymbol(identifier: UUID().uuidString, display: e.status!.formatted())
+                        healthStatus.events?.append(event)
+                    }
+                    configuration.healthcheckSymbol1 = healthStatus
+                }
+            }
+            if (configuration.healthcheckSymbol2 != nil) {
+                var health = shrinkedEventList.first { $0.healthtoken == configuration.healthcheckSymbol2?.identifier }
+                if (health == nil) {
+                    configuration.healthcheckSymbol2 = nil
+                } else {
+                    var healthStatus = HealthcheckSymbol(identifier: health!.healthtoken, display: health!.name)
+                    healthStatus.events = []
+                    health!.events.forEach { e in
+                        let event = EventSymbol(identifier: UUID().uuidString, display: e.status!.formatted())
+                        healthStatus.events?.append(event)
+                    }
+                    configuration.healthcheckSymbol2 = healthStatus
+                }
+            }
+            let entry = SimpleEntry(date: .now, configuration: configuration, healthcheck: [])
+            let timeline = Timeline(entries: [entry], policy: .after(.now.advanced(by: 15 * 60)))
+            completion(timeline)
+        }
+    }
+}
+
+struct ProviderStatic: TimelineProvider {
+    
+    @AppStorage("HealthcheckList") var healthCheckList: String = ""
+    
+    func placeholder(in context: Context) -> SimpleEntryStatic {
+        var count = 2
+        if context.family == .accessoryRectangular {
+            count = 1
+        } else if context.family == .systemSmall {
+            count = 2
+        } else if context.family == .systemMedium {
+            count = 4
+        } else {
+            count = 9
+        }
+        let hc = DummyData.HealthcheckListCustom(customCount: count)
+        print(hc)
+        return SimpleEntryStatic(date: Date(), healthcheck: hc)
+    }
+    
+    func getSnapshot(in context: Context, completion: @escaping (SimpleEntryStatic) -> Void) {
+        var count = 2
+        if context.family == .accessoryRectangular {
+            count = 1
+        } else if context.family == .systemSmall {
+            count = 2
+        } else if context.family == .systemMedium {
+            count = 4
+        } else {
+            count = 9
+        }
+        let hc = DummyData.HealthcheckListCustom(customCount: count)
+        print(hc)
+        let entry = SimpleEntryStatic(date: Date(), healthcheck: hc)
+        completion(entry)
+    }
+    
+    func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntryStatic>) -> Void) {
+        Task {
+            let api = NetworkServices()
+            let hcd = DummyData.HealthcheckListCustom(customCount: 2)
+            let hcr = await api.GetHealthchecks() ?? HealthCheckResult(domain: hcd)
             var count = 2
             if context.family == .accessoryRectangular {
                 count = 1
@@ -61,8 +141,9 @@ struct Provider: IntentTimelineProvider {
             } else {
                 count = 10
             }
-            let shrinkedEventList = Array(hcr.domain.prefix(count))
-            let entry = SimpleEntry(date: .now, configuration: configuration, healthcheck: shrinkedEventList)
+            let sorted = hcr.domain.prefix(count).sorted { $0.name > $1.name }
+            let shrinkedEventList = Array(sorted)
+            let entry = SimpleEntryStatic(date: .now, healthcheck: shrinkedEventList)
             let timeline = Timeline(entries: [entry], policy: .after(.now.advanced(by: 15 * 60)))
             completion(timeline)
         }
@@ -72,6 +153,11 @@ struct Provider: IntentTimelineProvider {
 struct SimpleEntry: TimelineEntry {
     let date: Date
     let configuration: ConfigurationIntent
+    let healthcheck: [HealthCheck]
+}
+
+struct SimpleEntryStatic: TimelineEntry {
+    let date: Date
     let healthcheck: [HealthCheck]
 }
 
@@ -85,14 +171,27 @@ struct HealthcheckWidgetEntryView : View {
         case .systemSmall:
             SmallSizeView(entry: entry)
                 .widgetURL(URL(string: "ipv64://tab/2"))
+        case .accessoryRectangular:
+            AccessoryRectangleView(entry: entry)
+                .widgetURL(URL(string: "ipv64://tab/2"))
+        default:
+            Text("Not implemented!")
+        }
+    }
+}
+
+struct HealthcheckWidgetStaticEntryView : View {
+    @Environment(\.widgetFamily) var widgetFamily
+    
+    var entry: ProviderStatic.Entry
+    
+    var body: some View {
+        switch widgetFamily {
         case .systemMedium:
             MediumSizeView(entry: entry)
                 .widgetURL(URL(string: "ipv64://tab/2"))
         case .systemLarge:
             LargeSizeView(entry: entry)
-                .widgetURL(URL(string: "ipv64://tab/2"))
-        case .accessoryRectangular:
-            AccessoryRectangleView(entry: entry)
                 .widgetURL(URL(string: "ipv64://tab/2"))
         default:
             Text("Not implemented!")
@@ -107,15 +206,11 @@ struct HealthcheckWidget: Widget {
         if #available(iOSApplicationExtension 16.0, *) {
             return [
                 .systemSmall,
-                .systemMedium,
-                .systemLarge,
                 .accessoryRectangular
             ]
         } else {
             return [
-                .systemSmall,
-                .systemMedium,
-                .systemLarge
+                .systemSmall
             ]
         }
     }
@@ -123,6 +218,26 @@ struct HealthcheckWidget: Widget {
     var body: some WidgetConfiguration {
         IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
             HealthcheckWidgetEntryView(entry: entry)
+        }
+        .supportedFamilies(supportedFamilies)
+        .configurationDisplayName("Meine Healthchecks")
+        .description("Hier werden dir deine Healthchecks angezeigt.")
+    }
+}
+
+struct HealthcheckWidgetStatic: Widget {
+    let kind: String = "HealthcheckWidgetStatic"
+    
+    private var supportedFamilies: [WidgetFamily] {
+        return [
+            .systemMedium,
+            .systemLarge
+        ]
+    }
+    
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: ProviderStatic()) { entry in
+            HealthcheckWidgetStaticEntryView(entry: entry)
         }
         .supportedFamilies(supportedFamilies)
         .configurationDisplayName("Meine Healthchecks")

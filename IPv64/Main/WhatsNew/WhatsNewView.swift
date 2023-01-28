@@ -14,7 +14,8 @@ struct WhatsNewView: View {
     
     var whatsNewList = [
         WhatsNewObj(imageName: "ant.circle", title: "Fehlerbehebung", subtitle: "Es wurden in diesem Update ein Paar Fehler behoben, die zur Steigerung der Performance und der Nutzbarkeit dienen"),
-        WhatsNewObj(imageName: Biometrics.GetBiometricSymbol(), title: "Biometrische Authentifizierung", subtitle: "Es gibt jetzt im Accounttab ein Feld zum Aktivieren der biometrischen Funktion deines iPhone's/IPad's, um deine Daten vor ungewollten Blicken zu schützen (FaceID/TouchID/PIN)")
+        WhatsNewObj(imageName: "rectangle.3.group.fill", title: "Widgets konfigurierbar (beta)", subtitle: "Das kleine Widget & das Lockscreen Widget kann jetzt mit einen beliebigen Healthcheck konfiguriert werden"),
+        WhatsNewObj(imageName: "platter.2.filled.iphone", title: "Lockscreen Widget", subtitle: "Es gibt jetzt ein Lockscreen Widgets, welches konfigriert werden kann")
     ]
     
     var body: some View {

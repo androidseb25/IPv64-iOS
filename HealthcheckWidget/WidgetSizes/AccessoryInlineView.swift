@@ -17,14 +17,14 @@ struct AccessoryRectangleView : View {
     var body: some View {
         ZStack {
             VStack {
-                ForEach(entry.healthcheck.prefix(1), id: \.healthtoken) { it in
+                if (entry.configuration.healthcheckSymbol1 != nil) {
                     LazyVStack(alignment: .leading, spacing: 0) {
-                        Text(it.name)
+                        Text(entry.configuration.healthcheckSymbol1!.displayString)
                             .font(.system(.callout, design: .rounded))
                             .lineLimit(1)
                         Spacer()
                         HStack(spacing: 4) {
-                            let lastXPills = GetLastXMonitorPills(count: 12, domain: it).reversed()
+                            let lastXPills = GetLastXMonitorPills(count: 12, events: entry.configuration.healthcheckSymbol1!.events!)
                             ForEach(lastXPills, id:\.self) { color in
                                 RoundedRectangle(cornerRadius: 5)
                                     .fill(color)
@@ -36,6 +36,9 @@ struct AccessoryRectangleView : View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .id(UUID())
                     .padding(.bottom, 5)
+                } else {
+                    Text("Keine Healthchecks konfiguriert!")
+                        .font(.system(.callout, design: .rounded))
                 }
             }
             .padding(0)
@@ -43,15 +46,13 @@ struct AccessoryRectangleView : View {
         .privacySensitive()
     }
     
-    fileprivate func GetLastXMonitorPills(count: Int, domain: HealthCheck) -> [Color] {
-        
-        let lastEvents = domain.events.prefix(count)
+    fileprivate func GetLastXMonitorPills(count: Int, events: [EventSymbol]) -> [Color] {
         var colorArr: [Color] = []
-        
-        lastEvents.forEach { event in
-            colorArr.append(SetDotColor(statusId: event.status!))
+        let lastEvents = events.prefix(count)
+        print("lastEvents")
+        lastEvents.reversed().forEach { event in
+            colorArr.append(SetDotColor(statusId: Int(event.displayString) ?? 0))
         }
-        
         return colorArr
     }
     
