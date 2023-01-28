@@ -294,7 +294,9 @@ struct HealthCheck: Codable {
         
         // 4
         // Extract healthcheckDomain from coding path
-        keyInd = container.codingPath.first!.stringValue
+        if (container.codingPath.first!.stringValue != nil) {
+            keyInd = container.codingPath.first!.stringValue
+        }
     }
     
     init(name: String = "", healthstatus: Int = 0, healthtoken: String = "", add_time: String? = "", last_update_time: String? = "", alarm_time: String? = "", alarm_down: Int = 0, alarm_up: Int = 0, integration_id: Int = 0, alarm_count: Int = 0, alarm_unit: Int = 0, grace_count: Int = 0, grace_unit: Int = 0, pings_total: Int = 0, events: [HealthEvents] = []) {

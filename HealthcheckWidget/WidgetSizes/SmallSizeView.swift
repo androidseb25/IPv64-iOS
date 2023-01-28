@@ -18,39 +18,61 @@ struct SmallSizeView : View {
         ZStack {
             Color("circleBG")
             VStack {
-                ForEach(entry.healthcheck.prefix(2), id: \.healthtoken) { it in
-                    LazyVStack(alignment: .leading, spacing: 0) {
-                        Text(it.name)
-                            .font(.system(.title3, design: .rounded))
-                            .lineLimit(1)
-                        Spacer()
-                        HStack(spacing: 4) {
-                            let lastXPills = GetLastXMonitorPills(count: 12, domain: it).reversed()
-                            ForEach(lastXPills, id:\.self) { color in
-                                RoundedRectangle(cornerRadius: 5).fill(color)
-                                    .frame(width: 7, height: 25)
+                if (entry.configuration.healthcheckSymbol1 != nil || entry.configuration.healthcheckSymbol2 != nil) {
+                    if (entry.configuration.healthcheckSymbol1 != nil) {
+                        LazyVStack(alignment: .leading, spacing: 0) {
+                            Text(entry.configuration.healthcheckSymbol1!.displayString)
+                                .font(.system(.title3, design: .rounded))
+                                .lineLimit(1)
+                            Spacer()
+                            HStack(spacing: 4) {
+                                let lastXPills = GetLastXMonitorPills(count: 12, events: entry.configuration.healthcheckSymbol1!.events!)
+                                ForEach(lastXPills, id:\.self) { color in
+                                    RoundedRectangle(cornerRadius: 5).fill(color)
+                                        .frame(width: 7, height: 25)
+                                }
                             }
+                            .padding(.trailing, 5)
                         }
-                        .padding(.trailing, 5)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .id(UUID())
+                        .padding(.bottom, 5)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .id(UUID())
-                    .padding(.bottom, 5)
+                    if (entry.configuration.healthcheckSymbol2 != nil) {
+                        LazyVStack(alignment: .leading, spacing: 0) {
+                            Text(entry.configuration.healthcheckSymbol2!.displayString)
+                                .font(.system(.title3, design: .rounded))
+                                .lineLimit(1)
+                            Spacer()
+                            HStack(spacing: 4) {
+                                let lastXPills = GetLastXMonitorPills(count: 12, events: entry.configuration.healthcheckSymbol2!.events!)
+                                 ForEach(lastXPills, id:\.self) { color in
+                                 RoundedRectangle(cornerRadius: 5).fill(color)
+                                 .frame(width: 7, height: 25)
+                                 }
+                            }
+                            .padding(.trailing, 5)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .id(UUID())
+                        .padding(.bottom, 5)
+                    }
+                } else {
+                    Text("Keine Healthchecks konfiguriert!")
+                        .font(.system(.callout, design: .rounded))
                 }
             }
             .padding()
         }
     }
     
-    fileprivate func GetLastXMonitorPills(count: Int, domain: HealthCheck) -> [Color] {
-        
-        let lastEvents = domain.events.prefix(count)
+    fileprivate func GetLastXMonitorPills(count: Int, events: [EventSymbol]) -> [Color] {
         var colorArr: [Color] = []
-        
-        lastEvents.forEach { event in
-            colorArr.append(SetDotColor(statusId: event.status!))
+        let lastEvents = events.prefix(count)
+        print("lastEvents")
+        lastEvents.reversed().forEach { event in
+            colorArr.append(SetDotColor(statusId: Int(event.displayString) ?? 0))
         }
-        
         return colorArr
     }
     
