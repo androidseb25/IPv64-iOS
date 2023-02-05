@@ -20,23 +20,6 @@ struct NewDomainView: View {
     @State private var selectedDomain = 0
     @State var domainError: String = ""
     
-    var domainList = [
-        "ipv64.net",
-        "ipv64.de",
-        "any64.de",
-        "eth64.de",
-        "home64.de",
-        "iot64.de",
-        "lan64.de",
-        "nas64.de",
-        "srv64.de",
-        "tcp64.de",
-        "udp64.de",
-        "vpn64.de",
-        "wan64.de",
-        "eth64.de"
-    ]
-    
     var body: some View {
         NavigationView {
             ZStack {
@@ -47,9 +30,9 @@ struct NewDomainView: View {
                             Picker(selection: $selectedDomain, label: Text("Domain")
                                 .font(.system(.callout))
                                 .padding(.horizontal, 5)) {
-                                    ForEach(0 ..< domainList.count) {
-                                        Text(self.domainList[$0])
-                                            .tag(self.domainList[$0])
+                                    ForEach(0 ..< dynDomainList.count) {
+                                        Text(dynDomainList[$0])
+                                            .tag(dynDomainList[$0])
                                     }
                                 }
                         }
@@ -60,11 +43,10 @@ struct NewDomainView: View {
                     ToolbarItem {
                         Button(action: {
                             if (domain.count > 0) {
-                                var domainReg = domain.trimmingCharacters(in: .whitespaces) + "." + domainList[selectedDomain]
+                                var domainReg = domain.trimmingCharacters(in: .whitespaces) + "." + dynDomainList[selectedDomain]
                                 //loadDomains()
                                 Task {
                                     let res = await api.PostDomain(domain: domainReg)
-                                    print(res)
                                     if (res?.info == "success") {
                                         activeSheet = .error
                                         errorTyp = ErrorTypes.domainCreatedSuccesfully

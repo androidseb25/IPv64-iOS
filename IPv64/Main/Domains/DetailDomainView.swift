@@ -33,9 +33,6 @@ struct DetailDomainView: View {
     
     fileprivate func CheckIfIpCorrect() -> Bool {
         let firstRec = domain.records?.first(where: { $0.type == "A" })
-        print(firstRec?.content)
-        print(myIp.ip)
-        print(firstRec?.content == myIp.ip)
         if (firstRec?.content != myIp.ip) {
             return false
         }
@@ -45,10 +42,8 @@ struct DetailDomainView: View {
     fileprivate func loadAccountInfos() {
         do {
             let jsonDecoder = JSONDecoder()
-            print(accountInfosJson)
             let jsonData = accountInfosJson.data(using: .utf8)
             accountInfos = try jsonDecoder.decode(AccountInfo.self, from: jsonData!)
-            print(accountInfos)
         } catch let error {
             print(error)
         }
@@ -72,7 +67,10 @@ struct DetailDomainView: View {
                         Button(action: {
                             Task {
                                 do {
-                                    if (accountInfos.update_hash == nil) { print("updatehash == nil"); return }
+                                    if (accountInfos.update_hash == nil) {
+                                        print("updatehash == nil");
+                                        return
+                                    }
                                     let result = try await api.UpdateDomainIp(updateKey: accountInfos.update_hash!, domain: domainName)
                                     if (result == nil) {
                                         throw NetworkError.NoNetworkConnection
@@ -82,7 +80,6 @@ struct DetailDomainView: View {
                                         errorTyp = ErrorTypes.updateCoolDown
                                         return
                                     }
-                                    print("A-Record \(result)")
                                     withAnimation {
                                         deleteThisDNSRecord = true
                                         presentationMode.wrappedValue.dismiss()
@@ -93,7 +90,6 @@ struct DetailDomainView: View {
                                     errorTyp = ErrorTypes.websiteRequestError
                                 }
                             }
-                            print(accountInfos.update_hash)
                             print("Aktualisiere A-Record")
                         }) {
                             Text("A-Record aktualisieren?")
@@ -126,7 +122,7 @@ struct DetailDomainView: View {
                         Button(role: .none, action: {
                             UIPasteboard.general.string = GetAccountUpdateUrl()
                         }) {
-                            Label("Account Update URL kopieren", systemImage: "doc.on.doc")
+                            Label("Kopieren", systemImage: "doc.on.doc")
                         }
                         .tint(.blue)
                     }
@@ -141,7 +137,7 @@ struct DetailDomainView: View {
                         Button(role: .none, action: {
                             UIPasteboard.general.string = GetDomainUpdateUrl()
                         }) {
-                            Label("Domain Update URL", systemImage: "doc.on.doc")
+                            Label("Kopieren", systemImage: "doc.on.doc")
                         }
                         .tint(.blue)
                     }
@@ -275,9 +271,7 @@ struct DetailDomainView: View {
                 .onDisappear {
                     if (deleteThisDNSRecord) {
                         Task {
-                            print(deleteDNSRecord)
                             let res = await api.DeleteDNSRecord(recordId: (delDNSRecord?.record_id)!)
-                            print(res)
                             withAnimation {
                                 presentationMode.wrappedValue.dismiss()
                             }
