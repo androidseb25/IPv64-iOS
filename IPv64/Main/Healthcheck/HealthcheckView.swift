@@ -32,6 +32,7 @@ struct HealthcheckView: View {
     
     @State private var refeshUUID = UUID()
     @State private var isNewItem = false
+    @State private var isEdit = false
     
     fileprivate func loadAccountInfos() {
         Task {
@@ -80,11 +81,9 @@ struct HealthcheckView: View {
             if (isPause) {
                 let res = await api.PostPauseHealth(healthtoken: startPauseHealthToken)
                 startPauseHealthToken = ""
-                print(res)
             } else {
                 let res = await api.PostStartHealth(healthtoken: startPauseHealthToken)
                 startPauseHealthToken = ""
-                print(res)
             }
             GetHealthChecks()
         }
@@ -105,7 +104,12 @@ struct HealthcheckView: View {
                                 Text("Keine Daten gefunden!")
                             } else {
                                 ForEach((healthcheckList?.domain.sorted { $0.name.lowercased() < $1.name.lowercased() }) ?? [], id: \.name) { hcd in
-                                    NavigationLink(destination: DetailHealthcheckView(healthcheck: hcd)) {
+                                    NavigationLink(destination: DetailHealthcheckView(healthcheck: hcd, isEdit: $isEdit).onDisappear {
+                                        if (isEdit) {
+                                            isEdit = false
+                                            GetHealthChecks()
+                                        }
+                                    }) {
                                         LazyVStack {
                                             HStack {
                                                 Image(systemName: "circle.fill")
@@ -125,33 +129,33 @@ struct HealthcheckView: View {
                                                 .padding(.trailing, 5)
                                             }
                                             .id(UUID())
-                                            .swipeActions(edge: .trailing) {
-                                                Button(role: .destructive, action: {
-                                                    deleteHealth = hcd.healthtoken
-                                                    deleteHealthcheck()
-                                                }) {
-                                                    Label("Löschen", systemImage: "trash")
-                                                }
-                                                .tint(.red)
-                                                if (hcd.healthstatus != StatusTypes.pause.statusId) {
-                                                    Button(role: .destructive, action: {
-                                                        startPauseHealthToken = hcd.healthtoken
-                                                        startPauseHealthCheck(isPause: true)
-                                                    }) {
-                                                        Label("Pause", systemImage: "pause.circle")
-                                                    }
-                                                    .tint(.teal)
-                                                }
-                                                if (hcd.healthstatus == StatusTypes.pause.statusId) {
-                                                    Button(role: .destructive, action: {
-                                                        startPauseHealthToken = hcd.healthtoken
-                                                        startPauseHealthCheck(isPause: false)
-                                                    }) {
-                                                        Label("Start", systemImage: "play.circle")
-                                                    }
-                                                    .tint(.green)
-                                                }
+                                        }
+                                    }
+                                    .swipeActions(edge: .trailing) {
+                                        Button(role: .destructive, action: {
+                                            deleteHealth = hcd.healthtoken
+                                            deleteHealthcheck()
+                                        }) {
+                                            Label("Löschen", systemImage: "trash")
+                                        }
+                                        .tint(.red)
+                                        if (hcd.healthstatus != StatusTypes.pause.statusId) {
+                                            Button(role: .destructive, action: {
+                                                startPauseHealthToken = hcd.healthtoken
+                                                startPauseHealthCheck(isPause: true)
+                                            }) {
+                                                Label("Pause", systemImage: "pause.circle")
                                             }
+                                            .tint(.teal)
+                                        }
+                                        if (hcd.healthstatus == StatusTypes.pause.statusId) {
+                                            Button(role: .destructive, action: {
+                                                startPauseHealthToken = hcd.healthtoken
+                                                startPauseHealthCheck(isPause: false)
+                                            }) {
+                                                Label("Start", systemImage: "play.circle")
+                                            }
+                                            .tint(.green)
                                         }
                                     }
                                 }
@@ -187,6 +191,7 @@ struct HealthcheckView: View {
             .sheet(item: $activeSheet) { item in
                 showActiveSheet(item: item)
             }
+            
             if api.isLoading {
                 VStack() {
                     Spinner(isAnimating: true, style: .large, color: .white)
@@ -218,9 +223,7 @@ struct HealthcheckView: View {
                     if (deleteThisHealth) {
                         Task {
                             refeshUUID = UUID()
-                            print(deleteHealth)
                             let res = await api.DeleteHealth(health: deleteHealth)
-                            print(res)
                             GetHealthChecks()
                         }
                     } else {
@@ -238,47 +241,43 @@ struct HealthcheckView: View {
     
     fileprivate func GetHealthChecks() {
         api.isLoading = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            Task {
-                activeCount = 0
-                warningCount = 0
-                alarmCount = 0
-                pausedCount = 0
-                healthcheckList = await api.GetHealthchecks()
-                print(healthcheckList)
-                let status = healthcheckList?.status
-                if (status == nil) {
-                    throw NetworkError.NoNetworkConnection
-                }
-                if (status!.contains("429") && healthcheckList?.domain.count == 0) {
-                    activeSheet = .error
-                    errorTyp = ErrorTypes.tooManyRequests
-                } else if (status!.contains("401")) {
-                    activeSheet = .error
-                    errorTyp = ErrorTypes.unauthorized
-                } else {
-                    activeSheet = nil
-                    errorTyp = nil
-                    print(healthcheckList)
-                    if (healthcheckList != nil) {
-                        let jsonEncoder = JSONEncoder()
-                        let jsonData = try jsonEncoder.encode(healthcheckList)
-                        let json = String(data: jsonData, encoding: String.Encoding.utf8)
-                        healthCheckList = json!
-                        Array((healthcheckList?.domain.sorted { $0.name.lowercased() < $1.name.lowercased() })!).forEach { hcd in
-                            if (hcd.healthstatus == StatusTypes.active.statusId) {
-                                activeCount += 1
-                            } else if (hcd.healthstatus == StatusTypes.warning.statusId) {
-                                warningCount += 1
-                            } else if (hcd.healthstatus == StatusTypes.alarm.statusId) {
-                                alarmCount += 1
-                            } else if (hcd.healthstatus == StatusTypes.pause.statusId) {
-                                pausedCount += 1
-                            }
+        Task {
+            activeCount = 0
+            warningCount = 0
+            alarmCount = 0
+            pausedCount = 0
+            healthcheckList = await api.GetHealthchecks()
+            let status = healthcheckList?.status
+            if (status == nil) {
+                throw NetworkError.NoNetworkConnection
+            }
+            if (status!.contains("429") && healthcheckList?.domain.count == 0) {
+                activeSheet = .error
+                errorTyp = ErrorTypes.tooManyRequests
+            } else if (status!.contains("401")) {
+                activeSheet = .error
+                errorTyp = ErrorTypes.unauthorized
+            } else {
+                activeSheet = nil
+                errorTyp = nil
+                if (healthcheckList != nil) {
+                    let jsonEncoder = JSONEncoder()
+                    let jsonData = try jsonEncoder.encode(healthcheckList)
+                    let json = String(data: jsonData, encoding: String.Encoding.utf8)
+                    healthCheckList = json!
+                    Array((healthcheckList?.domain.sorted { $0.name.lowercased() < $1.name.lowercased() })!).forEach { hcd in
+                        if (hcd.healthstatus == StatusTypes.active.statusId) {
+                            activeCount += 1
+                        } else if (hcd.healthstatus == StatusTypes.warning.statusId) {
+                            warningCount += 1
+                        } else if (hcd.healthstatus == StatusTypes.alarm.statusId) {
+                            alarmCount += 1
+                        } else if (hcd.healthstatus == StatusTypes.pause.statusId) {
+                            pausedCount += 1
                         }
                     }
-                    GetIntegrations()
                 }
+                GetIntegrations()
             }
         }
     }
@@ -299,7 +298,6 @@ struct HealthcheckView: View {
             } else {
                 activeSheet = nil
                 errorTyp = nil
-                print(integrationList)
                 if (integrationList != nil) {
                     let jsonEncoder = JSONEncoder()
                     let jsonData = try jsonEncoder.encode(integrationList?.integration)
