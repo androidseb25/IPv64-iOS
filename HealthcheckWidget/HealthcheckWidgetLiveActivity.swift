@@ -19,6 +19,7 @@ struct HealthcheckWidgetAttributes: ActivityAttributes {
     var name: String
 }
 
+@available(iOSApplicationExtension 16.1, *)
 struct HealthcheckWidgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: HealthcheckWidgetAttributes.self) { context in
@@ -56,6 +57,7 @@ struct HealthcheckWidgetLiveActivity: Widget {
     }
 }
 
+@available(iOSApplicationExtension 16.2, *)
 struct HealthcheckWidgetLiveActivity_Previews: PreviewProvider {
     static let attributes = HealthcheckWidgetAttributes(name: "Me")
     static let contentState = HealthcheckWidgetAttributes.ContentState(value: 3)

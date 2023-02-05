@@ -13,6 +13,7 @@ struct DetailHealthcheckView: View {
     @AppStorage("IntegrationList") var integrationListS: String = ""
     
     @State var healthcheck: HealthCheck?
+    @Binding var isEdit: Bool
     
     @ObservedObject var api: NetworkServices = NetworkServices()
     @State var activeSheet: ActiveSheet? = nil
@@ -24,7 +25,7 @@ struct DetailHealthcheckView: View {
     
     fileprivate func GetIntegrationName() -> String {
         do {
-            if (healthcheck!.integration_id == 0) {
+            if (healthcheck!.integration_id == "0") {
                 return "keine"
             }
             
@@ -34,7 +35,9 @@ struct DetailHealthcheckView: View {
             let integrationList = try jsonDecoder.decode([Integration].self, from: jsonData!)
             var integrationName = "Unbekannt"
             integrationList.forEach { inte in
-                if (inte.integration_id == healthcheck!.integration_id) {
+                print("\(inte.integration_id)")
+                print(healthcheck!.integration_id)
+                if ("\(inte.integration_id)" == healthcheck!.integration_id) {
                     integrationName = inte.integration_name!
                 }
             }
@@ -64,8 +67,6 @@ struct DetailHealthcheckView: View {
     }
     
     fileprivate func GetLastXMonitorPills(count: Int, domain: HealthCheck) -> [Color] {
-        
-        print("COUNT: \(domain.events.prefix(count).count) PillCount: \(count)")
         let lastEvents = domain.events.prefix(count)
         var colorArr: [Color] = []
         lastEvents.forEach { event in
@@ -76,8 +77,6 @@ struct DetailHealthcheckView: View {
     }
     
     fileprivate func GetLastXMonitor(count: Int, domain: HealthCheck) -> [HealthEvents] {
-        
-        print("COUNT: \(domain.events.prefix(count).count) HealthCount: \(count)")
         let lastEvents = domain.events.prefix(count)
         var healthArr: [HealthEvents] = []
         lastEvents.forEach { event in
@@ -177,7 +176,7 @@ struct DetailHealthcheckView: View {
                         Button(role: .none, action: {
                             UIPasteboard.general.string = GetHealthUpdateUrl()
                         }) {
-                            Label("Health Update URL", systemImage: "doc.on.doc")
+                            Label("Kopieren", systemImage: "doc.on.doc")
                         }
                         .tint(.blue)
                     }
@@ -242,6 +241,7 @@ struct DetailHealthcheckView: View {
             EditHealthcheckView(healthcheck: healthcheck!, updatedItem: $updatedItem)
                 .onDisappear {
                     if (updatedItem) {
+                        isEdit = true
                         updatedItem = false
                         withAnimation {
                             presentationMode.wrappedValue.dismiss()
@@ -288,12 +288,12 @@ struct DetailHealthcheckView_Previews: PreviewProvider {
     static var previews: some View {
         let hcd = DummyData.Healthcheck
         NavigationView {
-            DetailHealthcheckView(healthcheck: hcd)
+            DetailHealthcheckView(healthcheck: hcd, isEdit: .constant(false))
         }
         .preferredColorScheme(.light)
         .previewDisplayName("Light Mode")
         NavigationView {
-            DetailHealthcheckView(healthcheck: hcd)
+            DetailHealthcheckView(healthcheck: hcd, isEdit: .constant(false))
         }
         .preferredColorScheme(.dark)
         .previewDisplayName("Dark Mode")

@@ -20,6 +20,7 @@ struct ContentView: View {
     @State var myIP: MyIP = MyIP(ip: "")
     @State var myIPV6: MyIP = MyIP(ip: "")
     @State var listOfDomains: DomainResult = DomainResult()
+    @State var listDomains: [DomainItems] = []
     @State var activeSheet: ActiveSheet? = nil
     @State var errorTyp: ErrorTyp? = .none
     @State var showSheet = false
@@ -50,10 +51,10 @@ struct ContentView: View {
     
     fileprivate func loadDomains(isRefresh: Bool) {
         do {
-            if (listOfDomainsString.isEmpty || isRefresh) {
+            api.isLoading = true
+            if (isRefresh || listOfDomainsString.isEmpty) {
                 Task {
                     let response = await api.GetDomains()
-                    print(response)
                     let status = response?.status
                     if (status == nil) {
                         throw NetworkError.NoNetworkConnection
@@ -74,13 +75,14 @@ struct ContentView: View {
                     let json = String(data: jsonData, encoding: String.Encoding.utf8)
                     listOfDomainsString = json!
                     //loadAccountInfos()
-                    print(listOfDomains)
+                    prepareToNormalList()
                 }
             } else {
                 let jsonDecoder = JSONDecoder()
-                print(listOfDomainsString)
                 let jsonData = listOfDomainsString.data(using: .utf8)
                 listOfDomains = try jsonDecoder.decode(DomainResult.self, from: jsonData!)
+                
+                prepareToNormalList()
             }
         } catch let error {
             print(error)
@@ -90,7 +92,44 @@ struct ContentView: View {
         loadIpAddress()
     }
     
+    fileprivate func prepareToNormalList() {
+        listDomains = []
+        listOfDomains.subdomains?.forEach { domain in
+            var isDomaindAdded = false
+            dynDomainList.forEach { dynDomain in
+                if (domain.key.contains(dynDomain)) {
+                    var domInd = listDomains.firstIndex(where: { $0.name == dynDomain })
+                    if (domInd == nil) {
+                        var domval: Domain = domain.value
+                        domval.name = domain.key
+                        var dom = DomainItems(name: dynDomain, list: [domval])
+                        listDomains.append(dom)
+                    } else {
+                        var domval: Domain = domain.value
+                        domval.name = domain.key
+                        listDomains[domInd!].list?.append(domval)
+                    }
+                    isDomaindAdded = true
+                }
+            }
+            if (!isDomaindAdded) {
+                var domInd = listDomains.firstIndex(where: { $0.name == "Eigene Domains" })
+                if (domInd == nil) {
+                    var domval: Domain = domain.value
+                    domval.name = domain.key
+                    var dom = DomainItems(name: "Eigene Domains", list: [domval])
+                    listDomains.append(dom)
+                } else {
+                    var domval: Domain = domain.value
+                    domval.name = domain.key
+                    listDomains[domInd!].list?.append(domval)
+                }
+            }
+        }
+    }
+    
     fileprivate func loadIpAddress() {
+        api.isLoading = true
         Task {
             myIP = await api.GetMyIP() ?? MyIP(ip: "0.0.0.0")
             myIPV6 = await api.GetMyIPV6() ?? MyIP(ip: "0.0.0.0")
@@ -99,9 +138,6 @@ struct ContentView: View {
     
     fileprivate func SetDotColor(domain: Domain) -> Color {
         let firstRec = domain.records?.first(where: { $0.type == "A" })
-        print(firstRec?.content)
-        print(myIP.ip)
-        print(firstRec?.content == myIP.ip)
         if (firstRec?.content == myIP.ip) {
             return .green
         }
@@ -115,94 +151,104 @@ struct ContentView: View {
         print(errorTyp)
     }
     
-    fileprivate func extractedFunc() -> some View {
-        return NavigationView {
-            VStack {
-                Form {
-                    Section("Domainen") {
-                        if (listOfDomains.subdomains == nil) {
-                            Text("Keine Daten gefunden!")
-                        } else {
-                            ForEach(Array(listOfDomains.subdomains!.keys.sorted { $0.lowercased() < $1.lowercased() }), id: \.self) { domain in
-                                let domainOb = listOfDomains.subdomains![domain]
-                                NavigationLink(destination: DetailDomainView(domainName: domain, domain: domainOb!, myIp: myIP, deleteThisDNSRecord: $deleteThisDNSRecord ).onDisappear {
-                                    if (deleteThisDNSRecord) {
-                                        deleteThisDNSRecord = false
-                                        presentationMode.wrappedValue.dismiss()
-                                        loadDomains(isRefresh: true)
-                                    }
-                                }) {
-                                    HStack(alignment: .center) {
-                                        Image(systemName: "circle.fill")
-                                            .resizable()
-                                            .scaledToFill()
-                                            .foregroundColor(SetDotColor(domain: domainOb!))
-                                            .frame(width: 8, height: 8)
-                                        Text(domain)
-                                    }
-                                    .frame(alignment: .center)
-                                    .swipeActions(edge: .trailing) {
-                                        Button(role: .destructive, action: {
-                                            delDomain = domain
-                                            deleteDomain()
-                                        }) {
-                                            Label("Löschen", systemImage: "trash")
+    fileprivate func DomainViews() -> some View {
+        return VStack {
+            ZStack {
+                NavigationView {
+                    VStack {
+                        Form {
+                            if (listOfDomains.subdomains == nil) {
+                                Section("Domainen") {
+                                    Text("Keine Daten gefunden!")
+                                }
+                            } else {
+                                let sortedList = listDomains.sorted { $0.name!.lowercased() < $1.name!.lowercased() }
+                                ForEach(sortedList, id: \.id) { domain in
+                                    
+                                    let sorted = Array(domain.list!.sorted { $0.name.lowercased() < $1.name.lowercased() })
+                                    Section(domain.name!) {
+                                        ForEach(sorted, id: \.id) { dom in
+                                            NavigationLink(destination: DetailDomainView(domainName: dom.name, domain: dom, myIp: myIP, deleteThisDNSRecord: $deleteThisDNSRecord ).onDisappear {
+                                                if (deleteThisDNSRecord) {
+                                                    deleteThisDNSRecord = false
+                                                    presentationMode.wrappedValue.dismiss()
+                                                    loadDomains(isRefresh: true)
+                                                }
+                                            }) {
+                                                HStack(alignment: .center) {
+                                                    Image(systemName: "circle.fill")
+                                                        .resizable()
+                                                        .scaledToFill()
+                                                        .foregroundColor(SetDotColor(domain: dom))
+                                                        .frame(width: 8, height: 8)
+                                                    Text(dom.name)
+                                                }
+                                                .frame(alignment: .center)
+                                            }
+                                            .swipeActions(edge: .trailing) {
+                                                Button(role: .destructive, action: {
+                                                    delDomain = dom.name
+                                                    deleteDomain()
+                                                }) {
+                                                    Label("Löschen", systemImage: "trash")
+                                                }
+                                            }
+                                            .tint(.red)
                                         }
                                     }
-                                    .tint(.red)
                                 }
                             }
                         }
                     }
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .refreshable {
-                loadDomains(isRefresh: true)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        withAnimation {
-                            activeSheet = .add
-                        }
-                    }) {
-                        Image(systemName: "plus.circle")
-                            .symbolRenderingMode(.hierarchical)
-                            .foregroundColor(Color("primaryText"))
+                    .frame(maxWidth: .infinity)
+                    .refreshable {
+                        loadDomains(isRefresh: true)
                     }
-                    .foregroundColor(.black)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                withAnimation {
+                                    activeSheet = .add
+                                }
+                            }) {
+                                Image(systemName: "plus.circle")
+                                    .symbolRenderingMode(.hierarchical)
+                                    .foregroundColor(Color("primaryText"))
+                            }
+                            .foregroundColor(.black)
+                        }
+                    }
+                    .navigationTitle("Domains")
+                }
+                .introspectNavigationController { navigationController in
+                    navigationController.splitViewController?.preferredPrimaryColumnWidthFraction = 1
+                    navigationController.splitViewController?.maximumPrimaryColumnWidth = 400
+                }
+                .accentColor(Color("AccentColor"))
+                if api.isLoading {
+                    VStack() {
+                        Spinner(isAnimating: true, style: .large, color: .white)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.black.opacity(0.3).ignoresSafeArea())
                 }
             }
-            .navigationTitle("Domains")
         }
-        .introspectNavigationController { navigationController in
-            navigationController.splitViewController?.preferredPrimaryColumnWidthFraction = 1
-            navigationController.splitViewController?.maximumPrimaryColumnWidth = 400
-        }
-        .accentColor(Color("AccentColor"))
     }
     
     var body: some View {
-        ZStack {
-            extractedFunc()
-            if api.isLoading {
-                VStack() {
-                    Spinner(isAnimating: true, style: .large, color: .white)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.black.opacity(0.3).ignoresSafeArea())
+        VStack {
+            DomainViews()
+            .sheet(item: $activeSheet) { item in
+                showActiveSheet(item: item)
             }
-        }
-        .sheet(item: $activeSheet) { item in
-            showActiveSheet(item: item)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onAppear {
-            loadDomains(isRefresh: false)
-        }
-        .fullScreenCover(isPresented: $showLoginView) {
-            LoginView()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .onAppear {
+                loadDomains(isRefresh: false)
+            }
+            .fullScreenCover(isPresented: $showLoginView) {
+                LoginView()
+            }
         }
     }
     
@@ -214,6 +260,7 @@ struct ContentView: View {
                 .onDisappear {
                     if (isNewItem) {
                         isNewItem = false
+                        listOfDomainsString = ""
                         loadDomains(isRefresh: true)
                     }
                 }
@@ -225,9 +272,8 @@ struct ContentView: View {
                 .onDisappear {
                     if (deleteThisDomain) {
                         Task {
-                            print(delDomain)
                             let res = await api.DeleteDomain(domain: delDomain)
-                            print(res)
+                            listOfDomainsString = ""
                             loadDomains(isRefresh: true)
                         }
                     } else {

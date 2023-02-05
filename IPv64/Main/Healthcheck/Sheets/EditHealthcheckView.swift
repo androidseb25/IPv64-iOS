@@ -22,6 +22,7 @@ struct EditHealthcheckView: View {
     @State var graceCount = 0.0
     @State var notifyDown = false
     @State var notifyUp = false
+    @State var integrationId = 0
     
     @State var integrationList: [Integration] = []
     
@@ -71,7 +72,7 @@ struct EditHealthcheckView: View {
                         }
                         Section("Benachrichtigung") {
                             let intList = integrationList
-                            Picker(selection: $healthcheck.integration_id, label: Text("Benachrichtungsmethode")) {
+                            Picker(selection: $integrationId, label: Text("Benachrichtungsmethode")) {
                                 ForEach(0 ..< intList.count) {
                                     Text(intList[$0].integration_name!)
                                         .tag(intList[$0].integration_id)
@@ -99,8 +100,7 @@ struct EditHealthcheckView: View {
                                     healthcheck.grace_count = Int(graceCount)
                                     healthcheck.alarm_down = notifyDown ? 1 : 0
                                     healthcheck.alarm_up = notifyUp ? 1 : 0
-                                    let res = await api.PostEditHealthcheck(healthcheck: healthcheck)
-                                    print(res)
+                                    let res = await api.PostEditHealthcheck(healthcheck: healthcheck, integrationId: integrationId)
                                     withAnimation {
                                         if (res?.info == "success") {
                                             activeSheet = .error
@@ -131,12 +131,12 @@ struct EditHealthcheckView: View {
                 notifyDown = healthcheck.alarm_down == 1
                 do {
                     let jsonDecoder = JSONDecoder()
-                    print(integrationListS)
                     let jsonData = integrationListS.data(using: .utf8)
                     integrationList = try jsonDecoder.decode([Integration].self, from: jsonData!)
                 } catch {
                     print("ERROR \(error.localizedDescription)")
                 }
+                integrationId = integrationList.first(where: { "\($0.integration_id)" == healthcheck.integration_id })?.integration_id ?? 0
             }
             .tint(Color("ip64_color"))
             if api.isLoading {

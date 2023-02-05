@@ -16,6 +16,7 @@ struct AccountView: View {
     @State var accountInfos: AccountInfo = AccountInfo()
     @State var showDynHash = false
     @State var showApiKey = false
+    @State var showDevToken = false
     
     var body: some View {
         ZStack {
@@ -98,7 +99,7 @@ struct AccountView: View {
                             HStack {
                                 Text("API Limit / 24h")
                                 Spacer()
-                                Text("\(apiUpdates ?? "0") / \(apiLimit ?? "0")")
+                                Text("\(apiUpdates ?? "0") / \((apiLimit == "0" ? "∞" : apiLimit) ?? "0")")
                                     .foregroundColor(GetColor(cur: accountInfos.api_updates ?? 0, max: accountInfos.account_class?.api_limit ?? 0))
                             }
                             let sms = accountInfos.sms_count ?? 0
@@ -133,7 +134,7 @@ struct AccountView: View {
                                 Button(role: .none, action: {
                                     UIPasteboard.general.string = accountInfos.update_hash ?? "HASH"
                                 }) {
-                                    Label("DynDNS Updatehash kopieren", systemImage: "doc.on.doc")
+                                    Label("Kopieren", systemImage: "doc.on.doc")
                                 }
                                 .tint(.blue)
                             }
@@ -160,7 +161,7 @@ struct AccountView: View {
                                 Button(role: .none, action: {
                                     UIPasteboard.general.string = accountInfos.api_key ?? "API KEY"
                                 }) {
-                                    Label("API Key kopieren", systemImage: "doc.on.doc")
+                                    Label("Kopieren", systemImage: "doc.on.doc")
                                 }
                                 .tint(.blue)
                             }
@@ -190,7 +191,6 @@ struct AccountView: View {
     fileprivate func GetAccountInfos() {
         Task {
             accountInfos = await api.GetAccountStatus() ?? AccountInfo()
-            print(accountInfos)
             let status = accountInfos.status
             if (status == nil) {
                 throw NetworkError.NoNetworkConnection

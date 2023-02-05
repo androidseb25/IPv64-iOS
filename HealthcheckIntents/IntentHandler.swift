@@ -26,7 +26,6 @@ class IntentHandler: INExtension, ConfigurationIntentHandling {
         shrinkedEventList.forEach { health in
             var healthStatus = HealthcheckSymbol(identifier: health.healthtoken, display: health.name)
             healthStatus.events = []
-            print(health.events)
             health.events.forEach { e in
                 let event = EventSymbol(identifier: UUID().uuidString, display: e.status!.formatted())
                 healthStatus.events?.append(event)
@@ -37,7 +36,6 @@ class IntentHandler: INExtension, ConfigurationIntentHandling {
         // Create a collection with the array of characters.
         let collection = INObjectCollection(items: symbols)
         print("Collection")
-        print(collection)
         // Call the completion handler, passing the collection.
         return collection
     }
@@ -58,7 +56,6 @@ class IntentHandler: INExtension, ConfigurationIntentHandling {
         shrinkedEventList.forEach { health in
             var healthStatus = HealthcheckSymbol(identifier: health.healthtoken, display: health.name)
             healthStatus.events = []
-            print(health.events)
             health.events.forEach { e in
                 let event = EventSymbol(identifier: UUID().uuidString, display: e.status!.formatted())
                 healthStatus.events?.append(event)
@@ -69,7 +66,6 @@ class IntentHandler: INExtension, ConfigurationIntentHandling {
         // Create a collection with the array of characters.
         let collection = INObjectCollection(items: symbols)
         print("Collection")
-        print(collection)
         // Call the completion handler, passing the collection.
         return collection
     }

@@ -14,6 +14,14 @@
 		9A0035042931062B0065E1F3 /* LogItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0035032931062B0065E1F3 /* LogItemView.swift */; };
 		9A003506293129930065E1F3 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A003505293129930065E1F3 /* AccountView.swift */; };
 		9A08D1D82979AB47002CF0E8 /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 9A08D1D72979AB47002CF0E8 /* Introspect */; };
+		9A10DBF8298C206D00285C0A /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A10DBF7298C206D00285C0A /* NotificationService.swift */; };
+		9A10DBFC298C206D00285C0A /* NotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9A10DBF5298C206D00285C0A /* NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9A10DC00298C285800285C0A /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A10DBF7298C206D00285C0A /* NotificationService.swift */; };
+		9A10DC01298C29C600285C0A /* SetupPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA52918577D009B506D /* SetupPrefs.swift */; };
+		9A154B572989B7600021DD2E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 9A154B562989B7600021DD2E /* FirebaseAnalytics */; };
+		9A154B592989B7600021DD2E /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 9A154B582989B7600021DD2E /* FirebaseCrashlytics */; };
+		9A154B5B2989B7600021DD2E /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 9A154B5A2989B7600021DD2E /* FirebaseMessaging */; };
+		9A154B5D2989B7EA0021DD2E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9A154B5C2989B7EA0021DD2E /* GoogleService-Info.plist */; };
 		9A3313FC29844E4D009E47F5 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A3313FB29844E4D009E47F5 /* Intents.framework */; };
 		9A3313FF29844E4D009E47F5 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3313FE29844E4D009E47F5 /* IntentHandler.swift */; };
 		9A33140329844E4D009E47F5 /* HealthcheckIntents.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9A3313FA29844E4D009E47F5 /* HealthcheckIntents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -70,6 +78,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		9A10DBFA298C206D00285C0A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9AACEB80291851E1009B506D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9A10DBF4298C206D00285C0A;
+			remoteInfo = NotificationService;
+		};
 		9A33140129844E4D009E47F5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9AACEB80291851E1009B506D /* Project object */;
@@ -94,6 +109,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				9ABB37E1297B26A700FC9B74 /* HealthcheckWidgetExtension.appex in Embed Foundation Extensions */,
+				9A10DBFC298C206D00285C0A /* NotificationService.appex in Embed Foundation Extensions */,
 				9A33140329844E4D009E47F5 /* HealthcheckIntents.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
@@ -108,6 +124,11 @@
 		9A003501293101350065E1F3 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		9A0035032931062B0065E1F3 /* LogItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItemView.swift; sourceTree = "<group>"; };
 		9A003505293129930065E1F3 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
+		9A10DBF5298C206D00285C0A /* NotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A10DBF7298C206D00285C0A /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		9A10DBF9298C206D00285C0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9A10DC02298C2B5E00285C0A /* NotificationService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotificationService.entitlements; sourceTree = "<group>"; };
+		9A154B5C2989B7EA0021DD2E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9A3313FA29844E4D009E47F5 /* HealthcheckIntents.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HealthcheckIntents.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A3313FB29844E4D009E47F5 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		9A3313FE29844E4D009E47F5 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
@@ -159,6 +180,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9A10DBF2298C206D00285C0A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9A3313F729844E4D009E47F5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -171,6 +199,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A154B5B2989B7600021DD2E /* FirebaseMessaging in Frameworks */,
+				9A154B592989B7600021DD2E /* FirebaseCrashlytics in Frameworks */,
+				9A154B572989B7600021DD2E /* FirebaseAnalytics in Frameworks */,
 				9A08D1D82979AB47002CF0E8 /* Introspect in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -187,6 +218,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9A10DBF6298C206D00285C0A /* NotificationService */ = {
+			isa = PBXGroup;
+			children = (
+				9A10DC02298C2B5E00285C0A /* NotificationService.entitlements */,
+				9A10DBF7298C206D00285C0A /* NotificationService.swift */,
+				9A10DBF9298C206D00285C0A /* Info.plist */,
+			);
+			path = NotificationService;
+			sourceTree = "<group>";
+		};
 		9A3313FD29844E4D009E47F5 /* HealthcheckIntents */ = {
 			isa = PBXGroup;
 			children = (
@@ -296,6 +337,7 @@
 				9AACEB8A291851E1009B506D /* IPv64 */,
 				9ABB37D2297B26A600FC9B74 /* HealthcheckWidget */,
 				9A3313FD29844E4D009E47F5 /* HealthcheckIntents */,
+				9A10DBF6298C206D00285C0A /* NotificationService */,
 				9ABB37CD297B26A600FC9B74 /* Frameworks */,
 				9AACEB89291851E1009B506D /* Products */,
 			);
@@ -307,6 +349,7 @@
 				9AACEB88291851E1009B506D /* IPv64.app */,
 				9ABB37CC297B26A600FC9B74 /* HealthcheckWidgetExtension.appex */,
 				9A3313FA29844E4D009E47F5 /* HealthcheckIntents.appex */,
+				9A10DBF5298C206D00285C0A /* NotificationService.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -314,6 +357,7 @@
 		9AACEB8A291851E1009B506D /* IPv64 */ = {
 			isa = PBXGroup;
 			children = (
+				9A154B5C2989B7EA0021DD2E /* GoogleService-Info.plist */,
 				9ABB37F5297B659200FC9B74 /* IPv64.entitlements */,
 				9AB155C329747F5C0052F21E /* Info.plist */,
 				9A7CDCE2296DEBF700237D5B /* Models&Helpers */,
@@ -402,6 +446,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		9A10DBF4298C206D00285C0A /* NotificationService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9A10DBFD298C206D00285C0A /* Build configuration list for PBXNativeTarget "NotificationService" */;
+			buildPhases = (
+				9A10DBF1298C206D00285C0A /* Sources */,
+				9A10DBF2298C206D00285C0A /* Frameworks */,
+				9A10DBF3298C206D00285C0A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NotificationService;
+			productName = NotificationService;
+			productReference = 9A10DBF5298C206D00285C0A /* NotificationService.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		9A3313F929844E4D009E47F5 /* HealthcheckIntents */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9A33140629844E4D009E47F5 /* Build configuration list for PBXNativeTarget "HealthcheckIntents" */;
@@ -433,10 +494,14 @@
 			dependencies = (
 				9ABB37E0297B26A700FC9B74 /* PBXTargetDependency */,
 				9A33140229844E4D009E47F5 /* PBXTargetDependency */,
+				9A10DBFB298C206D00285C0A /* PBXTargetDependency */,
 			);
 			name = IPv64;
 			packageProductDependencies = (
 				9A08D1D72979AB47002CF0E8 /* Introspect */,
+				9A154B562989B7600021DD2E /* FirebaseAnalytics */,
+				9A154B582989B7600021DD2E /* FirebaseCrashlytics */,
+				9A154B5A2989B7600021DD2E /* FirebaseMessaging */,
 			);
 			productName = IPv64;
 			productReference = 9AACEB88291851E1009B506D /* IPv64.app */;
@@ -469,6 +534,9 @@
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1410;
 				TargetAttributes = {
+					9A10DBF4298C206D00285C0A = {
+						CreatedOnToolsVersion = 14.2;
+					};
 					9A3313F929844E4D009E47F5 = {
 						CreatedOnToolsVersion = 14.2;
 					};
@@ -482,15 +550,16 @@
 			};
 			buildConfigurationList = 9AACEB83291851E1009B506D /* Build configuration list for PBXProject "IPv64" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = de;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
+				de,
 				Base,
 			);
 			mainGroup = 9AACEB7F291851E1009B506D;
 			packageReferences = (
 				9A08D1D62979AB47002CF0E8 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
+				9A154B552989B7600021DD2E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 9AACEB89291851E1009B506D /* Products */;
 			projectDirPath = "";
@@ -499,11 +568,19 @@
 				9AACEB87291851E1009B506D /* IPv64 */,
 				9ABB37CB297B26A600FC9B74 /* HealthcheckWidgetExtension */,
 				9A3313F929844E4D009E47F5 /* HealthcheckIntents */,
+				9A10DBF4298C206D00285C0A /* NotificationService */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		9A10DBF3298C206D00285C0A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9A3313F829844E4D009E47F5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -517,6 +594,7 @@
 			files = (
 				9AACEB93291851E2009B506D /* Preview Assets.xcassets in Resources */,
 				9AACEB90291851E2009B506D /* Assets.xcassets in Resources */,
+				9A154B5D2989B7EA0021DD2E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -532,6 +610,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9A10DBF1298C206D00285C0A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A10DC01298C29C600285C0A /* SetupPrefs.swift in Sources */,
+				9A10DBF8298C206D00285C0A /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9A3313F629844E4D009E47F5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -549,6 +636,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AACEBA1291853C9009B506D /* NetworkServices.swift in Sources */,
+				9A10DC00298C285800285C0A /* NotificationService.swift in Sources */,
 				9A8D5C0529199141006B8A74 /* HelpView.swift in Sources */,
 				9A0034FE2930F9460065E1F3 /* ProfilView.swift in Sources */,
 				9ABB37F8297C6BDB00FC9B74 /* EditHealthcheckView.swift in Sources */,
@@ -606,6 +694,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		9A10DBFB298C206D00285C0A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9A10DBF4298C206D00285C0A /* NotificationService */;
+			targetProxy = 9A10DBFA298C206D00285C0A /* PBXContainerItemProxy */;
+		};
 		9A33140229844E4D009E47F5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9A3313F929844E4D009E47F5 /* HealthcheckIntents */;
@@ -619,6 +712,60 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		9A10DBFE298C206D00285C0A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = NotificationService/NotificationService.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.NotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9A10DBFF298C206D00285C0A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = NotificationService/NotificationService.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.NotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		9A33140429844E4D009E47F5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -630,7 +777,7 @@
 				INFOPLIST_FILE = HealthcheckIntents/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = HealthcheckIntents;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -657,7 +804,7 @@
 				INFOPLIST_FILE = HealthcheckIntents/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = HealthcheckIntents;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -795,7 +942,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -816,7 +963,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.6;
+				MARKETING_VERSION = 1.1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -833,7 +980,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -854,7 +1001,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.6;
+				MARKETING_VERSION = 1.1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -876,7 +1023,7 @@
 				INFOPLIST_FILE = HealthcheckWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = HealthcheckWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -905,7 +1052,7 @@
 				INFOPLIST_FILE = HealthcheckWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = HealthcheckWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -924,6 +1071,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9A10DBFD298C206D00285C0A /* Build configuration list for PBXNativeTarget "NotificationService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9A10DBFE298C206D00285C0A /* Debug */,
+				9A10DBFF298C206D00285C0A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9A33140629844E4D009E47F5 /* Build configuration list for PBXNativeTarget "HealthcheckIntents" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -971,6 +1127,14 @@
 				minimumVersion = 0.1.4;
 			};
 		};
+		9A154B552989B7600021DD2E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -978,6 +1142,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9A08D1D62979AB47002CF0E8 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
 			productName = Introspect;
+		};
+		9A154B562989B7600021DD2E /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A154B552989B7600021DD2E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		9A154B582989B7600021DD2E /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A154B552989B7600021DD2E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		9A154B5A2989B7600021DD2E /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A154B552989B7600021DD2E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 

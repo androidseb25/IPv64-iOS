@@ -40,7 +40,7 @@ class NetworkServices: ObservableObject {
             JsonEncoder.outputFormatting = .prettyPrinted
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(DomainResult.self, from: data)
             isLoading = false
             return result
@@ -72,7 +72,7 @@ class NetworkServices: ObservableObject {
             JsonEncoder.outputFormatting = .prettyPrinted
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(Logs.self, from: data)
             isLoading = false
             return result
@@ -104,7 +104,7 @@ class NetworkServices: ObservableObject {
             JsonEncoder.outputFormatting = .prettyPrinted
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(AccountInfo.self, from: data)
             isLoading = false
             return result
@@ -135,7 +135,7 @@ class NetworkServices: ObservableObject {
             JsonEncoder.outputFormatting = .prettyPrinted
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(MyIP.self, from: data)
             isLoading = false
             return result
@@ -166,7 +166,7 @@ class NetworkServices: ObservableObject {
             JsonEncoder.outputFormatting = .prettyPrinted
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(MyIP.self, from: data)
             isLoading = false
             return result
@@ -200,7 +200,7 @@ class NetworkServices: ObservableObject {
             request.httpBody = "add_domain=\(domain)".data(using: .utf8)
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
             isLoading = false
             return result
@@ -234,7 +234,7 @@ class NetworkServices: ObservableObject {
             request.httpBody = "del_domain=\(domain)".data(using: .utf8)
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
             isLoading = false
             return result
@@ -268,7 +268,7 @@ class NetworkServices: ObservableObject {
             request.httpBody = "add_record=\(domain)&praefix=\(praefix)&type=\(typ)&content=\(content)".data(using: .utf8)
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
             isLoading = false
             return result
@@ -301,7 +301,7 @@ class NetworkServices: ObservableObject {
             request.httpBody = "del_record=\(recordId)".data(using: .utf8)
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
             isLoading = false
             return result
@@ -334,7 +334,7 @@ class NetworkServices: ObservableObject {
             JsonEncoder.outputFormatting = .prettyPrinted
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
             isLoading = false
             return result
@@ -367,7 +367,7 @@ class NetworkServices: ObservableObject {
             JsonEncoder.outputFormatting = .prettyPrinted
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             var result = try JsonDecoder.decode(HealthCheckResult.self, from: data)
             isLoading = false
             return result
@@ -400,7 +400,7 @@ class NetworkServices: ObservableObject {
             request.httpBody = "add_healthcheck=\(add_healthcheck)&alarm_count=\(alarm_count)&alarm_unit=\(alarm_unit)".data(using: .utf8)
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
             isLoading = false
             return result
@@ -434,7 +434,7 @@ class NetworkServices: ObservableObject {
             request.httpBody = "pause_healthcheck=\(healthtoken)".data(using: .utf8)
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
             isLoading = false
             return result
@@ -468,7 +468,7 @@ class NetworkServices: ObservableObject {
             request.httpBody = "start_healthcheck=\(healthtoken)".data(using: .utf8)
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
             isLoading = false
             return result
@@ -503,7 +503,7 @@ class NetworkServices: ObservableObject {
             request.httpBody = "del_healthcheck=\(health)".data(using: .utf8)
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
             isLoading = false
             return result
@@ -535,7 +535,7 @@ class NetworkServices: ObservableObject {
             JsonEncoder.outputFormatting = .prettyPrinted
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             var result = try JsonDecoder.decode(IntegrationResult.self, from: data)
             isLoading = false
             return result
@@ -547,7 +547,7 @@ class NetworkServices: ObservableObject {
     }
     
     
-    @MainActor func PostEditHealthcheck(healthcheck: HealthCheck) async -> AddDomainResult? {
+    @MainActor func PostEditHealthcheck(healthcheck: HealthCheck, integrationId: Int) async -> AddDomainResult? {
         let urlString = "\(apiUrl)"
         
         isLoading = true
@@ -566,18 +566,54 @@ class NetworkServices: ObservableObject {
             request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
             JsonEncoder.outputFormatting = .prettyPrinted
             
-            let body = "edit_healthcheck=\(healthcheck.healthtoken)&healthcheck_name=\(healthcheck.name)&alarm_count=\(healthcheck.alarm_count)&alarm_unit=\(healthcheck.alarm_unit)&integration=\(healthcheck.integration_id)&grace_count=\(healthcheck.grace_count)&grace_unit=\(healthcheck.grace_unit)&alarm_down=\(healthcheck.alarm_down)&alarm_up=\(healthcheck.alarm_up)"
+            let body = "edit_healthcheck=\(healthcheck.healthtoken)&healthcheck_name=\(healthcheck.name)&alarm_count=\(healthcheck.alarm_count)&alarm_unit=\(healthcheck.alarm_unit)&integration=\(integrationId)&grace_count=\(healthcheck.grace_count)&grace_unit=\(healthcheck.grace_unit)&alarm_down=\(healthcheck.alarm_down)&alarm_up=\(healthcheck.alarm_up)"
             
             request.httpBody = body.data(using: .utf8)
             
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(data)
+            
             let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
             isLoading = false
             return result
         } catch let error {
             isLoading = false
             print("Failed to PostEditHealthcheck", error)
+            return nil
+        }
+    }
+    
+    
+    @MainActor func PostAddIntegration(integrationType: String, dtoken: String, dName: String) async -> AddDomainResult? {
+        let urlString = "\(apiUrl)"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            let body = "add_integration=\(integrationType)&integration_name=\(dName)&devicetoken=\(dtoken)"
+            
+            request.httpBody = body.data(using: .utf8)
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to PostDeviceToken", error)
             return nil
         }
     }
