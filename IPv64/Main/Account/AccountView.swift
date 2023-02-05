@@ -166,33 +166,6 @@ struct AccountView: View {
                                 .tint(.blue)
                             }
                             .tint(Color("primaryText"))
-                            Button(action: {
-                                withAnimation {
-                                    showDevToken.toggle()
-                                }
-                            }) {
-                                HStack {
-                                    if (showDevToken) {
-                                        Text(accountInfos.devicetoken ?? "Device Token")
-                                            .multilineTextAlignment(.trailing)
-                                            .foregroundColor(.gray)
-                                    } else {
-                                        Text("Gerätetoken")
-                                        Spacer()
-                                        Text("••••••")
-                                            .foregroundColor(.gray)
-                                    }
-                                }
-                            }
-                            .swipeActions(edge: .trailing) {
-                                Button(role: .none, action: {
-                                    UIPasteboard.general.string = accountInfos.devicetoken ?? "Device Token"
-                                }) {
-                                    Label("Kopieren", systemImage: "doc.on.doc")
-                                }
-                                .tint(.blue)
-                            }
-                            .tint(Color("primaryText"))
                         }
                     }
                 }
