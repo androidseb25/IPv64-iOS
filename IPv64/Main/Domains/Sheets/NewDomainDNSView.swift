@@ -61,7 +61,6 @@ struct NewDomainDNSView: View {
                                 let _content = content.trimmingCharacters(in: .whitespaces)
                                 Task {
                                     let res = await api.PostDNSRecord(domain: domainName, praefix: _praefix, typ: typeList[selectedTyp], content: _content)
-                                    print(res)
                                     if (res?.info == "success") {
                                         activeSheet = .error
                                         errorTyp = ErrorTypes.dnsRecordSuccesfullyCreated

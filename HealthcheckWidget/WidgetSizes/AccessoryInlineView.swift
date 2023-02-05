@@ -9,6 +9,8 @@ import Foundation
 import WidgetKit
 import SwiftUI
 
+
+@available(iOSApplicationExtension 16.0, *)
 struct AccessoryRectangleView : View {
     @Environment(\.widgetFamily) var widgetFamily
     
@@ -71,6 +73,7 @@ struct AccessoryRectangleView : View {
     }
 }
 
+@available(iOSApplicationExtension 16.0, *)
 struct AccessoryRectanglePreviews: PreviewProvider {
     static var previews: some View {
         let hc = DummyData.HealthcheckListCustom(customCount: 1)

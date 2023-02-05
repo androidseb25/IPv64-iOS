@@ -113,7 +113,6 @@ struct LoginView: View {
         private func handleScan(result: Result<String, CodeScannerView.ScanError>) {
             switch result {
             case .success(let data): do {
-                print(data)
                 apiKey = data
                 loginFailed = false
                 SetupPrefs.setPreference(mKey: "APIKEY", mValue: apiKey)

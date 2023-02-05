@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseMessaging
 
 struct TabbView: View {
     
@@ -49,6 +50,9 @@ struct TabbView: View {
             tabBarAppearance.configureWithDefaultBackground()
             UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
             
+            UIApplication.shared.applicationIconBadgeNumber = 0
+            SetupPrefs.setPreference(mKey: "BADGE_COUNT", mValue: 0)
+            
             var lastBuildNumber = SetupPrefs.readPreference(mKey: "LASTBUILDNUMBER", mDefaultValue: "0") as! String
             var token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
             
@@ -58,16 +62,18 @@ struct TabbView: View {
                     activeSheet = .whatsnew
                 }
             }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                sendFCMToken()
+            }
         }
         .onOpenURL { url in
             print("URL")
-            print(url)
             guard url.scheme == "ipv64", url.host == "tab", let tabId = Int(url.pathComponents[1])
             else {
                 print("issue")
                 return
             }
-            print("open tab \(tabId)")
             selectedView = tabId
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
@@ -92,6 +98,9 @@ struct TabbView: View {
             withAnimation {
                 showPlaceholder = false
                 showDomains = false
+                
+                UIApplication.shared.applicationIconBadgeNumber = 0
+                SetupPrefs.setPreference(mKey: "BADGE_COUNT", mValue: 0)
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
@@ -112,6 +121,27 @@ struct TabbView: View {
             WhatsNewView(activeSheet: $activeSheet, isPresented: $showWhatsNew)
         default:
             EmptyView()
+        }
+    }
+    
+    private func sendFCMToken() {
+        Messaging.messaging().isAutoInitEnabled = true
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                print("Error fetching FCM registration token: \(error)")
+            } else if let token = token {
+                print("FCM registration token: \(token)")
+                print(UIDevice().type.rawValue)
+                let os = ProcessInfo().operatingSystemVersion
+                var sdtoken = SetupPrefs.readPreference(mKey: "DEVICETOKEN", mDefaultValue: "") as! String
+                if (sdtoken != token) {
+                    Task {
+                        let api = NetworkServices()
+                        let result = await api.PostAddIntegration(integrationType: "mobil", dtoken: token, dName: UIDevice().type.rawValue)
+                        SetupPrefs.setPreference(mKey: "DEVICETOKEN", mValue: token)
+                    }
+                }
+            }
         }
     }
 }

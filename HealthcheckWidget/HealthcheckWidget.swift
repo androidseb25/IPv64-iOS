@@ -15,33 +15,52 @@ struct Provider: IntentTimelineProvider {
     
     func placeholder(in context: Context) -> SimpleEntry {
         var count = 2
-        if context.family == .accessoryRectangular {
-            count = 1
-        } else if context.family == .systemSmall {
-            count = 2
-        } else if context.family == .systemMedium {
-            count = 4
+        
+        if #available(iOSApplicationExtension 16.0, *) {
+            if context.family == .accessoryRectangular {
+                count = 1
+            } else if context.family == .systemSmall {
+                count = 2
+            } else if context.family == .systemMedium {
+                count = 4
+            } else {
+                count = 9
+            }
         } else {
-            count = 9
+            if context.family == .systemSmall {
+                count = 2
+            } else if context.family == .systemMedium {
+                count = 4
+            } else {
+                count = 9
+            }
         }
         let hc = DummyData.HealthcheckListCustom(customCount: count)
-        print(hc)
         return SimpleEntry(date: Date(), configuration: ConfigurationIntent(), healthcheck: hc)
     }
     
     func getSnapshot(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (SimpleEntry) -> ()) {
         var count = 2
-        if context.family == .accessoryRectangular {
-            count = 1
-        } else if context.family == .systemSmall {
-            count = 2
-        } else if context.family == .systemMedium {
-            count = 4
+        if #available(iOSApplicationExtension 16.0, *) {
+            if context.family == .accessoryRectangular {
+                count = 1
+            } else if context.family == .systemSmall {
+                count = 2
+            } else if context.family == .systemMedium {
+                count = 4
+            } else {
+                count = 9
+            }
         } else {
-            count = 9
+            if context.family == .systemSmall {
+                count = 2
+            } else if context.family == .systemMedium {
+                count = 4
+            } else {
+                count = 9
+            }
         }
         let hc = DummyData.HealthcheckListCustom(customCount: count)
-        print(hc)
         let entry = SimpleEntry(date: Date(), configuration: configuration, healthcheck: hc)
         completion(entry)
     }
@@ -51,7 +70,7 @@ struct Provider: IntentTimelineProvider {
             let api = NetworkServices()
             let hcd = DummyData.HealthcheckListCustom(customCount: 2)
             let hcr = await api.GetHealthchecks() ?? HealthCheckResult(domain: hcd)
-
+            
             let sorted = hcr.domain.sorted { $0.name > $1.name }
             let shrinkedEventList = Array(sorted)
             if (configuration.healthcheckSymbol1 != nil) {
@@ -95,33 +114,51 @@ struct ProviderStatic: TimelineProvider {
     
     func placeholder(in context: Context) -> SimpleEntryStatic {
         var count = 2
-        if context.family == .accessoryRectangular {
-            count = 1
-        } else if context.family == .systemSmall {
-            count = 2
-        } else if context.family == .systemMedium {
-            count = 4
+        if #available(iOSApplicationExtension 16.0, *) {
+            if context.family == .accessoryRectangular {
+                count = 1
+            } else if context.family == .systemSmall {
+                count = 2
+            } else if context.family == .systemMedium {
+                count = 4
+            } else {
+                count = 9
+            }
         } else {
-            count = 9
+            if context.family == .systemSmall {
+                count = 2
+            } else if context.family == .systemMedium {
+                count = 4
+            } else {
+                count = 9
+            }
         }
         let hc = DummyData.HealthcheckListCustom(customCount: count)
-        print(hc)
         return SimpleEntryStatic(date: Date(), healthcheck: hc)
     }
     
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntryStatic) -> Void) {
         var count = 2
-        if context.family == .accessoryRectangular {
-            count = 1
-        } else if context.family == .systemSmall {
-            count = 2
-        } else if context.family == .systemMedium {
-            count = 4
+        if #available(iOSApplicationExtension 16.0, *) {
+            if context.family == .accessoryRectangular {
+                count = 1
+            } else if context.family == .systemSmall {
+                count = 2
+            } else if context.family == .systemMedium {
+                count = 4
+            } else {
+                count = 9
+            }
         } else {
-            count = 9
+            if context.family == .systemSmall {
+                count = 2
+            } else if context.family == .systemMedium {
+                count = 4
+            } else {
+                count = 9
+            }
         }
         let hc = DummyData.HealthcheckListCustom(customCount: count)
-        print(hc)
         let entry = SimpleEntryStatic(date: Date(), healthcheck: hc)
         completion(entry)
     }
@@ -132,14 +169,24 @@ struct ProviderStatic: TimelineProvider {
             let hcd = DummyData.HealthcheckListCustom(customCount: 2)
             let hcr = await api.GetHealthchecks() ?? HealthCheckResult(domain: hcd)
             var count = 2
-            if context.family == .accessoryRectangular {
-                count = 1
-            } else if context.family == .systemSmall {
-                count = 2
-            } else if context.family == .systemMedium {
-                count = 4
+            if #available(iOSApplicationExtension 16.0, *) {
+                if context.family == .accessoryRectangular {
+                    count = 1
+                } else if context.family == .systemSmall {
+                    count = 2
+                } else if context.family == .systemMedium {
+                    count = 4
+                } else {
+                    count = 10
+                }
             } else {
-                count = 10
+                if context.family == .systemSmall {
+                    count = 2
+                } else if context.family == .systemMedium {
+                    count = 4
+                } else {
+                    count = 10
+                }
             }
             let sorted = hcr.domain.prefix(count).sorted { $0.name > $1.name }
             let shrinkedEventList = Array(sorted)
@@ -167,15 +214,26 @@ struct HealthcheckWidgetEntryView : View {
     var entry: Provider.Entry
     
     var body: some View {
-        switch widgetFamily {
-        case .systemSmall:
-            SmallSizeView(entry: entry)
-                .widgetURL(URL(string: "ipv64://tab/2"))
-        case .accessoryRectangular:
-            AccessoryRectangleView(entry: entry)
-                .widgetURL(URL(string: "ipv64://tab/2"))
-        default:
-            Text("Not implemented!")
+        if #available(iOSApplicationExtension 16.0, *) {
+            switch widgetFamily {
+            case .systemSmall:
+                SmallSizeView(entry: entry)
+                    .widgetURL(URL(string: "ipv64://tab/2"))
+            case .accessoryRectangular:
+                AccessoryRectangleView(entry: entry)
+                    .widgetURL(URL(string: "ipv64://tab/2"))
+            default:
+                Text("Not implemented!")
+            }
+        } else {
+            // Fallback on earlier versions
+            switch widgetFamily {
+            case .systemSmall:
+                SmallSizeView(entry: entry)
+                    .widgetURL(URL(string: "ipv64://tab/2"))
+            default:
+                Text("Not implemented!")
+            }
         }
     }
 }
