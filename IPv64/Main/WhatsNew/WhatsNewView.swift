@@ -15,7 +15,7 @@ struct WhatsNewView: View {
     var whatsNewList = [
         WhatsNewObj(imageName: "ant.circle", title: "Fehlerbehebung", subtitle: "Es wurden in diesem Update ein Paar Fehler behoben, die zur Steigerung der Performance und der Nutzbarkeit dienen"),
         WhatsNewObj(imageName: "app", title: "Neues App Icon", subtitle: "Jetzt ist das offizielle App Icon vom IPv64.net Brand enthalten"),
-        WhatsNewObj(imageName: "chart.bar.xaxis", title: "Charts", subtitle: "Schau dir nun die Latenzen deiner TCP/HTTP/HTTPS/PING Healthchecks in einem wunderschönen Chart an")
+        WhatsNewObj(imageName: "chart.bar.xaxis", title: "Charts", subtitle: "Schau dir nun die Latenzen deiner TCP/HTTP/HTTPS/PING Healthchecks in einem wunderschönen Chart an (nur auf iOS16/iPadOS16)")
     ]
     
     var body: some View {
