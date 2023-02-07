@@ -258,6 +258,7 @@ struct HealthCheck: Codable {
     var grace_count: Int = 0
     var grace_unit: Int = 0
     var pings_total: Int = 0
+    var type: String = ""
     var events: [HealthEvents] = []
     
     // 1
@@ -281,6 +282,7 @@ struct HealthCheck: Codable {
         case grace_count = "grace_count"
         case grace_unit = "grace_unit"
         case pings_total = "pings_total"
+        case type = "type"
         case keyInd = "keyInd"
         case events = "events"
     }
@@ -305,6 +307,7 @@ struct HealthCheck: Codable {
         grace_count = try container.decode(Int.self, forKey: CodingKeys.grace_count)
         grace_unit = try container.decode(Int.self, forKey: CodingKeys.grace_unit)
         pings_total = try container.decode(Int.self, forKey: CodingKeys.pings_total)
+        type = try container.decode(String.self, forKey: CodingKeys.type)
         events = try container.decode([HealthEvents].self, forKey: CodingKeys.events)
         
         // 4
@@ -314,7 +317,7 @@ struct HealthCheck: Codable {
         }
     }
     
-    init(name: String = "", healthstatus: Int = 0, healthtoken: String = "", add_time: String? = "", last_update_time: String? = "", alarm_time: String? = "", alarm_down: Int = 0, alarm_up: Int = 0, integration_id: String = "0", alarm_count: Int = 0, alarm_unit: Int = 0, grace_count: Int = 0, grace_unit: Int = 0, pings_total: Int = 0, events: [HealthEvents] = []) {
+    init(name: String = "", healthstatus: Int = 0, healthtoken: String = "", add_time: String? = "", last_update_time: String? = "", alarm_time: String? = "", alarm_down: Int = 0, alarm_up: Int = 0, integration_id: String = "0", alarm_count: Int = 0, alarm_unit: Int = 0, grace_count: Int = 0, grace_unit: Int = 0, pings_total: Int = 0, type: String = "", events: [HealthEvents] = []) {
         self.name = name
         self.healthstatus = healthstatus
         self.healthtoken = healthtoken
@@ -329,6 +332,7 @@ struct HealthCheck: Codable {
         self.grace_count = grace_count
         self.grace_unit = grace_unit
         self.pings_total = pings_total
+        self.type = type
         self.events = events
     }
 }
@@ -455,6 +459,33 @@ struct Integration: Codable {
         } catch {
             print(error)
         }
+    }
+}
+
+struct HealthcheckStatisticsResult: Codable {
+    var info: String = ""
+    var status: String = ""
+    var get_account_info: String = ""
+    var statistics: [String: [HealthcheckStatistics]]?
+    
+    enum CodingKeys: String, CodingKey {
+        case info = "info"
+        case status = "status"
+        case get_account_info = "get_account_info"
+        case statistics = "statistics"
+    }
+}
+
+struct HealthcheckStatistics: Codable {
+    var id = UUID()
+    var time: String = ""
+    var measurement: String = ""
+    var latency: Double = 0.0
+    
+    enum CodingKeys: String, CodingKey {
+        case time = "time"
+        case measurement = "measurement"
+        case latency = "latency"
     }
 }
 
