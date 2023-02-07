@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Charts
 
 struct DetailHealthcheckView: View {
     
@@ -18,10 +19,13 @@ struct DetailHealthcheckView: View {
     @ObservedObject var api: NetworkServices = NetworkServices()
     @State var activeSheet: ActiveSheet? = nil
     @State var errorTyp: ErrorTyp? = .none
+    @State var healthcheckStatus: HealthcheckStatisticsResult = HealthcheckStatisticsResult()
     
     @State var updatedItem = false
     
     @State var pillCount = 15
+    
+    @State var selectedPos: String? = nil
     
     fileprivate func GetIntegrationName() -> String {
         do {
@@ -30,13 +34,10 @@ struct DetailHealthcheckView: View {
             }
             
             let jsonDecoder = JSONDecoder()
-            print(integrationListS)
             let jsonData = integrationListS.data(using: .utf8)
             let integrationList = try jsonDecoder.decode([Integration].self, from: jsonData!)
             var integrationName = "Unbekannt"
             integrationList.forEach { inte in
-                print("\(inte.integration_id)")
-                print(healthcheck!.integration_id)
                 if ("\(inte.integration_id)" == healthcheck!.integration_id) {
                     integrationName = inte.integration_name!
                 }
@@ -105,7 +106,16 @@ struct DetailHealthcheckView: View {
             GeometryReader { geo in
                 let countPills = geo.size.width / 17
                 VStack { }
-                    .onAppear { pillCount = Int(countPills) }
+                    .onAppear {
+                        pillCount = Int(countPills)
+                        if (healthcheck?.type != "health") {
+                            Task {
+                                healthcheckStatus = await api.GetHealthcheckStatistics(healthtoken: healthcheck!.healthtoken) ?? HealthcheckStatisticsResult()
+                                print("STATSRES")
+                                print(healthcheckStatus)
+                            }
+                        }
+                    }
             }
             Form {
                 HStack {
@@ -181,6 +191,97 @@ struct DetailHealthcheckView: View {
                         .tint(.blue)
                     }
                 }
+                if (healthcheck?.type != "health") {
+                    Section("Latenzen") {
+                        if #available(iOS 16.0, *) {
+                            if (healthcheckStatus.statistics != nil) {
+                                let gradient = Gradient(colors: [Color("ip64_color"), Color("ip64_color").opacity(0)])
+                                let statKey = Array(healthcheckStatus.statistics!)[0]
+                                let stats = Array(statKey.value.reversed().prefix(pillCount).reversed())
+                                VStack(alignment: .leading, spacing: 4) {
+                                    if (selectedPos != nil) {
+                                        let item = stats.first(where: { $0.id.uuidString == selectedPos })
+                                        let dateDate = dateDBTFormatter.date(from: item!.time)
+                                        let dateString = itemFormatter.string(from: dateDate ?? Date())
+                                        Text("Datum: \(dateString)")
+                                            .font(.system(.headline, design: .rounded))
+                                        Text("Latenz: \(item?.latency ?? 0, specifier: "%.2f") ms")
+                                            .font(.system(.footnote, design: .rounded))
+                                    }
+                                    Chart(stats, id: \.id) {
+                                        if (selectedPos != nil && $0.id.uuidString == selectedPos) {
+                                            RuleMark(x: .value("Now", $0.id.uuidString))
+                                                .foregroundStyle(Color.secondary)
+                                                .accessibilityHidden(true)
+                                            PointMark(
+                                                x: .value("ID", $0.id.uuidString),
+                                                y: .value("Value", $0.latency)
+                                            )
+                                            .symbolSize(CGSize(width: 8, height: 8))
+                                            .foregroundStyle(Color.white)
+                                            .accessibilityHidden(true)
+                                        }
+                                        LineMark(
+                                            x: .value("ID", $0.id.uuidString),
+                                            y: .value("Value", $0.latency)
+                                        )
+                                        .interpolationMethod(.catmullRom)
+                                        .foregroundStyle(Color("ip64_color"))
+                                        AreaMark(
+                                            x: .value("ID", $0.id.uuidString),
+                                            y: .value("Value", $0.latency)
+                                        )
+                                        .interpolationMethod(.catmullRom)
+                                        .foregroundStyle(gradient)
+                                    }
+                                    .chartOverlay { proxy in
+                                        GeometryReader { geo in
+                                            Rectangle()
+                                                .fill(Color.clear)
+                                                .contentShape(Rectangle())
+                                                .gesture(DragGesture(minimumDistance: 0)
+                                                    .onChanged { value in
+                                                        // find start and end positions of the drag
+                                                        
+                                                        let start = geo[proxy.plotAreaFrame].origin.x
+                                                        let xCurrent = value.location.x - start
+                                                        // map those positions to X-axis values in the chart
+                                                        if let posId: String = proxy.value(atX: xCurrent) {
+                                                            selectedPos = posId
+                                                        }
+                                                    }
+                                                    .onEnded { value in
+                                                        // find start and end positions of the drag
+                                                        
+                                                        let start = geo[proxy.plotAreaFrame].origin.x
+                                                        let xCurrent = value.location.x - start
+                                                        // map those positions to X-axis values in the chart
+                                                        if let posId: String = proxy.value(atX: xCurrent) {
+                                                            selectedPos = posId
+                                                        }
+                                                    })
+                                        }
+                                    }
+                                    .chartXAxis(.hidden)
+                                    .frame(height: 250)
+                                    .padding(.vertical)
+                                    .onAppear {
+                                        selectedPos = stats[0].id.uuidString ?? ""
+                                    }
+                                    
+                                }
+                            } else {
+                                VStack {
+                                    Spinner(isAnimating: true, style: .medium, color: .white)
+                                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                            }
+                        }
+                        else {
+                            Text("Latenzen sind erst unter iOS 16 mit der Apple Chart Bibliothek verfügbar!")
+                        }
+                    }
+                }
+                
                 Section("Logs") {
                     let list = GetLastXMonitor(count: Int(pillCount), domain: healthcheck!)
                     ForEach(list, id:\.event_time) { event in
@@ -280,6 +381,13 @@ struct DetailHealthcheckView: View {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "de_DE")
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter
+    }()
+    
+    private let dateDBTFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "de_DE")
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         return formatter
     }()
 }

@@ -23,10 +23,12 @@ struct LoginView: View {
                 ZStack {
                     ScrollView {
                         VStack {
-                            Image("ipv64_logo")
+                            Image("ipv64_logo_new")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(height: 60)
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 12).fill(Color("lightgray")))
                                 .padding(.bottom, 20)
                             
                             /*TextField("Benutzername", text: $username)
@@ -133,5 +135,8 @@ struct LoginView: View {
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
+            .preferredColorScheme(.dark)
+        LoginView()
+            .preferredColorScheme(.light)
     }
 }

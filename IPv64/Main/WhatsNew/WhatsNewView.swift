@@ -14,9 +14,8 @@ struct WhatsNewView: View {
     
     var whatsNewList = [
         WhatsNewObj(imageName: "ant.circle", title: "Fehlerbehebung", subtitle: "Es wurden in diesem Update ein Paar Fehler behoben, die zur Steigerung der Performance und der Nutzbarkeit dienen"),
-        WhatsNewObj(imageName: "text.line.first.and.arrowtriangle.forward", title: "Domain Übersicht verbessert", subtitle: "Die Domain Übersicht wurde jetzt überarbeitet. Diese werden jetzt in den einzelnen Domains aufgelistet"),
-        WhatsNewObj(imageName: "app", title: "Neues App Icon", subtitle: "Nach einem Picasso ähnlichen kreativen Erguss, wurde ein neues App Icon gemalt"),
-        WhatsNewObj(imageName: "bell.badge", title: "Benachrichtung über die App", subtitle: "Empfange jetzt deine Server Down/Up  Benachrichtungen über die App, wenn du unter deinem Healthcheck bei den Benachrichtungsmethoden \"iOS IPv64.net App\" auswählst")
+        WhatsNewObj(imageName: "app", title: "Neues App Icon", subtitle: "Jetzt ist das offizielle App Icon vom IPv64.net Brand enthalten"),
+        WhatsNewObj(imageName: "chart.bar.xaxis", title: "Charts", subtitle: "Schau dir nun die Latenzen deiner TCP/HTTP/HTTPS/PING Healthchecks in einem wunderschönen Chart an")
     ]
     
     var body: some View {
