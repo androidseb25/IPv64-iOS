@@ -277,7 +277,9 @@ struct HealthcheckView: View {
                         }
                     }
                 }
-                GetIntegrations()
+                if (integrationListS.isEmpty) {
+                    GetIntegrations()
+                }
             }
         }
     }
