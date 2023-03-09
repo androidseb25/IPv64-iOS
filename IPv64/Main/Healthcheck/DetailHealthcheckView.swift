@@ -27,27 +27,12 @@ struct DetailHealthcheckView: View {
     
     @State var selectedPos: String? = nil
     
-    fileprivate func GetIntegrationName() -> String {
-        do {
-            if (healthcheck!.integration_id == "0") {
-                return "keine"
-            }
-            
-            let jsonDecoder = JSONDecoder()
-            let jsonData = integrationListS.data(using: .utf8)
-            let integrationList = try jsonDecoder.decode([Integration].self, from: jsonData!)
-            var integrationName = "Unbekannt"
-            integrationList.forEach { inte in
-                if ("\(inte.integration_id)" == healthcheck!.integration_id) {
-                    integrationName = inte.integration_name!
-                }
-            }
-            
-            return integrationName
-        } catch {
-            print("Error \(error.localizedDescription)")
+    fileprivate func GetIntegrationCount() -> String {
+        if (healthcheck!.integration_id == "0") {
+            return "0"
         }
-        return ""
+        
+        return "\(healthcheck!.integration_id.split(separator: ",").count)"
     }
     
     fileprivate func SetDotColor(statusId: Int) -> Color {
@@ -148,9 +133,9 @@ struct DetailHealthcheckView: View {
                             .foregroundColor(.gray)
                     }
                     HStack {
-                        Text("Benachrichtungsmethode")
+                        Text("Benachrichtungsmethode/n")
                         Spacer()
-                        Text(GetIntegrationName())
+                        Text(GetIntegrationCount())
                             .foregroundColor(.gray)
                     }
                     HStack {
@@ -201,7 +186,7 @@ struct DetailHealthcheckView: View {
                                 VStack(alignment: .leading, spacing: 4) {
                                     if (selectedPos != nil) {
                                         let item = stats.first(where: { $0.id.uuidString == selectedPos })
-                                        let dateDate = dateDBTFormatter.date(from: item!.time)
+                                        let dateDate = dateDBTFormatter.date(from: item?.time ?? "2001-01-01")
                                         let dateString = itemFormatter.string(from: dateDate ?? Date())
                                         Text("Datum: \(dateString)")
                                             .font(.system(.headline, design: .rounded))

@@ -427,7 +427,8 @@ struct IntegrationResult: Codable {
     }
 }
 
-struct Integration: Codable {
+struct Integration: Codable, Hashable {
+    var i_uuid = UUID()
     var integration: String?
     var integration_id: Int = 0
     var integration_name: String?
@@ -714,7 +715,7 @@ extension UIDevice {
 
 
 enum ActiveSheet: Identifiable {
-    case detail, add, adddns, help, error, qrcode, whatsnew, edit
+    case detail, add, adddns, help, error, qrcode, whatsnew, edit, integrationselection
     
     var id: Int {
         hashValue

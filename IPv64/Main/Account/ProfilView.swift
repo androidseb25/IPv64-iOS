@@ -13,6 +13,9 @@ struct ProfilView: View {
     @AppStorage("AccountInfos") var accountInfos: String = ""
     @AppStorage("DomainResult") var listOfDomainsString: String = ""
     @AppStorage("BIOMETRIC_ENABLED") var isBiometricEnabled: Bool = false
+    @AppStorage("IntegrationList") var integrationListS: String = ""
+    @AppStorage("HealthcheckList") var healthCheckList: String = ""
+    @AppStorage("SelectedView") var selectedView: Int = 1
     
     @Environment(\.openURL) var openURL
     
@@ -64,8 +67,14 @@ struct ProfilView: View {
                     Section {
                         Button(action: {
                             SetupPrefs.setPreference(mKey: "APIKEY", mValue: "")
+                            SetupPrefs.setPreference(mKey: "LASTBUILDNUMBER", mValue: "0")
+                            SetupPrefs.setPreference(mKey: "DEVICETOKEN", mValue: "")
                             accountInfos = ""
                             listOfDomainsString = ""
+                            isBiometricEnabled = false
+                            integrationListS = ""
+                            healthCheckList = ""
+                            selectedView = 1
                             withAnimation {
                                 showLoginView.toggle()
                             }
