@@ -605,6 +605,16 @@ struct ErrorTypes {
             status: 202
         )
     }
+    static var deleteIntegration: ErrorTyp {
+        ErrorTyp(
+            icon: "trash.fill",
+            iconColor: .red,
+            navigationTitle: "Wirklick löschen?",
+            errorTitle: "Willst du wirklich die Integration löschen?",
+            errorDescription: "Deine Integration wird aus allen Healthchecks gelöscht.",
+            status: 202
+        )
+    }
     static var dnsRecordSuccesfullyCreated: ErrorTyp {
         ErrorTyp(
             icon: "checkmark.icloud.fill",

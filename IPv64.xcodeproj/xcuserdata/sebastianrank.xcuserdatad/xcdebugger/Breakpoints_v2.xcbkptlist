@@ -18,6 +18,38 @@
             endingLineNumber = "216"
             landmarkName = "showActiveSheet(item:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "373311D3-5872-4C78-93F2-E2198E221C84 - f0a054d69fe54d4e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in IPv64.HealthcheckView.showActiveSheet(item: Swift.Optional&lt;IPv64.ActiveSheet&gt;) -&gt; some"
+                  moduleName = "IPv64"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sebastianrank/Programmierung/XCode/IPv64/IPv64/Main/Healthcheck/HealthcheckView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "216"
+                  endingLineNumber = "216"
+                  offsetFromSymbolStart = "388">
+               </Location>
+               <Location
+                  uuid = "373311D3-5872-4C78-93F2-E2198E221C84 - f0a054d69fe54d4e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in IPv64.HealthcheckView.showActiveSheet(item: Swift.Optional&lt;IPv64.ActiveSheet&gt;) -&gt; some"
+                  moduleName = "IPv64"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sebastianrank/Programmierung/XCode/IPv64/IPv64/Main/Healthcheck/HealthcheckView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "216"
+                  endingLineNumber = "216"
+                  offsetFromSymbolStart = "408">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -34,6 +66,38 @@
             endingLineNumber = "233"
             landmarkName = "showActiveSheet(item:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "1F9AB5AD-9A18-4A81-B060-D9EE9FB1249F - 7093fd2dd2edc13e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; () in IPv64.HealthcheckView.showActiveSheet(item: Swift.Optional&lt;IPv64.ActiveSheet&gt;) -&gt; some"
+                  moduleName = "IPv64"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sebastianrank/Programmierung/XCode/IPv64/IPv64/Main/Healthcheck/HealthcheckView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "233"
+                  endingLineNumber = "233"
+                  offsetFromSymbolStart = "856">
+               </Location>
+               <Location
+                  uuid = "1F9AB5AD-9A18-4A81-B060-D9EE9FB1249F - 7093fd2dd2edc13e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; () in IPv64.HealthcheckView.showActiveSheet(item: Swift.Optional&lt;IPv64.ActiveSheet&gt;) -&gt; some"
+                  moduleName = "IPv64"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sebastianrank/Programmierung/XCode/IPv64/IPv64/Main/Healthcheck/HealthcheckView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "233"
+                  endingLineNumber = "233"
+                  offsetFromSymbolStart = "916">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -114,22 +178,6 @@
                   offsetFromSymbolStart = "208">
                </Location>
             </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "F04A2D91-951B-4CDC-85A5-A741032C2139"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "IPv64/Main/Healthcheck/HealthcheckView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "110"
-            endingLineNumber = "110"
-            landmarkName = "body"
-            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

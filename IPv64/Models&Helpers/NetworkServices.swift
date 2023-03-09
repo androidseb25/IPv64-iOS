@@ -651,4 +651,38 @@ class NetworkServices: ObservableObject {
             return nil
         }
     }
+    
+    @MainActor func DeleteIntegration(integration_id: Int) async -> AddDomainResult? {
+        let urlString = "\(apiUrl)"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+            request.httpMethod = "DELETE"
+            //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField:"Content-Type");
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            request.httpBody = "del_integration=\(integration_id)".data(using: .utf8)
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to Post Domain", error)
+            return nil
+        }
+    }
 }

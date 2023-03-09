@@ -34,12 +34,18 @@ struct TabbView: View {
                     Label("Healthcheck", systemImage: "waveform.path.ecg")
                 }
                 .tag(2)
+            IntegrationView()
+                .redacted(reason: showPlaceholder ? .placeholder : .init())
+                .tabItem {
+                    Label("Integrationen", systemImage: "bell.and.waveform")
+                }
+                .tag(3)
             ProfilView()
                 .redacted(reason: showPlaceholder ? .placeholder : .init())
                 .tabItem {
                     Label("Account", systemImage: "person.circle")
                 }
-                .tag(3)
+                .tag(4)
         }
         .tint(Color("ip64_color"))
         .sheet(item: $activeSheet) { item in
