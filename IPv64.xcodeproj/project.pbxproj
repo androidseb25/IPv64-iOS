@@ -74,6 +74,7 @@
 		9AD5DF612975BAC3007928F6 /* HealthcheckStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */; };
 		9AD5DF632975BAD7007928F6 /* HealthcheckStatsItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF622975BAD7007928F6 /* HealthcheckStatsItem.swift */; };
 		9AD5DF652975ECC1007928F6 /* NewHealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF642975ECC1007928F6 /* NewHealthcheckView.swift */; };
+		9AD7FE3E29B7ED0E001F72B7 /* IntegrationSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD7FE3D29B7ED0E001F72B7 /* IntegrationSelection.swift */; };
 		9AE5E22E298302280019D524 /* AccessoryInlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE5E22D298302280019D524 /* AccessoryInlineView.swift */; };
 /* End PBXBuildFile section */
 
@@ -176,6 +177,7 @@
 		9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckStatsView.swift; sourceTree = "<group>"; };
 		9AD5DF622975BAD7007928F6 /* HealthcheckStatsItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckStatsItem.swift; sourceTree = "<group>"; };
 		9AD5DF642975ECC1007928F6 /* NewHealthcheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHealthcheckView.swift; sourceTree = "<group>"; };
+		9AD7FE3D29B7ED0E001F72B7 /* IntegrationSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationSelection.swift; sourceTree = "<group>"; };
 		9AE5E22D298302280019D524 /* AccessoryInlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessoryInlineView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -439,6 +441,7 @@
 			children = (
 				9ABB37F7297C6BDB00FC9B74 /* EditHealthcheckView.swift */,
 				9AD5DF642975ECC1007928F6 /* NewHealthcheckView.swift */,
+				9AD7FE3D29B7ED0E001F72B7 /* IntegrationSelection.swift */,
 			);
 			path = Sheets;
 			sourceTree = "<group>";
@@ -666,6 +669,7 @@
 				9A5A359E29756EFA006F27EB /* WhatsNewView.swift in Sources */,
 				9AACEBAA2918609F009B506D /* NewDomainView.swift in Sources */,
 				9AACEB98291851E2009B506D /* IPv64.xcdatamodeld in Sources */,
+				9AD7FE3E29B7ED0E001F72B7 /* IntegrationSelection.swift in Sources */,
 				9A33140929845AF1009E47F5 /* IntentHandler.swift in Sources */,
 				9AACEBA429185411009B506D /* Models.swift in Sources */,
 			);

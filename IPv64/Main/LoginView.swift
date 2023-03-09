@@ -31,32 +31,9 @@ struct LoginView: View {
                                 .background(RoundedRectangle(cornerRadius: 12).fill(Color("lightgray")))
                                 .padding(.bottom, 20)
                             
-                            /*TextField("Benutzername", text: $username)
-                             .font(.system(.body, design: .rounded))
-                             .padding(EdgeInsets(top: 20.5, leading: 16, bottom: 20.5, trailing: 0))
-                             .background(Color("textFieldBG")).clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))*/
-                            /*TextField("API - Key", text: $apiKey)
-                                .font(.system(.body, design: .rounded))
-                                .padding(EdgeInsets(top: 20.5, leading: 16, bottom: 20.5, trailing: 0))
-                                .background(Color("textFieldBG")).clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                                .padding(.top, 6)*/
                             Button(action: {
                                 withAnimation {
                                     actionSheet = .qrcode
-                                    Task {
-                                        /*let apiUser = ApiUser(AU_Username: username, AU_APIKEY: apiKey)
-                                         let result = await api.Login(user: apiUser)
-                                         if (result != nil) {
-                                         let r = result!
-                                         if (r.User != nil) {
-                                         SetupPrefs.setPreference(mKey: "APIKEY", mValue: r.User?.AU_APIKEY)
-                                         SetupPrefs.setPreference(mKey: "ISLOGGEDIN", mValue: true)
-                                         showMainView.toggle()
-                                         } else {
-                                         loginFailed.toggle()
-                                         }
-                                         }*/
-                                    }
                                 }
                             }) {
                                 Text("Login mit QR Code")
@@ -69,6 +46,47 @@ struct LoginView: View {
                                     .background(Color("ip64_color")).clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                             }
                             .padding(.vertical)
+                            
+                            HStack {
+                                VStack {}
+                                    .frame(maxWidth: .infinity, maxHeight: 1)
+                                    .background(Color.gray)
+                                    .padding(.trailing, 16)
+                                Text("ODER")
+                                    .font(.system(.callout, design: .rounded))
+                                    .fontWeight(.bold)
+                                    .textCase(.uppercase)
+                                VStack {}
+                                    .frame(maxWidth: .infinity, maxHeight: 1)
+                                    .background(Color.gray)
+                                    .padding(.trailing, 16)
+                            }
+                            .padding(.horizontal, 16)
+                            
+                            TextField("API - Key", text: $apiKey)
+                                .font(.system(.body, design: .rounded))
+                                .padding(EdgeInsets(top: 20.5, leading: 16, bottom: 20.5, trailing: 0))
+                                .background(Color("textFieldBG")).clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                                .padding(.top, 6)
+                                .tint(Color("ip64_color"))
+                            
+                            Button(action: {
+                                withAnimation {
+                                    SetupPrefs.setPreference(mKey: "APIKEY", mValue: apiKey)
+                                    showMainView.toggle()
+                                }
+                            }) {
+                                Text("Login mit API Key")
+                                    .font(.system(.callout, design: .rounded))
+                                    .fontWeight(.bold)
+                                    .textCase(.uppercase)
+                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                    .padding(16)
+                                    .foregroundColor(Color.white)
+                                    .background(Color("ip64_color")).clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                            }
+                            .padding(.vertical)
+                            
                             if (loginFailed) {
                                 if #available(iOS 16.0, *) {
                                     Text("Login fehlgeschlagen!\n\(errorMsg)")
@@ -103,33 +121,33 @@ struct LoginView: View {
     }
     
     @ViewBuilder
-        private func showActiveSheet(item: ActiveSheet?) -> some View {
-            switch item {
-            case .qrcode:
-                CodeScannerView(codeTypes: [.qr], simulatedData: "", completion: self.handleScan).edgesIgnoringSafeArea(.bottom)
-            default:
-                EmptyView()
+    private func showActiveSheet(item: ActiveSheet?) -> some View {
+        switch item {
+        case .qrcode:
+            CodeScannerView(codeTypes: [.qr], simulatedData: "", completion: self.handleScan).edgesIgnoringSafeArea(.bottom)
+        default:
+            EmptyView()
+        }
+    }
+    
+    private func handleScan(result: Result<String, CodeScannerView.ScanError>) {
+        switch result {
+        case .success(let data): do {
+            apiKey = data
+            loginFailed = false
+            SetupPrefs.setPreference(mKey: "APIKEY", mValue: apiKey)
+            showMainView.toggle()
+            withAnimation {
+                self.actionSheet = nil
             }
-        }
-        
-        private func handleScan(result: Result<String, CodeScannerView.ScanError>) {
-            switch result {
-            case .success(let data): do {
-                apiKey = data
-                loginFailed = false
-                SetupPrefs.setPreference(mKey: "APIKEY", mValue: apiKey)
-                showMainView.toggle()
-                withAnimation {
-                    self.actionSheet = nil
-                }
-            } case .failure(let error): do {
-                errorMsg = error.localizedDescription
-                loginFailed = true
-                withAnimation {
-                    self.actionSheet = nil
-                }
-            }}
-        }
+        } case .failure(let error): do {
+            errorMsg = error.localizedDescription
+            loginFailed = true
+            withAnimation {
+                self.actionSheet = nil
+            }
+        }}
+    }
 }
 
 struct LoginView_Previews: PreviewProvider {

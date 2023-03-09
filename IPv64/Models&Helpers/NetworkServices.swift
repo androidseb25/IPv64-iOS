@@ -32,7 +32,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "GET"
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -64,7 +64,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "GET"
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -96,7 +96,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "GET"
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -128,7 +128,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "GET"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -159,7 +159,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "GET"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -190,7 +190,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "POST"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -223,7 +223,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "DELETE"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField:"Content-Type");
@@ -258,7 +258,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "POST"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -291,7 +291,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "DELETE"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -326,7 +326,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "GET"
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -359,7 +359,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "GET"
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -390,7 +390,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "POST"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -424,7 +424,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "POST"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -458,7 +458,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "POST"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -492,7 +492,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "DELETE"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField:"Content-Type");
@@ -527,7 +527,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "GET"
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -547,7 +547,7 @@ class NetworkServices: ObservableObject {
     }
     
     
-    @MainActor func PostEditHealthcheck(healthcheck: HealthCheck, integrationId: Int) async -> AddDomainResult? {
+    @MainActor func PostEditHealthcheck(healthcheck: HealthCheck, integrationId: String) async -> AddDomainResult? {
         let urlString = "\(apiUrl)"
         
         isLoading = true
@@ -559,7 +559,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "POST"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -595,7 +595,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "POST"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
@@ -633,7 +633,7 @@ class NetworkServices: ObservableObject {
         
         do {
             let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "GET"
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON

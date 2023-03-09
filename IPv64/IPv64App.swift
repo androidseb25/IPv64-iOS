@@ -149,7 +149,7 @@ struct IPv64App: App {
         }
         if (lastBuildNumber.isEmpty || lastBuildNumber == "0") {
             lastBuildNumber = lastBuildNumberStandart
-            SetupPrefs.setPreference(mKey: "LASTBUILDNUMBER", mValue: token)
+            SetupPrefs.setPreference(mKey: "LASTBUILDNUMBER", mValue: lastBuildNumber)
         }
     }
     

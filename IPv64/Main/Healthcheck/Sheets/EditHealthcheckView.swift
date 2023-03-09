@@ -22,7 +22,7 @@ struct EditHealthcheckView: View {
     @State var graceCount = 0.0
     @State var notifyDown = false
     @State var notifyUp = false
-    @State var integrationId = 0
+    @State var integrationIds = ""
     
     @State var integrationList: [Integration] = []
     
@@ -71,12 +71,19 @@ struct EditHealthcheckView: View {
                             }
                         }
                         Section("Benachrichtigung") {
-                            let intList = integrationList
+                            /*let intList = integrationList
                             Picker(selection: $integrationId, label: Text("Benachrichtungsmethode")) {
                                 ForEach(0 ..< intList.count) {
                                     Text(intList[$0].integration_name!)
                                         .tag(intList[$0].integration_id)
                                 }
+                            }*/
+                            Button(action: {
+                                withAnimation {
+                                    activeSheet = .integrationselection
+                                }
+                            }) {
+                                Text("Benachrichtigungsmethoden")
                             }
                             Toggle(isOn: $notifyDown) {
                                 Text("Benachrichtung bei DOWN")
@@ -100,7 +107,7 @@ struct EditHealthcheckView: View {
                                     healthcheck.grace_count = Int(graceCount)
                                     healthcheck.alarm_down = notifyDown ? 1 : 0
                                     healthcheck.alarm_up = notifyUp ? 1 : 0
-                                    let res = await api.PostEditHealthcheck(healthcheck: healthcheck, integrationId: integrationId)
+                                    let res = await api.PostEditHealthcheck(healthcheck: healthcheck, integrationId: integrationIds)
                                     withAnimation {
                                         if (res?.info == "success") {
                                             activeSheet = .error
@@ -129,6 +136,7 @@ struct EditHealthcheckView: View {
                 graceCount = Double(healthcheck.grace_count)
                 notifyUp = healthcheck.alarm_up == 1
                 notifyDown = healthcheck.alarm_down == 1
+                integrationIds = healthcheck.integration_id.replacingOccurrences(of: ",", with: "_")
                 do {
                     let jsonDecoder = JSONDecoder()
                     let jsonData = integrationListS.data(using: .utf8)
@@ -136,7 +144,6 @@ struct EditHealthcheckView: View {
                 } catch {
                     print("ERROR \(error.localizedDescription)")
                 }
-                integrationId = integrationList.first(where: { "\($0.integration_id)" == healthcheck.integration_id })?.integration_id ?? 0
             }
             .tint(Color("ip64_color"))
             if api.isLoading {
@@ -163,6 +170,8 @@ struct EditHealthcheckView: View {
                         }
                     }
                 }
+        case .integrationselection:
+            IntegrationSelection(integrationIds: $integrationIds)
         default:
             EmptyView()
         }
