@@ -1,3 +1,4 @@
+![Action Build](https://github.com/androidseb25/IPv64-iOS/actions/workflows/ios.yml/badge.svg?branch=androidseb25-patch-1)
 
 # IPv64.net iOS App
 
