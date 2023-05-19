@@ -33,6 +33,7 @@
 		9A33140C29845F4B009E47F5 /* SetupPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA52918577D009B506D /* SetupPrefs.swift */; };
 		9A5A359E29756EFA006F27EB /* WhatsNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5A359C29756EFA006F27EB /* WhatsNewView.swift */; };
 		9A5A359F29756EFA006F27EB /* WhatsNewItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5A359D29756EFA006F27EB /* WhatsNewItemView.swift */; };
+		9A6EC81D2A1749AA005C5D5A /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 9A6EC81C2A1749AA005C5D5A /* Toast */; };
 		9A8D5BE229196290006B8A74 /* ErrorSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5BE129196290006B8A74 /* ErrorSheetView.swift */; };
 		9A8D5BE429197355006B8A74 /* DetailDomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5BE329197355006B8A74 /* DetailDomainView.swift */; };
 		9A8D5C0529199141006B8A74 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5C0429199141006B8A74 /* HelpView.swift */; };
@@ -206,6 +207,7 @@
 				9A154B5B2989B7600021DD2E /* FirebaseMessaging in Frameworks */,
 				9A154B592989B7600021DD2E /* FirebaseCrashlytics in Frameworks */,
 				9A154B572989B7600021DD2E /* FirebaseAnalytics in Frameworks */,
+				9A6EC81D2A1749AA005C5D5A /* Toast in Frameworks */,
 				9A08D1D82979AB47002CF0E8 /* Introspect in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -516,6 +518,7 @@
 				9A154B562989B7600021DD2E /* FirebaseAnalytics */,
 				9A154B582989B7600021DD2E /* FirebaseCrashlytics */,
 				9A154B5A2989B7600021DD2E /* FirebaseMessaging */,
+				9A6EC81C2A1749AA005C5D5A /* Toast */,
 			);
 			productName = IPv64;
 			productReference = 9AACEB88291851E1009B506D /* IPv64.app */;
@@ -574,6 +577,7 @@
 			packageReferences = (
 				9A08D1D62979AB47002CF0E8 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 				9A154B552989B7600021DD2E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				9A6EC81B2A1749AA005C5D5A /* XCRemoteSwiftPackageReference "toast-swift" */,
 			);
 			productRefGroup = 9AACEB89291851E1009B506D /* Products */;
 			projectDirPath = "";
@@ -958,7 +962,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -979,7 +983,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.9;
+				MARKETING_VERSION = 1.1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -996,7 +1000,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -1017,7 +1021,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.9;
+				MARKETING_VERSION = 1.1.10;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1151,6 +1155,14 @@
 				kind = branch;
 			};
 		};
+		9A6EC81B2A1749AA005C5D5A /* XCRemoteSwiftPackageReference "toast-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/BastiaanJansen/toast-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1173,6 +1185,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9A154B552989B7600021DD2E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		9A6EC81C2A1749AA005C5D5A /* Toast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A6EC81B2A1749AA005C5D5A /* XCRemoteSwiftPackageReference "toast-swift" */;
+			productName = Toast;
 		};
 /* End XCSwiftPackageProductDependency section */
 

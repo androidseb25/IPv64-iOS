@@ -14,7 +14,7 @@ struct WhatsNewView: View {
     
     var whatsNewList = [
         WhatsNewObj(imageName: "ant.circle", title: "Fehlerbehebung", subtitle: "Es wurden in diesem Update ein Paar Fehler behoben, die zur Steigerung der Performance und der Nutzbarkeit dienen"),
-        WhatsNewObj(imageName: "bell.and.waveform", title: "Integrationsübersicht", subtitle: "Ab jetzt gibt es einen neuen Tab der euch erlaubt eure Integrationen zu verwalten")
+        WhatsNewObj(imageName: "bubble.middle.bottom", title: "Interaktions Bubblen", subtitle: "Es gibt jetzt bei sämtlichen Interaktionen wie z.B. Löschen von Domains, eine kleine Notificationbubble")
     ]
     
     var body: some View {
