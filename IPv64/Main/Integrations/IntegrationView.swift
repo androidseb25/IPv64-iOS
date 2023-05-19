@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Introspect
+import Toast
 
 struct IntegrationView: View {
     
@@ -96,6 +97,20 @@ struct IntegrationView: View {
                     if (deleteThisIntegration) {
                         Task {
                             let res = await api.DeleteIntegration(integration_id: deleteIntegrationId)
+                            
+                            
+                            let toast = Toast.default(
+                                image: GetUIImage(imageName: "checkmark.circle", color: UIColor.systemGreen, hierarichal: true),
+                                title: "Erfolgreich gelöscht!", config: .init(
+                                    direction: .top,
+                                    autoHide: true,
+                                    enablePanToClose: false,
+                                    displayTime: 4,
+                                    enteringAnimation: .fade(alphaValue: 0.5),
+                                    exitingAnimation: .slide(x: 0, y: -100))
+                            )
+                            toast.show(haptic: .success)
+                            
                             GetIntegrations()
                         }
                     } else {

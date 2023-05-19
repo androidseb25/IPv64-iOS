@@ -46,7 +46,7 @@ struct LogView: View {
     
     fileprivate func GetLogs() {
         Task {
-            myLogs = await api.GetLogs()!
+            myLogs = await api.GetLogs() ?? Logs(logs: [])
         }
     }
     
