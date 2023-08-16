@@ -15,6 +15,8 @@ struct IntegrationView: View {
     @AppStorage("IntegrationList") var integrationListS: String = ""
     @ObservedObject var api: NetworkServices = NetworkServices()
     
+    @Binding var popToRootTab: Tab
+    
     @State var deleteThisIntegration = false
     @State var activeSheet: ActiveSheet? = nil
     @State var errorTyp: ErrorTyp? = .none
@@ -60,7 +62,7 @@ struct IntegrationView: View {
                         }
                     }
                 }
-                .navigationTitle("Integrationen")
+                .navigationTitle(Tab.integrations.labelName)
                 .refreshable {
                     GetIntegrations()
                 }
@@ -257,13 +259,6 @@ struct IntegrationView: View {
     }
 }
 
-struct IntegrationView_Previews: PreviewProvider {
-    static var previews: some View {
-        IntegrationView()
-            .preferredColorScheme(.light)
-            .previewDisplayName("Light Mode")
-        IntegrationView()
-            .preferredColorScheme(.dark)
-            .previewDisplayName("Dark Mode")
-    }
+#Preview {
+    IntegrationView(popToRootTab: .constant(.other))
 }

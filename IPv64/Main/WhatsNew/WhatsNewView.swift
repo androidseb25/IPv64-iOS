@@ -14,7 +14,9 @@ struct WhatsNewView: View {
     
     var whatsNewList = [
         WhatsNewObj(imageName: "ant.circle", title: "Fehlerbehebung", subtitle: "Es wurden in diesem Update ein Paar Fehler behoben, die zur Steigerung der Performance und der Nutzbarkeit dienen"),
-        WhatsNewObj(imageName: "bubble.middle.bottom", title: "Interaktions Bubblen", subtitle: "Es gibt jetzt bei sämtlichen Interaktionen wie z.B. Löschen von Domains, eine kleine Notificationbubble")
+        WhatsNewObj(imageName: "shield.lefthalf.filled", title: "Blocklist", subtitle: "Du kannst jetzt an deine Blocklist Node's bösartige IP - Adressen reporten"),
+        WhatsNewObj(imageName: "person.circle", title: "Profilseite", subtitle: "Profilseite wurde angepasst und es gibt erste Vorbereitungen für den Multi-User Support"),
+        WhatsNewObj(imageName: "speaker.wave.2", title: "Klick Sound", subtitle: "Beim drücken eines Tabs gibt es jetzt einen Klick Sound")
     ]
     
     var body: some View {

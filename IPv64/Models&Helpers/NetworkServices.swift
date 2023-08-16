@@ -685,4 +685,72 @@ class NetworkServices: ObservableObject {
             return nil
         }
     }
+    
+    @MainActor
+    func GetBlockerNodes() async -> BlockerNodeResults? {
+        let urlString = "\(apiUrl)?get_blockers"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+            request.httpMethod = "GET"
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            let result = try JsonDecoder.decode(BlockerNodeResults.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to GetBlockerNodes", error)
+            return nil
+        }
+    }
+    
+    
+    @MainActor func PostPoisonedIP(poisonedIp: PoisonedIP) async -> PoisonedIPResult? {
+        let urlString = "\(apiUrl)"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+            request.httpMethod = "POST"
+            //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            let body = "blocker_id=\(poisonedIp.blocker_id)&report_ip=\(poisonedIp.report_ip)&port=\(poisonedIp.port!)&category=\(poisonedIp.category!)&info=\(poisonedIp.info!)"
+            
+            request.httpBody = body.data(using: .utf8)
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            let result = try JsonDecoder.decode(PoisonedIPResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to PostPoisonedIP", error)
+            return nil
+        }
+    }
 }
