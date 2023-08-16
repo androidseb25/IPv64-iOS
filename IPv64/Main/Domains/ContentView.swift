@@ -17,6 +17,8 @@ struct ContentView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @Binding var popToRootTab: Tab
+    
     @ObservedObject var api: NetworkServices = NetworkServices()
     @State var myIP: MyIP = MyIP(ip: "")
     @State var myIPV6: MyIP = MyIP(ip: "")
@@ -219,7 +221,7 @@ struct ContentView: View {
                             .foregroundColor(.black)
                         }
                     }
-                    .navigationTitle("Domains")
+                    .navigationTitle(Tab.domains.labelName)
                 }
                 .introspectNavigationController { navigationController in
                     navigationController.splitViewController?.preferredPrimaryColumnWidthFraction = 1
@@ -321,6 +323,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(popToRootTab: .constant(.other))
     }
 }

@@ -16,6 +16,8 @@ struct HealthcheckView: View {
     @AppStorage("IntegrationList") var integrationListS: String = ""
     @ObservedObject var api: NetworkServices = NetworkServices()
     
+    @Binding var popToRootTab: Tab
+    
     @State var activeSheet: ActiveSheet? = nil
     @State var errorTyp: ErrorTyp? = .none
     @State var showSheet = false
@@ -203,7 +205,7 @@ struct HealthcheckView: View {
                         .foregroundColor(.black)
                     }
                 }
-                .navigationTitle("Healthcheck")
+                .navigationTitle(Tab.healthchecks.labelName)
                 .refreshable {
                     GetHealthChecks()
                 }
@@ -376,13 +378,6 @@ struct HealthcheckView: View {
     }
 }
 
-struct HealthcheckView_Previews: PreviewProvider {
-    static var previews: some View {
-        HealthcheckView()
-            .preferredColorScheme(.light)
-            .previewDisplayName("Light Mode")
-        HealthcheckView()
-            .preferredColorScheme(.dark)
-            .previewDisplayName("Dark Mode")
-    }
+#Preview {
+    HealthcheckView(popToRootTab: .constant(.other))
 }

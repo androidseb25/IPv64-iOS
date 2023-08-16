@@ -10,19 +10,33 @@ import SwiftUI
 struct LogView: View {
     
     @ObservedObject var api: NetworkServices = NetworkServices()
-    @State var myLogs: Logs = Logs(logs: [])
+    @State var myLogs: [MyLogs] = []
     @State var activeSheet: ActiveSheet? = nil
     @State var errorTyp: ErrorTyp? = .none
+    @State private var showAllLogs = false
+    @State private var btnTxt = ""
+    @State private var myCustomLogs: [MyLogs] = []
     
     var body: some View {
         ZStack {
             VStack {
                 Form {
-                    Section("Letzten 10 Logs") {
-                        let logList = (myLogs.logs ?? []).prefix(10)
-                        ForEach(logList, id: \.id) { log in
+                    Section("Letzten \(myCustomLogs.count) Logs") {
+                        ForEach(myCustomLogs, id: \.id) { log in
                             LogItemView(log: log)
                         }
+                    }
+                    
+                    Button(action: {
+                        withAnimation {
+                            showAllLogs.toggle()
+                            editLogs()
+                        }
+                    }) {
+                        Text(btnTxt)
+                            .font(.system(.callout, design: .rounded))
+                            .textCase(.uppercase)
+                            .foregroundColor(Color("ip64_color"))
                     }
                 }
             }
@@ -44,9 +58,20 @@ struct LogView: View {
         .navigationTitle("Logs")
     }
     
+    fileprivate func editLogs() {
+        if (showAllLogs) {
+            btnTxt = "Zeige 10 Logs an"
+            myCustomLogs = myLogs
+        } else {
+            btnTxt = "Zeige \(myLogs.count) Logs an"
+            myCustomLogs = Array(myLogs.prefix(10))
+        }
+    }
+    
     fileprivate func GetLogs() {
         Task {
-            myLogs = await api.GetLogs() ?? Logs(logs: [])
+            myLogs = await api.GetLogs()?.logs ?? Logs(logs: []).logs!
+            editLogs()
         }
     }
     
@@ -69,8 +94,6 @@ struct LogView: View {
     }
 }
 
-struct LogView_Previews: PreviewProvider {
-    static var previews: some View {
-        LogView()
-    }
+#Preview {
+    LogView()
 }

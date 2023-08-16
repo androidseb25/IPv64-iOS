@@ -98,6 +98,7 @@ struct MyLogs: Codable {
     var time: String?
     var header: String?
     var content: String?
+    var expandLog: Bool = false
     
     enum CodingKeys: String, CodingKey {
         case subdomain = "subdomain"
@@ -176,6 +177,22 @@ struct AccountClass: Codable {
         case dyndns_ttl = "dyndns_ttl"
         case api_limit = "api_limit"
         case sms_limit = "sms_limit"
+    }
+}
+
+struct Account: Codable {
+    var ApiKey: String?
+    var AccountName: String?
+    var DeviceToken: String?
+    var Since: String?
+    var Active: Bool?
+    
+    enum CodingKeys: String, CodingKey {
+        case ApiKey = "ApiKey"
+        case AccountName = "AccountName"
+        case DeviceToken = "DeviceToken"
+        case Since = "Since"
+        case Active = "Active"
     }
 }
 
@@ -490,6 +507,70 @@ struct HealthcheckStatistics: Codable {
     }
 }
 
+struct BlockerNode : Codable {
+    var blocker_id: String?
+    var name: String?
+    var last_contact: String?
+    var reported_ips_count: Int?
+    var blocked_with_help: Int?
+    var status: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case blocker_id = "blocker_id"
+        case name = "name"
+        case last_contact = "last_contact"
+        case reported_ips_count = "reported_ips_count"
+        case blocked_with_help = "blocked_with_help"
+        case status = "status"
+    }
+}
+
+struct BlockerNodeResults : Codable {
+    var blockers: [BlockerNode] = []
+    var info: String?
+    var status: String?
+    var get_blocker: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case blockers = "blockers"
+        case info = "info"
+        case status = "status"
+        case get_blocker = "get_blocker"
+    }
+    
+    static var empty: BlockerNodeResults { return BlockerNodeResults(blockers: [], info: "", status: "", get_blocker: "") }
+}
+
+struct PoisonedIP : Codable {
+    var blocker_id: String
+    var report_ip: String
+    var port: String?
+    var category: String?
+    var info: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case blocker_id = "blocker_id"
+        case report_ip = "report_ip"
+        case port = "port"
+        case category = "category"
+        case info = "info"
+    }
+    
+    static var empty: PoisonedIP { return PoisonedIP(blocker_id: "", report_ip: "", port: "", category: "", info: "") }
+}
+
+struct PoisonedIPResult : Codable {
+    var info: String?
+    var status: String?
+    var report_ip: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case info = "info"
+        case status = "status"
+        case report_ip = "report_ip"
+    }
+}
+
 struct AlarmUnit: Codable {
     var id: Int?
     var text: String?
@@ -583,6 +664,26 @@ struct ErrorTypes {
             errorTitle: "Domaine wurde erfolgreich reserviert!",
             errorDescription: "Deine ausgewählte Domaine wurde erfolgreich, bei uns im System, für dich reserviert!",
             status: 201
+        )
+    }
+    static var poisonedIpSuccesfully: ErrorTyp {
+        ErrorTyp(
+            icon: "checkmark.icloud.fill",
+            iconColor: .green,
+            navigationTitle: "Erfolgreich",
+            errorTitle: "Bösartige IP wurde erfolgreich gemeldet!",
+            errorDescription: "Deine Bösartige IP wurde erfolgreich, bei uns im System gemeldet!",
+            status: 201
+        )
+    }
+    static var poisonedIpError: ErrorTyp {
+        ErrorTyp(
+            icon: "xmark.icloud.fill",
+            iconColor: .red,
+            navigationTitle: "Fehler",
+            errorTitle: "Fehlerhafte IP!",
+            errorDescription: "Deine übergebene bösartige IP ist nicht korrekt!",
+            status: 403
         )
     }
     static var delete: ErrorTyp {
@@ -692,6 +793,32 @@ public var dynDomainList = [
     "vpn64.de",
     "wan64.de"
 ]
+
+public var badNodeCategory: [BadNodeCategory] = [
+    BadNodeCategory(id: 1, text: "SSH"),
+    BadNodeCategory(id: 2, text: "HTTP/S"),
+    BadNodeCategory(id: 3, text: "Mail"),
+    BadNodeCategory(id: 4, text: "FTP"),
+    BadNodeCategory(id: 5, text: "ICMP"),
+    BadNodeCategory(id: 6, text: "DoS"),
+    BadNodeCategory(id: 7, text: "DDoS"),
+    BadNodeCategory(id: 8, text: "Flooding"),
+    BadNodeCategory(id: 9, text: "Web"),
+    BadNodeCategory(id: 10, text: "Malware"),
+    BadNodeCategory(id: 11, text: "Bots"),
+    BadNodeCategory(id: 12, text: "TCP"),
+    BadNodeCategory(id: 13, text: "UDP"),
+]
+
+public struct BadNodeCategory: Codable {
+    var id: Int?
+    var text: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case text = "text"
+    }
+}
 
 struct WhatsNewObj : Codable {
     var id = UUID()
