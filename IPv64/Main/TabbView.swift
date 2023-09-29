@@ -11,35 +11,93 @@ import FirebaseMessaging
 struct TabbView: View {
     
     @AppStorage("BIOMETRIC_ENABLED") var isBiometricEnabled: Bool = false
-    @AppStorage("AccountInfos") var accountInfos: String = ""
+    @AppStorage("AccountInfos") var accountInfosJson: String = ""
+    @AppStorage("AccountList") var accountListJson: String = ""
     @AppStorage("DomainResult") var listOfDomainsString: String = ""
-    @AppStorage("SelectedView") var selectedView: Int = 1
+    @AppStorage("current_Tab") var selectedTab: Tab = .domains
     
     @Binding var showDomains: Bool
-    @State private var showPlaceholder = false
+    
+    @ObservedObject var api: NetworkServices = NetworkServices()
+    
     @State var activeSheet: ActiveSheet? = nil
+    @State var accountInfos = AccountInfo()
+    
+    @State private var popToRootTab: Tab = .other
+    @State private var showPlaceholder = false
     @State private var showWhatsNew = false
+    @State private var accountList: [Account] = []
+    
+    private var availableTabs: [Tab] {
+        Tab.tabList()
+    }
     
     var body: some View {
-        TabView(selection: $selectedView) {
-            ContentView()
-                .redacted(reason: showPlaceholder ? .placeholder : .init())
-                .tabItem {
-                    Label("Domains", systemImage: "network")
+        tabBarView
+    }
+    
+    @ViewBuilder
+    private func showActiveSheet(item: ActiveSheet?) -> some View {
+        switch item {
+        case .whatsnew:
+            WhatsNewView(activeSheet: $activeSheet, isPresented: $showWhatsNew)
+        default:
+            EmptyView()
+        }
+    }
+    
+    private func sendFCMToken() {
+        Messaging.messaging().isAutoInitEnabled = true
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                print("Error fetching FCM registration token: \(error)")
+            } else if let token = token {
+                print("FCM registration token: \(token)")
+                print(UIDevice().type.rawValue)
+                let os = ProcessInfo().operatingSystemVersion
+                let sdtoken = SetupPrefs.readPreference(mKey: "DEVICETOKEN", mDefaultValue: "") as! String
+                if (sdtoken != token) {
+                    Task {
+                        let api = NetworkServices()
+                        let result = await api.PostAddIntegration(integrationType: "mobil", dtoken: token, dName: UIDevice().type.rawValue)
+                        SetupPrefs.setPreference(mKey: "DEVICETOKEN", mValue: token)
+                    }
                 }
-                .tag(1)
-            HealthcheckView()
-                .redacted(reason: showPlaceholder ? .placeholder : .init())
-                .tabItem {
-                    Label("Healthcheck", systemImage: "waveform.path.ecg")
+            }
+        }
+    }
+    
+    
+    
+    private var tabBarView: some View {
+        TabView(selection: .init(get: {
+            selectedTab
+        }, set: { newTab in
+            Task {
+                if newTab == selectedTab {
+                    /// Stupid hack to trigger onChange binding in tab views.
+                    popToRootTab = .other
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                        popToRootTab = selectedTab
+                    }
                 }
-                .tag(2)
-            ProfilView()
-                .redacted(reason: showPlaceholder ? .placeholder : .init())
-                .tabItem {
-                    Label("Account", systemImage: "person.circle")
-                }
-                .tag(3)
+                
+                selectedTab = newTab
+                
+                await HapticManager.shared.fireHaptic(of: .tabSelection)
+                await SoundEffectManager.shared.playSound(of: .tabSelection)
+            }
+            
+        })) {
+            ForEach(availableTabs) { tab in
+                tab.makeContentView(popToRootTab: $popToRootTab)
+                    .redacted(reason: showPlaceholder ? .placeholder : .init())
+                    .tabItem {
+                        tab.label
+                            .labelStyle(TitleAndIconLabelStyle())
+                    }
+                    .tag(tab)
+            }
         }
         .tint(Color("ip64_color"))
         .sheet(item: $activeSheet) { item in
@@ -53,9 +111,14 @@ struct TabbView: View {
             UIApplication.shared.applicationIconBadgeNumber = 0
             SetupPrefs.setPreference(mKey: "BADGE_COUNT", mValue: 0)
             
+            if (accountListJson.isEmpty) {
+                Task {
+                    await createAccountList()
+                }
+            }
+            
             var lastBuildNumber = SetupPrefs.readPreference(mKey: "LASTBUILDNUMBER", mDefaultValue: "0") as! String
             var token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            
             if Int(lastBuildNumber) != Int(Bundle.main.buildNumber) && !token.isEmpty {
                 withAnimation {
                     showWhatsNew = true
@@ -74,7 +137,20 @@ struct TabbView: View {
                 print("issue")
                 return
             }
-            selectedView = tabId
+            
+            var tab: Tab = .other
+            
+            if (tabId == 1) {
+                tab = .domains
+            } else if (tabId == 2) {
+                tab = .healthchecks
+            } else if (tabId == 3) {
+                tab = .integrations
+            } else if (tabId == 4) {
+                tab = .profile
+            }
+            
+            selectedTab = tab
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             print("Moving to the background! didBecomeActiveNotification")
@@ -114,40 +190,48 @@ struct TabbView: View {
         }
     }
     
-    @ViewBuilder
-    private func showActiveSheet(item: ActiveSheet?) -> some View {
-        switch item {
-        case .whatsnew:
-            WhatsNewView(activeSheet: $activeSheet, isPresented: $showWhatsNew)
-        default:
-            EmptyView()
+    fileprivate func createAccountList() async {
+        loadAccountInfos()
+        if (!accountInfosJson.isEmpty) {
+            do {
+                let apikey = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+                let sdtoken = SetupPrefs.readPreference(mKey: "DEVICETOKEN", mDefaultValue: "") as! String
+                
+                let account = Account(ApiKey: apikey, AccountName: accountInfos.email, DeviceToken: sdtoken, Since: accountInfos.reg_date, Active: true)
+                
+                accountList.append(account)
+                
+                let jsonEncoder = JSONEncoder()
+                let jsonData = try jsonEncoder.encode(accountList)
+                let json = String(data: jsonData, encoding: String.Encoding.utf8)
+                accountListJson = json!
+            } catch let error {
+                print(error)
+            }
+        } else {
+            Task {
+                accountInfos = await api.GetAccountStatus() ?? AccountInfo()
+                print(accountInfos)
+                let jsonEncoder = JSONEncoder()
+                let jsonData = try jsonEncoder.encode(accountInfos)
+                let json = String(data: jsonData, encoding: String.Encoding.utf8)
+                accountInfosJson = json!
+                await createAccountList()
+            }
         }
     }
     
-    private func sendFCMToken() {
-        Messaging.messaging().isAutoInitEnabled = true
-        Messaging.messaging().token { token, error in
-            if let error = error {
-                print("Error fetching FCM registration token: \(error)")
-            } else if let token = token {
-                print("FCM registration token: \(token)")
-                print(UIDevice().type.rawValue)
-                let os = ProcessInfo().operatingSystemVersion
-                var sdtoken = SetupPrefs.readPreference(mKey: "DEVICETOKEN", mDefaultValue: "") as! String
-                if (sdtoken != token) {
-                    Task {
-                        let api = NetworkServices()
-                        let result = await api.PostAddIntegration(integrationType: "mobil", dtoken: token, dName: UIDevice().type.rawValue)
-                        SetupPrefs.setPreference(mKey: "DEVICETOKEN", mValue: token)
-                    }
-                }
-            }
+    fileprivate func loadAccountInfos() {
+        do {
+            let jsonDecoder = JSONDecoder()
+            let jsonData = accountInfosJson.data(using: .utf8)
+            accountInfos = try jsonDecoder.decode(AccountInfo.self, from: jsonData!)
+        } catch let error {
+            print(error)
         }
     }
 }
 
-struct TabbView_Previews: PreviewProvider {
-    static var previews: some View {
-        TabbView(showDomains: .constant(true))
-    }
+#Preview {
+    TabbView(showDomains: .constant(true))
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import Introspect
+import Toast
 
 struct ContentView: View {
     
@@ -15,6 +16,8 @@ struct ContentView: View {
     @AppStorage("DomainResult") var listOfDomainsString: String = ""
     
     @Environment(\.presentationMode) var presentationMode
+    
+    @Binding var popToRootTab: Tab
     
     @ObservedObject var api: NetworkServices = NetworkServices()
     @State var myIP: MyIP = MyIP(ip: "")
@@ -218,7 +221,7 @@ struct ContentView: View {
                             .foregroundColor(.black)
                         }
                     }
-                    .navigationTitle("Domains")
+                    .navigationTitle(Tab.domains.labelName)
                 }
                 .introspectNavigationController { navigationController in
                     navigationController.splitViewController?.preferredPrimaryColumnWidthFraction = 1
@@ -273,7 +276,32 @@ struct ContentView: View {
                     if (deleteThisDomain) {
                         Task {
                             let res = await api.DeleteDomain(domain: delDomain)
-                            listOfDomainsString = ""
+                            let status = res?.status
+                            if (status == nil) {
+                                throw NetworkError.NoNetworkConnection
+                            }
+                            if (status!.contains("429")) {
+                                activeSheet = .error
+                                errorTyp = ErrorTypes.tooManyRequests
+                            } else if (status!.contains("401")) {
+                                activeSheet = .error
+                                errorTyp = ErrorTypes.unauthorized
+                            } else {
+                                activeSheet = nil
+                                errorTyp = nil
+                                let toast = Toast.default(
+                                    image: GetUIImage(imageName: "checkmark.circle", color: UIColor.systemGreen, hierarichal: true),
+                                    title: "Erfolgreich gelöscht!", config: .init(
+                                        direction: .top,
+                                        autoHide: true,
+                                        enablePanToClose: false,
+                                        displayTime: 4,
+                                        enteringAnimation: .fade(alphaValue: 0.5),
+                                        exitingAnimation: .slide(x: 0, y: -100))
+                                )
+                                toast.show(haptic: .success)
+                            }
+                            
                             loadDomains(isRefresh: true)
                         }
                     } else {
@@ -295,6 +323,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(popToRootTab: .constant(.other))
     }
 }

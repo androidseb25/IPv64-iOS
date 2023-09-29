@@ -16,7 +16,6 @@ struct SmallSizeView : View {
     
     var body: some View {
         ZStack {
-            Color("circleBG")
             VStack {
                 if (entry.configuration.healthcheckSymbol1 != nil || entry.configuration.healthcheckSymbol2 != nil) {
                     if (entry.configuration.healthcheckSymbol1 != nil) {
@@ -64,6 +63,8 @@ struct SmallSizeView : View {
             }
             .padding()
         }
+        .frame(maxHeight: .infinity)
+        .widgetBackground(backgroundView: Color("circleBG"))
     }
     
     fileprivate func GetLastXMonitorPills(count: Int, events: [EventSymbol]) -> [Color] {

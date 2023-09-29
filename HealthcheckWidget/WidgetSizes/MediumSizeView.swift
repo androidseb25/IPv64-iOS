@@ -16,7 +16,6 @@ struct MediumSizeView : View {
 
     var body: some View {
         ZStack {
-            Color("circleBG")
             HStack {
                 let firstColumn = GetColumn(start: 0, end: 1)
                 let secondColumn = GetColumn(start: 2, end: 3)
@@ -73,6 +72,8 @@ struct MediumSizeView : View {
             }
             .padding()
         }
+        .frame(maxHeight: .infinity)
+        .widgetBackground(backgroundView: Color("circleBG"))
     }
     
     fileprivate func GetLastXMonitorPills(count: Int, domain: HealthCheck) -> [Color] {

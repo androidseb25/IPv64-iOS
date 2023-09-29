@@ -33,9 +33,18 @@
 		9A33140C29845F4B009E47F5 /* SetupPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA52918577D009B506D /* SetupPrefs.swift */; };
 		9A5A359E29756EFA006F27EB /* WhatsNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5A359C29756EFA006F27EB /* WhatsNewView.swift */; };
 		9A5A359F29756EFA006F27EB /* WhatsNewItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5A359D29756EFA006F27EB /* WhatsNewItemView.swift */; };
+		9A6EC81D2A1749AA005C5D5A /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 9A6EC81C2A1749AA005C5D5A /* Toast */; };
+		9A8482E82AC603B10072BF45 /* AccountListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8482E72AC603B10072BF45 /* AccountListView.swift */; };
 		9A8D5BE229196290006B8A74 /* ErrorSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5BE129196290006B8A74 /* ErrorSheetView.swift */; };
 		9A8D5BE429197355006B8A74 /* DetailDomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5BE329197355006B8A74 /* DetailDomainView.swift */; };
 		9A8D5C0529199141006B8A74 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5C0429199141006B8A74 /* HelpView.swift */; };
+		9AA7B4D22A82BDF900A06B4D /* Tabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA7B4D12A82BDF900A06B4D /* Tabs.swift */; };
+		9AA7B4D52A82BF8600A06B4D /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA7B4D32A82BF8600A06B4D /* HapticManager.swift */; };
+		9AA7B4D62A82BF8600A06B4D /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA7B4D42A82BF8600A06B4D /* SoundEffectManager.swift */; };
+		9AA7B4D82A82BFAD00A06B4D /* UserPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA7B4D72A82BFAD00A06B4D /* UserPrefs.swift */; };
+		9AA7B4DD2A82C66B00A06B4D /* tabSelection_old.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9AA7B4DB2A82C66A00A06B4D /* tabSelection_old.wav */; };
+		9AA7B4DE2A82C66B00A06B4D /* tabSelection.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9AA7B4DC2A82C66B00A06B4D /* tabSelection.wav */; };
+		9AA7B4E12A82C7D400A06B4D /* BlocklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA7B4E02A82C7D400A06B4D /* BlocklistView.swift */; };
 		9AACEB8C291851E1009B506D /* IPv64App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEB8B291851E1009B506D /* IPv64App.swift */; };
 		9AACEB8E291851E1009B506D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEB8D291851E1009B506D /* ContentView.swift */; };
 		9AACEB90291851E2009B506D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AACEB8F291851E2009B506D /* Assets.xcassets */; };
@@ -70,6 +79,7 @@
 		9ABB37F4297B5CB800FC9B74 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AACEBA7291857AF009B506D /* SpinnerView.swift */; };
 		9ABB37F8297C6BDB00FC9B74 /* EditHealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABB37F7297C6BDB00FC9B74 /* EditHealthcheckView.swift */; };
 		9AC2EDEC291ADFAF00140CD9 /* NewDomainDNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */; };
+		9AD1D90229B9E26E00DD6057 /* IntegrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD1D90129B9E26E00DD6057 /* IntegrationView.swift */; };
 		9AD5DF5E2975B5DB007928F6 /* HealthcheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF5D2975B5DB007928F6 /* HealthcheckView.swift */; };
 		9AD5DF612975BAC3007928F6 /* HealthcheckStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */; };
 		9AD5DF632975BAD7007928F6 /* HealthcheckStatsItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD5DF622975BAD7007928F6 /* HealthcheckStatsItem.swift */; };
@@ -136,10 +146,18 @@
 		9A33140029844E4D009E47F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9A5A359C29756EFA006F27EB /* WhatsNewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsNewView.swift; sourceTree = "<group>"; };
 		9A5A359D29756EFA006F27EB /* WhatsNewItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsNewItemView.swift; sourceTree = "<group>"; };
+		9A8482E72AC603B10072BF45 /* AccountListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountListView.swift; sourceTree = "<group>"; };
 		9A8D5BE129196290006B8A74 /* ErrorSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorSheetView.swift; sourceTree = "<group>"; };
 		9A8D5BE329197355006B8A74 /* DetailDomainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailDomainView.swift; sourceTree = "<group>"; };
 		9A8D5C0429199141006B8A74 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		9AA1F99F29847A5B00170C69 /* HealthcheckIntents.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HealthcheckIntents.entitlements; sourceTree = "<group>"; };
+		9AA7B4D12A82BDF900A06B4D /* Tabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabs.swift; sourceTree = "<group>"; };
+		9AA7B4D32A82BF8600A06B4D /* HapticManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		9AA7B4D42A82BF8600A06B4D /* SoundEffectManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundEffectManager.swift; sourceTree = "<group>"; };
+		9AA7B4D72A82BFAD00A06B4D /* UserPrefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPrefs.swift; sourceTree = "<group>"; };
+		9AA7B4DB2A82C66A00A06B4D /* tabSelection_old.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = tabSelection_old.wav; sourceTree = "<group>"; };
+		9AA7B4DC2A82C66B00A06B4D /* tabSelection.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = tabSelection.wav; sourceTree = "<group>"; };
+		9AA7B4E02A82C7D400A06B4D /* BlocklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocklistView.swift; sourceTree = "<group>"; };
 		9AACEB88291851E1009B506D /* IPv64.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IPv64.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AACEB8B291851E1009B506D /* IPv64App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPv64App.swift; sourceTree = "<group>"; };
 		9AACEB8D291851E1009B506D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -173,6 +191,7 @@
 		9ABB37F6297B65BF00FC9B74 /* HealthcheckWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HealthcheckWidgetExtension.entitlements; sourceTree = "<group>"; };
 		9ABB37F7297C6BDB00FC9B74 /* EditHealthcheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditHealthcheckView.swift; sourceTree = "<group>"; };
 		9AC2EDEB291ADFAF00140CD9 /* NewDomainDNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDomainDNSView.swift; sourceTree = "<group>"; };
+		9AD1D90129B9E26E00DD6057 /* IntegrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationView.swift; sourceTree = "<group>"; };
 		9AD5DF5D2975B5DB007928F6 /* HealthcheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckView.swift; sourceTree = "<group>"; };
 		9AD5DF602975BAC3007928F6 /* HealthcheckStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckStatsView.swift; sourceTree = "<group>"; };
 		9AD5DF622975BAD7007928F6 /* HealthcheckStatsItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthcheckStatsItem.swift; sourceTree = "<group>"; };
@@ -204,6 +223,7 @@
 				9A154B5B2989B7600021DD2E /* FirebaseMessaging in Frameworks */,
 				9A154B592989B7600021DD2E /* FirebaseCrashlytics in Frameworks */,
 				9A154B572989B7600021DD2E /* FirebaseAnalytics in Frameworks */,
+				9A6EC81D2A1749AA005C5D5A /* Toast in Frameworks */,
 				9A08D1D82979AB47002CF0E8 /* Introspect in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,6 +297,7 @@
 				9A003505293129930065E1F3 /* AccountView.swift */,
 				9A0034FF2930FD010065E1F3 /* IPView.swift */,
 				9A8D5C0429199141006B8A74 /* HelpView.swift */,
+				9A8482E72AC603B10072BF45 /* AccountListView.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -284,6 +305,8 @@
 		9A7CDCDE296DEA6F00237D5B /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				9AA7B4DF2A82C7BD00A06B4D /* Blocklist */,
+				9AD1D90029B9E25C00DD6057 /* Integrations */,
 				9AD5DF5C2975B5C8007928F6 /* Healthcheck */,
 				9A5A359B29756EFA006F27EB /* WhatsNew */,
 				9A7CDCDD296DEA6500237D5B /* Account */,
@@ -291,6 +314,7 @@
 				9A7CDCE0296DEBD400237D5B /* Sheets */,
 				9AACEB9E2918524B009B506D /* LoginView.swift */,
 				9A0034FB2930F9200065E1F3 /* TabbView.swift */,
+				9AA7B4D12A82BDF900A06B4D /* Tabs.swift */,
 				9AAEF656297F0D3800726849 /* LockView.swift */,
 			);
 			path = Main;
@@ -324,12 +348,40 @@
 		9A7CDCE2296DEBF700237D5B /* Models&Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				9AA7B4D72A82BFAD00A06B4D /* UserPrefs.swift */,
+				9AA7B4D32A82BF8600A06B4D /* HapticManager.swift */,
+				9AA7B4D42A82BF8600A06B4D /* SoundEffectManager.swift */,
 				9AAEF654297F089D00726849 /* Biometrics.swift */,
 				9AACEBA52918577D009B506D /* SetupPrefs.swift */,
 				9AACEBA0291853C9009B506D /* NetworkServices.swift */,
 				9AACEBA329185411009B506D /* Models.swift */,
 			);
 			path = "Models&Helpers";
+			sourceTree = "<group>";
+		};
+		9AA7B4D92A82C63F00A06B4D /* Env */ = {
+			isa = PBXGroup;
+			children = (
+				9AA7B4DA2A82C64D00A06B4D /* Sounds */,
+			);
+			path = Env;
+			sourceTree = "<group>";
+		};
+		9AA7B4DA2A82C64D00A06B4D /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				9AA7B4DB2A82C66A00A06B4D /* tabSelection_old.wav */,
+				9AA7B4DC2A82C66B00A06B4D /* tabSelection.wav */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
+		9AA7B4DF2A82C7BD00A06B4D /* Blocklist */ = {
+			isa = PBXGroup;
+			children = (
+				9AA7B4E02A82C7D400A06B4D /* BlocklistView.swift */,
+			);
+			path = Blocklist;
 			sourceTree = "<group>";
 		};
 		9AACEB7F291851E1009B506D = {
@@ -359,6 +411,7 @@
 		9AACEB8A291851E1009B506D /* IPv64 */ = {
 			isa = PBXGroup;
 			children = (
+				9AA7B4D92A82C63F00A06B4D /* Env */,
 				9A154B5C2989B7EA0021DD2E /* GoogleService-Info.plist */,
 				9ABB37F5297B659200FC9B74 /* IPv64.entitlements */,
 				9AB155C329747F5C0052F21E /* Info.plist */,
@@ -414,6 +467,14 @@
 				9ABB37EA297B2C2A00FC9B74 /* LargeSizeView.swift */,
 			);
 			path = WidgetSizes;
+			sourceTree = "<group>";
+		};
+		9AD1D90029B9E25C00DD6057 /* Integrations */ = {
+			isa = PBXGroup;
+			children = (
+				9AD1D90129B9E26E00DD6057 /* IntegrationView.swift */,
+			);
+			path = Integrations;
 			sourceTree = "<group>";
 		};
 		9AD5DF5C2975B5C8007928F6 /* Healthcheck */ = {
@@ -505,6 +566,7 @@
 				9A154B562989B7600021DD2E /* FirebaseAnalytics */,
 				9A154B582989B7600021DD2E /* FirebaseCrashlytics */,
 				9A154B5A2989B7600021DD2E /* FirebaseMessaging */,
+				9A6EC81C2A1749AA005C5D5A /* Toast */,
 			);
 			productName = IPv64;
 			productReference = 9AACEB88291851E1009B506D /* IPv64.app */;
@@ -563,6 +625,7 @@
 			packageReferences = (
 				9A08D1D62979AB47002CF0E8 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 				9A154B552989B7600021DD2E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				9A6EC81B2A1749AA005C5D5A /* XCRemoteSwiftPackageReference "toast-swift" */,
 			);
 			productRefGroup = 9AACEB89291851E1009B506D /* Products */;
 			projectDirPath = "";
@@ -598,6 +661,8 @@
 				9AACEB93291851E2009B506D /* Preview Assets.xcassets in Resources */,
 				9AACEB90291851E2009B506D /* Assets.xcassets in Resources */,
 				9A154B5D2989B7EA0021DD2E /* GoogleService-Info.plist in Resources */,
+				9AA7B4DD2A82C66B00A06B4D /* tabSelection_old.wav in Resources */,
+				9AA7B4DE2A82C66B00A06B4D /* tabSelection.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -638,11 +703,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9AA7B4E12A82C7D400A06B4D /* BlocklistView.swift in Sources */,
 				9AACEBA1291853C9009B506D /* NetworkServices.swift in Sources */,
 				9A10DC00298C285800285C0A /* NotificationService.swift in Sources */,
 				9A8D5C0529199141006B8A74 /* HelpView.swift in Sources */,
 				9A0034FE2930F9460065E1F3 /* ProfilView.swift in Sources */,
 				9ABB37F8297C6BDB00FC9B74 /* EditHealthcheckView.swift in Sources */,
+				9AA7B4D52A82BF8600A06B4D /* HapticManager.swift in Sources */,
 				9AD5DF612975BAC3007928F6 /* HealthcheckStatsView.swift in Sources */,
 				9AD5DF652975ECC1007928F6 /* NewHealthcheckView.swift in Sources */,
 				9AACEBA8291857AF009B506D /* SpinnerView.swift in Sources */,
@@ -651,16 +718,21 @@
 				9AB155C229747DAC0052F21E /* CodeScanner.swift in Sources */,
 				9AACEB8E291851E1009B506D /* ContentView.swift in Sources */,
 				9AACEB8C291851E1009B506D /* IPv64App.swift in Sources */,
+				9AD1D90229B9E26E00DD6057 /* IntegrationView.swift in Sources */,
 				9AD5DF5E2975B5DB007928F6 /* HealthcheckView.swift in Sources */,
 				9A5A359F29756EFA006F27EB /* WhatsNewItemView.swift in Sources */,
 				9A003502293101350065E1F3 /* LogView.swift in Sources */,
 				9AACEBA62918577D009B506D /* SetupPrefs.swift in Sources */,
 				9AACEB9F2918524B009B506D /* LoginView.swift in Sources */,
+				9AA7B4D62A82BF8600A06B4D /* SoundEffectManager.swift in Sources */,
 				9AB78EB7297740D00047FDFA /* DetailHealthcheckView.swift in Sources */,
 				9AAEF657297F0D3800726849 /* LockView.swift in Sources */,
 				9A8D5BE429197355006B8A74 /* DetailDomainView.swift in Sources */,
 				9AC2EDEC291ADFAF00140CD9 /* NewDomainDNSView.swift in Sources */,
+				9AA7B4D82A82BFAD00A06B4D /* UserPrefs.swift in Sources */,
+				9AA7B4D22A82BDF900A06B4D /* Tabs.swift in Sources */,
 				9A0034FC2930F9200065E1F3 /* TabbView.swift in Sources */,
+				9A8482E82AC603B10072BF45 /* AccountListView.swift in Sources */,
 				9A0035002930FD010065E1F3 /* IPView.swift in Sources */,
 				9A0035042931062B0065E1F3 /* LogItemView.swift in Sources */,
 				9A8D5BE229196290006B8A74 /* ErrorSheetView.swift in Sources */,
@@ -946,7 +1018,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -962,12 +1034,12 @@
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.8;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -984,7 +1056,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_ASSET_PATHS = "\"IPv64/Preview Content\"";
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
@@ -1000,12 +1072,12 @@
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.8;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1139,6 +1211,14 @@
 				kind = branch;
 			};
 		};
+		9A6EC81B2A1749AA005C5D5A /* XCRemoteSwiftPackageReference "toast-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/BastiaanJansen/toast-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1161,6 +1241,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9A154B552989B7600021DD2E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		9A6EC81C2A1749AA005C5D5A /* Toast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A6EC81B2A1749AA005C5D5A /* XCRemoteSwiftPackageReference "toast-swift" */;
+			productName = Toast;
 		};
 /* End XCSwiftPackageProductDependency section */
 
