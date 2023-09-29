@@ -776,6 +776,16 @@ struct ErrorTypes {
             status: 201
         )
     }
+    static var accountSuccessfullyAdded: ErrorTyp {
+        ErrorTyp(
+            icon: "person.crop.circle.badge.checkmark",
+            iconColor: .green,
+            navigationTitle: "Erfolgreich",
+            errorTitle: "Account erfolgreich hinzugefügt!",
+            errorDescription: "",
+            status: 201
+        )
+    }
 }
 
 public var dynDomainList = [
