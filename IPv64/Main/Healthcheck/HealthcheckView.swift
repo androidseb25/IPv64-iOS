@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Introspect
+import Toast
 
 struct HealthcheckView: View {
     
@@ -14,6 +15,8 @@ struct HealthcheckView: View {
     @AppStorage("HealthcheckList") var healthCheckList: String = ""
     @AppStorage("IntegrationList") var integrationListS: String = ""
     @ObservedObject var api: NetworkServices = NetworkServices()
+    
+    @Binding var popToRootTab: Tab
     
     @State var activeSheet: ActiveSheet? = nil
     @State var errorTyp: ErrorTyp? = .none
@@ -81,9 +84,34 @@ struct HealthcheckView: View {
             if (isPause) {
                 let res = await api.PostPauseHealth(healthtoken: startPauseHealthToken)
                 startPauseHealthToken = ""
+                
+                let toast = Toast.default(
+                    image: GetUIImage(imageName: "pause.circle", color: UIColor.systemCyan, hierarichal: true),
+                    title: "Erfolgreich pausiert!", config: .init(
+                        direction: .top,
+                        autoHide: true,
+                        enablePanToClose: false,
+                        displayTime: 4,
+                        enteringAnimation: .fade(alphaValue: 0.5),
+                        exitingAnimation: .slide(x: 0, y: -100))
+                )
+                toast.show(haptic: .success)
+                
             } else {
                 let res = await api.PostStartHealth(healthtoken: startPauseHealthToken)
                 startPauseHealthToken = ""
+                
+                let toast = Toast.default(
+                    image: GetUIImage(imageName: "play.circle", color: UIColor.systemGreen, hierarichal: true),
+                    title: "Erfolgreich gestartet!", config: .init(
+                        direction: .top,
+                        autoHide: true,
+                        enablePanToClose: false,
+                        displayTime: 4,
+                        enteringAnimation: .fade(alphaValue: 0.5),
+                        exitingAnimation: .slide(x: 0, y: -100))
+                )
+                toast.show(haptic: .success)
             }
             GetHealthChecks()
         }
@@ -177,7 +205,7 @@ struct HealthcheckView: View {
                         .foregroundColor(.black)
                     }
                 }
-                .navigationTitle("Healthcheck")
+                .navigationTitle(Tab.healthchecks.labelName)
                 .refreshable {
                     GetHealthChecks()
                 }
@@ -224,6 +252,33 @@ struct HealthcheckView: View {
                         Task {
                             refeshUUID = UUID()
                             let res = await api.DeleteHealth(health: deleteHealth)
+                            
+                            let status = res?.status
+                            if (status == nil) {
+                                throw NetworkError.NoNetworkConnection
+                            }
+                            if (status!.contains("429")) {
+                                activeSheet = .error
+                                errorTyp = ErrorTypes.tooManyRequests
+                            } else if (status!.contains("401")) {
+                                activeSheet = .error
+                                errorTyp = ErrorTypes.unauthorized
+                            } else {
+                                activeSheet = nil
+                                errorTyp = nil
+                                let toast = Toast.default(
+                                    image: GetUIImage(imageName: "checkmark.circle", color: UIColor.systemGreen, hierarichal: true),
+                                    title: "Erfolgreich gelöscht!", config: .init(
+                                        direction: .top,
+                                        autoHide: true,
+                                        enablePanToClose: false,
+                                        displayTime: 4,
+                                        enteringAnimation: .fade(alphaValue: 0.5),
+                                        exitingAnimation: .slide(x: 0, y: -100))
+                                )
+                                toast.show(haptic: .success)
+                            }
+                            
                             GetHealthChecks()
                         }
                     } else {
@@ -277,7 +332,9 @@ struct HealthcheckView: View {
                         }
                     }
                 }
-                GetIntegrations()
+                if (integrationListS.isEmpty) {
+                    GetIntegrations()
+                }
             }
         }
     }
@@ -321,13 +378,6 @@ struct HealthcheckView: View {
     }
 }
 
-struct HealthcheckView_Previews: PreviewProvider {
-    static var previews: some View {
-        HealthcheckView()
-            .preferredColorScheme(.light)
-            .previewDisplayName("Light Mode")
-        HealthcheckView()
-            .preferredColorScheme(.dark)
-            .previewDisplayName("Dark Mode")
-    }
+#Preview {
+    HealthcheckView(popToRootTab: .constant(.other))
 }

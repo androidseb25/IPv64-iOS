@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Toast
 
 struct DetailDomainView: View {
     
@@ -120,6 +121,17 @@ struct DetailDomainView: View {
                     }
                     .swipeActions(edge: .trailing) {
                         Button(role: .none, action: {
+                            let toast = Toast.default(
+                                image: GetUIImage(imageName: "doc.on.doc", color: UIColor.systemBlue, hierarichal: true),
+                                title: "Kopiert!", config: .init(
+                                    direction: .top,
+                                    autoHide: true,
+                                    enablePanToClose: false,
+                                    displayTime: 4,
+                                    enteringAnimation: .fade(alphaValue: 0.5),
+                                    exitingAnimation: .slide(x: 0, y: -100))
+                            )
+                            toast.show(haptic: .success)
                             UIPasteboard.general.string = GetAccountUpdateUrl()
                         }) {
                             Label("Kopieren", systemImage: "doc.on.doc")
@@ -135,6 +147,17 @@ struct DetailDomainView: View {
                     }
                     .swipeActions(edge: .trailing) {
                         Button(role: .none, action: {
+                            let toast = Toast.default(
+                                image: GetUIImage(imageName: "doc.on.doc", color: UIColor.systemBlue, hierarichal: true),
+                                title: "Kopiert!", config: .init(
+                                    direction: .top,
+                                    autoHide: true,
+                                    enablePanToClose: false,
+                                    displayTime: 4,
+                                    enteringAnimation: .fade(alphaValue: 0.5),
+                                    exitingAnimation: .slide(x: 0, y: -100))
+                            )
+                            toast.show(haptic: .success)
                             UIPasteboard.general.string = GetDomainUpdateUrl()
                         }) {
                             Label("Kopieren", systemImage: "doc.on.doc")
@@ -272,6 +295,34 @@ struct DetailDomainView: View {
                     if (deleteThisDNSRecord) {
                         Task {
                             let res = await api.DeleteDNSRecord(recordId: (delDNSRecord?.record_id)!)
+                            
+                            let status = res?.status
+                            if (status == nil) {
+                                throw NetworkError.NoNetworkConnection
+                            }
+                            if (status!.contains("429")) {
+                                activeSheet = .error
+                                errorTyp = ErrorTypes.tooManyRequests
+                            } else if (status!.contains("401")) {
+                                activeSheet = .error
+                                errorTyp = ErrorTypes.unauthorized
+                            } else {
+                                activeSheet = nil
+                                errorTyp = nil
+                                let toast = Toast.default(
+                                    image: GetUIImage(imageName: "checkmark.circle", color: UIColor.systemGreen, hierarichal: true),
+                                    title: "Erfolgreich gelöscht!", config: .init(
+                                        direction: .top,
+                                        autoHide: true,
+                                        enablePanToClose: false,
+                                        displayTime: 4,
+                                        enteringAnimation: .fade(alphaValue: 0.5),
+                                        exitingAnimation: .slide(x: 0, y: -100))
+                                )
+                                toast.show(haptic: .success)
+                            }
+                            
+                            
                             withAnimation {
                                 presentationMode.wrappedValue.dismiss()
                             }

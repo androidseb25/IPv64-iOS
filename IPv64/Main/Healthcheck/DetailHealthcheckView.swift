@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Charts
+import Toast
 
 struct DetailHealthcheckView: View {
     
@@ -169,6 +170,17 @@ struct DetailHealthcheckView: View {
                     }
                     .swipeActions(edge: .trailing) {
                         Button(role: .none, action: {
+                            let toast = Toast.default(
+                                image: GetUIImage(imageName: "doc.on.doc", color: UIColor.systemBlue, hierarichal: true),
+                                title: "Kopiert!", config: .init(
+                                    direction: .top,
+                                    autoHide: true,
+                                    enablePanToClose: false,
+                                    displayTime: 4,
+                                    enteringAnimation: .fade(alphaValue: 0.5),
+                                    exitingAnimation: .slide(x: 0, y: -100))
+                            )
+                            toast.show(haptic: .success)
                             UIPasteboard.general.string = GetHealthUpdateUrl()
                         }) {
                             Label("Kopieren", systemImage: "doc.on.doc")

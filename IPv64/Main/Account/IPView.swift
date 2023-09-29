@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Toast
 
 struct IPView: View {
     
@@ -25,6 +26,17 @@ struct IPView: View {
                         .minimumScaleFactor(0.01)
                         .swipeActions(edge: .trailing) {
                             Button(role: .none, action: {
+                                let toast = Toast.default(
+                                    image: GetUIImage(imageName: "doc.on.doc", color: UIColor.systemBlue, hierarichal: true),
+                                    title: "IPv4 kopiert!", config: .init(
+                                        direction: .top,
+                                        autoHide: true,
+                                        enablePanToClose: false,
+                                        displayTime: 4,
+                                        enteringAnimation: .fade(alphaValue: 0.5),
+                                        exitingAnimation: .slide(x: 0, y: -100))
+                                )
+                                toast.show(haptic: .success)
                                 UIPasteboard.general.string = myIP.ip! ?? "0.0.0.0"
                             }) {
                                 Label("IPv4 kopieren", systemImage: "doc.on.doc")
@@ -42,6 +54,17 @@ struct IPView: View {
                         .minimumScaleFactor(0.01)
                         .swipeActions(edge: .trailing) {
                             Button(role: .none, action: {
+                                let toast = Toast.default(
+                                    image: GetUIImage(imageName: "doc.on.doc", color: UIColor.systemBlue, hierarichal: true),
+                                    title: "IPv6 kopiert!", config: .init(
+                                        direction: .top,
+                                        autoHide: true,
+                                        enablePanToClose: false,
+                                        displayTime: 4,
+                                        enteringAnimation: .fade(alphaValue: 0.5),
+                                        exitingAnimation: .slide(x: 0, y: -100))
+                                )
+                                toast.show(haptic: .success)
                                 UIPasteboard.general.string = myIPV6.ip! ?? "0.0.0.0"
                             }) {
                                 Label("IPv6 kopieren", systemImage: "doc.on.doc")

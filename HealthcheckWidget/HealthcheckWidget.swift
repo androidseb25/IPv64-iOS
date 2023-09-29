@@ -280,6 +280,7 @@ struct HealthcheckWidget: Widget {
         .supportedFamilies(supportedFamilies)
         .configurationDisplayName("Meine Healthchecks")
         .description("Hier werden dir deine Healthchecks angezeigt.")
+        .contentMarginsDisabled()
     }
 }
 
@@ -300,6 +301,19 @@ struct HealthcheckWidgetStatic: Widget {
         .supportedFamilies(supportedFamilies)
         .configurationDisplayName("Meine Healthchecks")
         .description("Hier werden dir deine Healthchecks angezeigt.")
+        .contentMarginsDisabled()
+    }
+}
+
+extension View {
+    func widgetBackground(backgroundView: some View) -> some View {
+        if #available(iOSApplicationExtension 17.0, *) {
+            return containerBackground(for: .widget) {
+                backgroundView
+            }
+        } else {
+            return background(backgroundView)
+        }
     }
 }
 

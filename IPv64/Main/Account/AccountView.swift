@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Toast
 
 struct AccountView: View {
     
@@ -132,6 +133,17 @@ struct AccountView: View {
                             }
                             .swipeActions(edge: .trailing) {
                                 Button(role: .none, action: {
+                                    let toast = Toast.default(
+                                        image: GetUIImage(imageName: "doc.on.doc", color: UIColor.systemBlue, hierarichal: true),
+                                        title: "Kopiert!", config: .init(
+                                            direction: .top,
+                                            autoHide: true,
+                                            enablePanToClose: false,
+                                            displayTime: 4,
+                                            enteringAnimation: .fade(alphaValue: 0.5),
+                                            exitingAnimation: .slide(x: 0, y: -100))
+                                    )
+                                    toast.show(haptic: .success)
                                     UIPasteboard.general.string = accountInfos.update_hash ?? "HASH"
                                 }) {
                                     Label("Kopieren", systemImage: "doc.on.doc")
@@ -159,6 +171,17 @@ struct AccountView: View {
                             }
                             .swipeActions(edge: .trailing) {
                                 Button(role: .none, action: {
+                                    let toast = Toast.default(
+                                        image: GetUIImage(imageName: "doc.on.doc", color: UIColor.systemBlue, hierarichal: true),
+                                        title: "Kopiert!", config: .init(
+                                            direction: .top,
+                                            autoHide: true,
+                                            enablePanToClose: false,
+                                            displayTime: 4,
+                                            enteringAnimation: .fade(alphaValue: 0.5),
+                                            exitingAnimation: .slide(x: 0, y: -100))
+                                    )
+                                    toast.show(haptic: .success)
                                     UIPasteboard.general.string = accountInfos.api_key ?? "API KEY"
                                 }) {
                                     Label("Kopieren", systemImage: "doc.on.doc")
