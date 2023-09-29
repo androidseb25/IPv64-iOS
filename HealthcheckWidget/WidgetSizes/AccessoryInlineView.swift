@@ -46,6 +46,7 @@ struct AccessoryRectangleView : View {
             .padding(0)
         }
         .privacySensitive()
+        .frame(maxHeight: .infinity)
     }
     
     fileprivate func GetLastXMonitorPills(count: Int, events: [EventSymbol]) -> [Color] {

@@ -8,14 +8,22 @@
 import SwiftUI
 
 struct LoginView: View {
+    
+    @AppStorage("NEW_ACCOUNT") var newAccount = false
+    @AppStorage("AccountInfos") var accountInfosJson: String = ""
+    @AppStorage("AccountList") var accountListJson: String = ""
+    
     @ObservedObject var api: NetworkServices = NetworkServices()
     
     @State var actionSheet: ActiveSheet?
+    @State var errorTyp: ErrorTyp? = nil
     @State var username = ""
     @State var apiKey = ""
     @State private var errorMsg = ""
     @State var showMainView = false
     @State var loginFailed = false
+    @State var accountInfos = AccountInfo()
+    @State private var accountList: [Account] = []
     
     var body: some View {
         GeometryReader { geometry in
@@ -72,8 +80,12 @@ struct LoginView: View {
                             
                             Button(action: {
                                 withAnimation {
-                                    SetupPrefs.setPreference(mKey: "APIKEY", mValue: apiKey)
-                                    showMainView.toggle()
+                                    if (newAccount) {
+                                        addNewAccount()
+                                    } else {
+                                        SetupPrefs.setPreference(mKey: "APIKEY", mValue: apiKey)
+                                        showMainView.toggle()
+                                    }
                                 }
                             }) {
                                 Text("Login mit API Key")
@@ -106,6 +118,18 @@ struct LoginView: View {
                     .sheet(item: $actionSheet) { item in
                         showActiveSheet(item: item)
                     }
+                    .onAppear {
+                        if (!accountListJson.isEmpty) {
+                            do {
+                                let jsonDecoder = JSONDecoder()
+                                let jsonData = accountListJson.data(using: .utf8)
+                                accountList = try jsonDecoder.decode([Account].self, from: jsonData!)
+                                print(accountList)
+                            } catch {
+                                print("ERROR \(error.localizedDescription)")
+                            }
+                        }
+                    }
                     if api.isLoading {
                         VStack() {
                             Spinner(isAnimating: true, style: .large, color: .white)
@@ -125,8 +149,56 @@ struct LoginView: View {
         switch item {
         case .qrcode:
             CodeScannerView(codeTypes: [.qr], simulatedData: "", completion: self.handleScan).edgesIgnoringSafeArea(.bottom)
+        case .error:
+            ErrorSheetView(errorTyp: $errorTyp, deleteThisDomain: .constant(false))
+                .interactiveDismissDisabled(true)
+                .onDisappear {
+                    if (self.errorTyp!.status == 201) {
+                        withAnimation {
+                            errorTyp = nil
+                            actionSheet = nil
+                            newAccount = false
+                            showMainView.toggle()
+                        }
+                    }
+                }
         default:
             EmptyView()
+        }
+    }
+    
+    private func addNewAccount() {
+        Task {
+            let accountInd = accountList.firstIndex { $0.ApiKey == apiKey }
+            if (accountInd != nil) {
+                withAnimation {
+                    errorTyp = nil
+                    actionSheet = nil
+                    newAccount = false
+                    showMainView.toggle()
+                }
+                return;
+            }
+            await getAccountInfos()
+            do {
+                let sdtoken = SetupPrefs.readPreference(mKey: "DEVICETOKEN", mDefaultValue: "") as! String
+                
+                let account = Account(ApiKey: apiKey, AccountName: accountInfos.email, DeviceToken: sdtoken, Since: accountInfos.reg_date, Active: false)
+                
+                accountList.append(account)
+                
+                let result = await api.PostAddIntegration(integrationType: "mobil", dtoken: sdtoken, dName: UIDevice().type.rawValue, apiKey: apiKey)
+                
+                let jsonEncoder = JSONEncoder()
+                let jsonData = try jsonEncoder.encode(accountList)
+                let json = String(data: jsonData, encoding: String.Encoding.utf8)
+                accountListJson = json!
+                
+                actionSheet = .error
+                errorTyp = ErrorTypes.accountSuccessfullyAdded
+            } catch let error {
+                print(error)
+            }
         }
     }
     
@@ -135,10 +207,14 @@ struct LoginView: View {
         case .success(let data): do {
             apiKey = data
             loginFailed = false
-            SetupPrefs.setPreference(mKey: "APIKEY", mValue: apiKey)
-            showMainView.toggle()
-            withAnimation {
-                self.actionSheet = nil
+            if (newAccount) {
+                addNewAccount()
+            } else {
+                SetupPrefs.setPreference(mKey: "APIKEY", mValue: apiKey)
+                showMainView.toggle()
+                withAnimation {
+                    self.actionSheet = nil
+                }
             }
         } case .failure(let error): do {
             errorMsg = error.localizedDescription
@@ -147,6 +223,21 @@ struct LoginView: View {
                 self.actionSheet = nil
             }
         }}
+    }
+    
+    fileprivate func loadAccountInfos() {
+        do {
+            let jsonDecoder = JSONDecoder()
+            let jsonData = accountInfosJson.data(using: .utf8)
+            accountInfos = try jsonDecoder.decode(AccountInfo.self, from: jsonData!)
+        } catch let error {
+            print(error)
+        }
+    }
+    
+    fileprivate func getAccountInfos() async {
+        accountInfos = await api.GetAccountStatus(apiKey: apiKey) ?? AccountInfo()
+        print(accountInfos)
     }
 }
 

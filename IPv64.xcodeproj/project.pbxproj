@@ -34,6 +34,7 @@
 		9A5A359E29756EFA006F27EB /* WhatsNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5A359C29756EFA006F27EB /* WhatsNewView.swift */; };
 		9A5A359F29756EFA006F27EB /* WhatsNewItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5A359D29756EFA006F27EB /* WhatsNewItemView.swift */; };
 		9A6EC81D2A1749AA005C5D5A /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 9A6EC81C2A1749AA005C5D5A /* Toast */; };
+		9A8482E82AC603B10072BF45 /* AccountListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8482E72AC603B10072BF45 /* AccountListView.swift */; };
 		9A8D5BE229196290006B8A74 /* ErrorSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5BE129196290006B8A74 /* ErrorSheetView.swift */; };
 		9A8D5BE429197355006B8A74 /* DetailDomainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5BE329197355006B8A74 /* DetailDomainView.swift */; };
 		9A8D5C0529199141006B8A74 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8D5C0429199141006B8A74 /* HelpView.swift */; };
@@ -145,6 +146,7 @@
 		9A33140029844E4D009E47F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9A5A359C29756EFA006F27EB /* WhatsNewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsNewView.swift; sourceTree = "<group>"; };
 		9A5A359D29756EFA006F27EB /* WhatsNewItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsNewItemView.swift; sourceTree = "<group>"; };
+		9A8482E72AC603B10072BF45 /* AccountListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountListView.swift; sourceTree = "<group>"; };
 		9A8D5BE129196290006B8A74 /* ErrorSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorSheetView.swift; sourceTree = "<group>"; };
 		9A8D5BE329197355006B8A74 /* DetailDomainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailDomainView.swift; sourceTree = "<group>"; };
 		9A8D5C0429199141006B8A74 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
@@ -295,6 +297,7 @@
 				9A003505293129930065E1F3 /* AccountView.swift */,
 				9A0034FF2930FD010065E1F3 /* IPView.swift */,
 				9A8D5C0429199141006B8A74 /* HelpView.swift */,
+				9A8482E72AC603B10072BF45 /* AccountListView.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -729,6 +732,7 @@
 				9AA7B4D82A82BFAD00A06B4D /* UserPrefs.swift in Sources */,
 				9AA7B4D22A82BDF900A06B4D /* Tabs.swift in Sources */,
 				9A0034FC2930F9200065E1F3 /* TabbView.swift in Sources */,
+				9A8482E82AC603B10072BF45 /* AccountListView.swift in Sources */,
 				9A0035002930FD010065E1F3 /* IPView.swift in Sources */,
 				9A0035042931062B0065E1F3 /* LogItemView.swift in Sources */,
 				9A8D5BE229196290006B8A74 /* ErrorSheetView.swift in Sources */,
@@ -1030,7 +1034,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1068,7 +1072,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

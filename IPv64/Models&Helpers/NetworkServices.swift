@@ -84,7 +84,7 @@ class NetworkServices: ObservableObject {
     }
     
     @MainActor
-    func GetAccountStatus() async -> AccountInfo? {
+    func GetAccountStatus(apiKey: String = "") async -> AccountInfo? {
         let urlString = "\(apiUrl)?get_account_info"
         
         isLoading = true
@@ -95,7 +95,7 @@ class NetworkServices: ObservableObject {
         }
         
         do {
-            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            let token = apiKey.count == 0 ? SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String : apiKey
             var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "GET"
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
@@ -583,7 +583,7 @@ class NetworkServices: ObservableObject {
     }
     
     
-    @MainActor func PostAddIntegration(integrationType: String, dtoken: String, dName: String) async -> AddDomainResult? {
+    @MainActor func PostAddIntegration(integrationType: String, dtoken: String, dName: String, apiKey: String = "") async -> AddDomainResult? {
         let urlString = "\(apiUrl)"
         
         isLoading = true
@@ -594,7 +594,7 @@ class NetworkServices: ObservableObject {
         }
         
         do {
-            let token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
+            let token = apiKey.count == 0 ? SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String : apiKey
             var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "POST"
             //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON

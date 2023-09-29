@@ -12,11 +12,13 @@ struct TabbView: View {
     
     @AppStorage("BIOMETRIC_ENABLED") var isBiometricEnabled: Bool = false
     @AppStorage("AccountInfos") var accountInfosJson: String = ""
-    @AppStorage("DomainResult") var listOfDomainsString: String = ""
     @AppStorage("AccountList") var accountListJson: String = ""
+    @AppStorage("DomainResult") var listOfDomainsString: String = ""
     @AppStorage("current_Tab") var selectedTab: Tab = .domains
     
     @Binding var showDomains: Bool
+    
+    @ObservedObject var api: NetworkServices = NetworkServices()
     
     @State var activeSheet: ActiveSheet? = nil
     @State var accountInfos = AccountInfo()
@@ -109,14 +111,16 @@ struct TabbView: View {
             UIApplication.shared.applicationIconBadgeNumber = 0
             SetupPrefs.setPreference(mKey: "BADGE_COUNT", mValue: 0)
             
+            if (accountListJson.isEmpty) {
+                Task {
+                    await createAccountList()
+                }
+            }
+            
             var lastBuildNumber = SetupPrefs.readPreference(mKey: "LASTBUILDNUMBER", mDefaultValue: "0") as! String
             var token = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
-            
             if Int(lastBuildNumber) != Int(Bundle.main.buildNumber) && !token.isEmpty {
                 withAnimation {
-                    if (accountListJson.isEmpty) {
-                        createAccountList()
-                    }
                     showWhatsNew = true
                     activeSheet = .whatsnew
                 }
@@ -157,9 +161,9 @@ struct TabbView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
             print("Moving to the background! willResignActiveNotification")
             withAnimation {
-//                if (isBiometricEnabled) {
+                if (isBiometricEnabled) {
                     showPlaceholder = true
-//                }
+                }
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
@@ -186,9 +190,9 @@ struct TabbView: View {
         }
     }
     
-    fileprivate func createAccountList() {
+    fileprivate func createAccountList() async {
+        loadAccountInfos()
         if (!accountInfosJson.isEmpty) {
-            loadAccountInfos()
             do {
                 let apikey = SetupPrefs.readPreference(mKey: "APIKEY", mDefaultValue: "") as! String
                 let sdtoken = SetupPrefs.readPreference(mKey: "DEVICETOKEN", mDefaultValue: "") as! String
@@ -203,6 +207,16 @@ struct TabbView: View {
                 accountListJson = json!
             } catch let error {
                 print(error)
+            }
+        } else {
+            Task {
+                accountInfos = await api.GetAccountStatus() ?? AccountInfo()
+                print(accountInfos)
+                let jsonEncoder = JSONEncoder()
+                let jsonData = try jsonEncoder.encode(accountInfos)
+                let json = String(data: jsonData, encoding: String.Encoding.utf8)
+                accountInfosJson = json!
+                await createAccountList()
             }
         }
     }
