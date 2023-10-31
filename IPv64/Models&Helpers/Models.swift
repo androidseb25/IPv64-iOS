@@ -636,6 +636,7 @@ struct ErrorTypes {
             status: 429
         )
     }
+    
     static var updateCoolDown: ErrorTyp {
         ErrorTyp(
             icon: "bolt.horizontal.icloud.fill;exclamationmark.arrow.triangle.2.circlepath",
@@ -646,6 +647,7 @@ struct ErrorTypes {
             status: 429
         )
     }
+    
     static var domainNotAvailable: ErrorTyp {
         ErrorTyp(
             icon: "xmark.icloud.fill",
@@ -656,6 +658,7 @@ struct ErrorTypes {
             status: 403
         )
     }
+    
     static var domainCreatedSuccesfully: ErrorTyp {
         ErrorTyp(
             icon: "checkmark.icloud.fill",
@@ -666,6 +669,7 @@ struct ErrorTypes {
             status: 201
         )
     }
+    
     static var poisonedIpSuccesfully: ErrorTyp {
         ErrorTyp(
             icon: "checkmark.icloud.fill",
@@ -676,6 +680,7 @@ struct ErrorTypes {
             status: 201
         )
     }
+    
     static var poisonedIpError: ErrorTyp {
         ErrorTyp(
             icon: "xmark.icloud.fill",
@@ -686,6 +691,7 @@ struct ErrorTypes {
             status: 403
         )
     }
+    
     static var delete: ErrorTyp {
         ErrorTyp(
             icon: "trash.fill",
@@ -696,6 +702,7 @@ struct ErrorTypes {
             status: 202
         )
     }
+    
     static var deletehealth: ErrorTyp {
         ErrorTyp(
             icon: "trash.fill",
@@ -706,6 +713,7 @@ struct ErrorTypes {
             status: 202
         )
     }
+    
     static var deleteIntegration: ErrorTyp {
         ErrorTyp(
             icon: "trash.fill",
@@ -716,6 +724,7 @@ struct ErrorTypes {
             status: 202
         )
     }
+    
     static var dnsRecordSuccesfullyCreated: ErrorTyp {
         ErrorTyp(
             icon: "checkmark.icloud.fill",
@@ -726,6 +735,7 @@ struct ErrorTypes {
             status: 201
         )
     }
+    
     static var deleteDNSRecord: ErrorTyp {
         ErrorTyp(
             icon: "trash.fill",
@@ -736,6 +746,7 @@ struct ErrorTypes {
             status: 202
         )
     }
+    
     static var unauthorized: ErrorTyp {
         ErrorTyp(
             icon: "xmark.shield.fill",
@@ -746,6 +757,7 @@ struct ErrorTypes {
             status: 401
         )
     }
+    
     static var websiteRequestError: ErrorTyp {
         ErrorTyp(
             icon: "bolt.horizontal.icloud.fill;exclamationmark.arrow.triangle.2.circlepath",
@@ -756,6 +768,7 @@ struct ErrorTypes {
             status: 500
         )
     }
+    
     static var healthcheckCreatedSuccesfully: ErrorTyp {
         ErrorTyp(
             icon: "waveform.path.ecg",
@@ -766,6 +779,7 @@ struct ErrorTypes {
             status: 201
         )
     }
+    
     static var healthcheckUpdatedSuccesfully: ErrorTyp {
         ErrorTyp(
             icon: "waveform.path.ecg",
@@ -776,6 +790,7 @@ struct ErrorTypes {
             status: 201
         )
     }
+    
     static var accountSuccessfullyAdded: ErrorTyp {
         ErrorTyp(
             icon: "person.crop.circle.badge.checkmark",
@@ -784,6 +799,39 @@ struct ErrorTypes {
             errorTitle: "Account erfolgreich hinzugefügt!",
             errorDescription: "",
             status: 201
+        )
+    }
+    
+    static var accountFound: ErrorTyp {
+        ErrorTyp(
+            icon: "person.crop.circle.badge.exclamationmark",
+            iconColor: .orange,
+            navigationTitle: "Achtung",
+            errorTitle: "Account wurde bereits hinzugefügt!",
+            errorDescription: "Dein API-Key ist bereits mit einem Account in der App verknüpft.",
+            status: 201
+        )
+    }
+    
+    static var accountNotFound: ErrorTyp {
+        ErrorTyp(
+            icon: "person.crop.circle.badge.questionmark",
+            iconColor: .red,
+            navigationTitle: "Fehler!",
+            errorTitle: "API-Key nicht gefunden!",
+            errorDescription: "Bist du dir sicher das der API-Key korrekt geschrieben ist?",
+            status: 401
+        )
+    }
+    
+    static var deleteAccount: ErrorTyp {
+        ErrorTyp(
+            icon: "trash.fill",
+            iconColor: .red,
+            navigationTitle: "Wirklick löschen?",
+            errorTitle: "Willst du wirklich den\nAccount löschen?",
+            errorDescription: "Dein Account wird mit sofortiger Wirkung aus der App gelöscht.",
+            status: 202
         )
     }
 }
@@ -1052,6 +1100,7 @@ public enum Model : String {
          iPad7              = "iPad 7", //iPad 2019
          iPad8              = "iPad 8", //iPad 2020
          iPad9              = "iPad 9", //iPad 2021
+         iPad10             = "iPad 10", //iPad 2022
          
          //iPad Mini
          iPadMini           = "iPad Mini",
@@ -1109,6 +1158,10 @@ public enum Model : String {
          iPhone14Plus       = "iPhone 14 Plus",
          iPhone14Pro        = "iPhone 14 Pro",
          iPhone14ProMax     = "iPhone 14 Pro Max",
+         iPhone15           = "iPhone 15",
+         iPhone15Plus       = "iPhone 15 Plus",
+         iPhone15Pro        = "iPhone 15 Pro",
+         iPhone15ProMax     = "iPhone 15 Pro Max",
          
          // Apple Watch
          AppleWatch1         = "Apple Watch 1gen",
@@ -1152,7 +1205,6 @@ public extension UIDevice {
             //Simulator
             "i386"      : .simulator,
             "x86_64"    : .simulator,
-            "arm64"     : .simulator,
             
             //iPod
             "iPod1,1"   : .iPod1,
@@ -1184,6 +1236,8 @@ public extension UIDevice {
             "iPad11,7"  : .iPad8,
             "iPad12,1"  : .iPad9, //iPad 2021
             "iPad12,2"  : .iPad9,
+            "iPad13,18" : .iPad10,
+            "iPad13,19" : .iPad10,
             
             //iPad Mini
             "iPad2,5"   : .iPadMini,
@@ -1292,6 +1346,10 @@ public extension UIDevice {
             "iPhone14,8" : .iPhone14Plus,
             "iPhone15,2" : .iPhone14Pro,
             "iPhone15,3" : .iPhone14ProMax,
+            "iPhone15,4" : .iPhone15,
+            "iPhone15,5" : .iPhone15Plus,
+            "iPhone16,1" : .iPhone15Pro,
+            "iPhone16,2" : .iPhone15ProMax,
             
             // Apple Watch
             "Watch1,1" : .AppleWatch1,
@@ -1346,6 +1404,7 @@ public extension UIDevice {
         return model
     }
 }
+
 
 
 func GetUIImage(imageName: String, color: UIColor, hierarichal: Bool) -> UIImage {

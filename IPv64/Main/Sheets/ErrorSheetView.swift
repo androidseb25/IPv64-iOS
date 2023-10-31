@@ -21,6 +21,7 @@ struct ErrorSheetView: View {
             VStack {
                 Spacer()
                 let icon = errorTyp!.icon!
+                
                 if (icon.contains(";")) {
                     let splittetIcons = icon.split(separator: ";")
                     ZStack {

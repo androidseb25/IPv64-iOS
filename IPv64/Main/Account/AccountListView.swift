@@ -18,6 +18,16 @@ struct AccountListView: View {
     @Binding var isBottomSheetVisible: Bool
     @Binding var accountList: [Account]
     @Binding var newAccountB: Bool
+    @State var activeSheet: ActiveSheet? = nil
+    @State var errorTyp: ErrorTyp? = .none
+    @State private var selectedAccount: Account? = nil
+    @State private var deleteAccount: Bool = false
+    
+    fileprivate func deleteAccountDialog() {
+        errorTyp = ErrorTypes.deleteAccount
+        activeSheet = .error
+        print(errorTyp)
+    }
     
     var body: some View {
         VStack {
@@ -67,6 +77,18 @@ struct AccountListView: View {
                             }
                         }
                         .listRowBackground(acc.Active! ? Color("AccountSelectionBG") : Color("SectionBG"))
+                        .swipeActions(edge: .trailing) {
+                            if (!acc.Active!) {
+                                Button(role: .destructive, action: {
+                                    print("delete")
+                                    selectedAccount = acc
+                                    deleteAccountDialog()
+                                }) {
+                                    Label("Löschen", systemImage: "trash")
+                                }
+                                .tint(.red)
+                            }
+                        }
                     }
                 }
                 Button(action: {
@@ -93,6 +115,44 @@ struct AccountListView: View {
                 }
             }
             .scrollIndicators(.hidden)
+            .sheet(item: $activeSheet) { item in
+                showActiveSheet(item: item)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func showActiveSheet(item: ActiveSheet?) -> some View {
+        switch item {
+        case .error:
+            ErrorSheetView(errorTyp: $errorTyp, deleteThisDomain: $deleteAccount)
+                .interactiveDismissDisabled(errorTyp?.status == 202 ? false : true)
+                .onDisappear {
+                    do {
+                        let jsonDecoder = JSONDecoder()
+                        let jsonData = accountListJson.data(using: .utf8)
+                        var accountList = try jsonDecoder.decode([Account].self, from: jsonData!)
+                        
+                        if (deleteAccount) {
+                            print(selectedAccount)
+                            let indSel = accountList.firstIndex { $0.ApiKey == selectedAccount?.ApiKey }
+                            print(indSel)
+                            if indSel! > -1 {
+                                accountList.remove(at: indSel!)
+                            }
+                            self.accountList = accountList
+                            
+                            let jsonEncoder = JSONEncoder()
+                            let jsonData = try jsonEncoder.encode(accountList)
+                            let json = String(data: jsonData, encoding: String.Encoding.utf8)
+                            accountListJson = json!
+                        }
+                    } catch let error {
+                        print(error)
+                    }
+                }
+        default:
+            EmptyView()
         }
     }
     

@@ -13,6 +13,78 @@ struct MediumSizeView : View {
     @Environment(\.widgetFamily) var widgetFamily
     
     var entry: ProviderStatic.Entry
+    
+    /*
+     var body: some View {
+         ZStack {
+             if (entry.configuration.healthcheckSymbol11 == nil || entry.configuration.healthcheckSymbol12 == nil || entry.configuration.healthcheckSymbol21 == nil || entry.configuration.healthcheckSymbol22 == nil) {
+                 VStack {
+                     Text("Keine Healthchecks konfiguriert!")
+                         .font(.system(.callout, design: .rounded))
+                 }
+                 .padding()
+             } else {
+                 /*HStack {
+                     let firstColumn = GetColumn(start: 0, end: 1)
+                     let secondColumn = GetColumn(start: 2, end: 3)
+                     VStack {
+                         ForEach(firstColumn, id: \.healthtoken) { it in
+                             LazyVStack(alignment: .leading, spacing: 0) {
+                                 Text(it.name)
+                                     .font(.system(.title3, design: .rounded))
+                                     .lineLimit(1)
+                                 Spacer()
+                                 HStack(spacing: 4) {
+                                     let lastXPills = GetLastXMonitorPills(count: 12, domain: it).reversed()
+                                     ForEach(lastXPills, id:\.self) { color in
+                                         RoundedRectangle(cornerRadius: 5).fill(color)
+                                             .frame(width: 7, height: 25)
+                                     }
+                                 }
+                                 .padding(.trailing, 5)
+                             }
+                             .frame(maxWidth: .infinity, alignment: .leading)
+                             .id(UUID())
+                             .padding(.bottom, 5)
+                         }
+                         if (firstColumn.count == 1) {
+                             Spacer()
+                         }
+                     }
+                     .padding(.top, firstColumn.count == 1 ? 3 : 0)
+                     VStack {
+                         ForEach(secondColumn, id: \.healthtoken) { it in
+                             LazyVStack(alignment: .leading, spacing: 0) {
+                                 Text(it.name)
+                                     .font(.system(.title3, design: .rounded))
+                                     .lineLimit(1)
+                                 Spacer()
+                                 HStack(spacing: 4) {
+                                     let lastXPills = GetLastXMonitorPills(count: 12, domain: it).reversed()
+                                     ForEach(lastXPills, id:\.self) { color in
+                                         RoundedRectangle(cornerRadius: 5).fill(color)
+                                             .frame(width: 7, height: 25)
+                                     }
+                                 }
+                                 .padding(.trailing, 5)
+                             }
+                             .frame(maxWidth: .infinity, alignment: .leading)
+                             .id(UUID())
+                             .padding(.bottom, 5)
+                         }
+                         if (secondColumn.count == 1) {
+                             Spacer()
+                         }
+                     }
+                     .padding(.top, secondColumn.count == 1 ? 0 : 0)
+                 }
+                 .padding()*/
+             }
+         }
+         .frame(maxHeight: .infinity)
+         .widgetBackground(backgroundView: Color("circleBG"))
+     }
+     */
 
     var body: some View {
         ZStack {

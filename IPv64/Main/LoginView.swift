@@ -159,6 +159,7 @@ struct LoginView: View {
                             actionSheet = nil
                             newAccount = false
                             showMainView.toggle()
+                            apiKey = ""
                         }
                     }
                 }
@@ -168,36 +169,45 @@ struct LoginView: View {
     }
     
     private func addNewAccount() {
-        Task {
-            let accountInd = accountList.firstIndex { $0.ApiKey == apiKey }
-            if (accountInd != nil) {
-                withAnimation {
-                    errorTyp = nil
-                    actionSheet = nil
-                    newAccount = false
-                    showMainView.toggle()
+        if (apiKey.isEmpty) {
+            return;
+        }
+        
+        let accountInd = accountList.firstIndex { $0.ApiKey == apiKey }
+        if (accountInd != nil && accountInd != -1) {
+            errorTyp = ErrorTypes.accountFound
+            actionSheet = .error
+        } else {
+            Task {
+                do {
+                    await getAccountInfos()
+                    
+                    if (accountInfos.api_key == nil) {
+                        errorTyp = ErrorTypes.accountNotFound
+                        actionSheet = .error
+                    } else {
+                        
+                        let sdtoken = SetupPrefs.readPreference(mKey: "DEVICETOKEN", mDefaultValue: "") as! String
+                        
+                        let result = await api.PostAddIntegration(integrationType: "mobil", dtoken: sdtoken, dName: UIDevice().type.rawValue, apiKey: apiKey)
+                        
+                        print(result)
+                        
+                        let account = Account(ApiKey: apiKey, AccountName: accountInfos.email, DeviceToken: sdtoken, Since: accountInfos.reg_date, Active: false)
+                        
+                        accountList.append(account)
+                        
+                        let jsonEncoder = JSONEncoder()
+                        let jsonData = try jsonEncoder.encode(accountList)
+                        let json = String(data: jsonData, encoding: String.Encoding.utf8)
+                        accountListJson = json!
+                        
+                        actionSheet = .error
+                        errorTyp = ErrorTypes.accountSuccessfullyAdded
+                    }
+                } catch let error {
+                    print(error)
                 }
-                return;
-            }
-            await getAccountInfos()
-            do {
-                let sdtoken = SetupPrefs.readPreference(mKey: "DEVICETOKEN", mDefaultValue: "") as! String
-                
-                let account = Account(ApiKey: apiKey, AccountName: accountInfos.email, DeviceToken: sdtoken, Since: accountInfos.reg_date, Active: false)
-                
-                accountList.append(account)
-                
-                let result = await api.PostAddIntegration(integrationType: "mobil", dtoken: sdtoken, dName: UIDevice().type.rawValue, apiKey: apiKey)
-                
-                let jsonEncoder = JSONEncoder()
-                let jsonData = try jsonEncoder.encode(accountList)
-                let json = String(data: jsonData, encoding: String.Encoding.utf8)
-                accountListJson = json!
-                
-                actionSheet = .error
-                errorTyp = ErrorTypes.accountSuccessfullyAdded
-            } catch let error {
-                print(error)
             }
         }
     }
