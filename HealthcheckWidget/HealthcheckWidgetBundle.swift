@@ -12,6 +12,7 @@ import SwiftUI
 struct HealthcheckWidgetBundle: WidgetBundle {
     var body: some Widget {
         HealthcheckWidget()
+//        HealthcheckWidgetFour()
         HealthcheckWidgetStatic()
     }
 }

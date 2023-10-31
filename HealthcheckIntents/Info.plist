@@ -12,6 +12,7 @@
 			<array/>
 			<key>IntentsSupported</key>
 			<array>
+				<string>ConfigurationFourIntent</string>
 				<string>ConfigurationIntent</string>
 			</array>
 		</dict>

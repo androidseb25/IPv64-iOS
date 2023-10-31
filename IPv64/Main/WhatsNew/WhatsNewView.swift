@@ -14,9 +14,7 @@ struct WhatsNewView: View {
     
     var whatsNewList = [
         WhatsNewObj(imageName: "ant.circle", title: "Fehlerbehebung", subtitle: "Es wurden in diesem Update ein Paar Fehler behoben, die zur Steigerung der Performance und der Nutzbarkeit dienen"),
-        WhatsNewObj(imageName: "shield.lefthalf.filled", title: "Blocklist", subtitle: "Du kannst jetzt an deine Blocklist Node's bösartige IP - Adressen reporten"),
-        WhatsNewObj(imageName: "person.circle", title: "Profilseite", subtitle: "Profilseite wurde angepasst und es gibt erste Vorbereitungen für den Multi-User Support"),
-        WhatsNewObj(imageName: "speaker.wave.2", title: "Klick Sound", subtitle: "Beim drücken eines Tabs gibt es jetzt einen Klick Sound")
+        WhatsNewObj(imageName: "person.circle", title: "Multi-User Support", subtitle: "Ihr könnt jetzt mehr als 1 Account in der App hinterlegen um Private & Firmenaccount über ein Gerät zuverwalten!")
     ]
     
     var body: some View {

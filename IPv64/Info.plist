@@ -17,6 +17,7 @@
 	</array>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>ConfigurationFourIntent</string>
 		<string>ConfigurationIntent</string>
 	</array>
 	<key>UIBackgroundModes</key>
