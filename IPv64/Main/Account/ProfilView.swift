@@ -14,6 +14,7 @@ struct ProfilView: View {
     @AppStorage("AccountInfos") var accountInfos: String = ""
     @AppStorage("DomainResult") var listOfDomainsString: String = ""
     @AppStorage("BIOMETRIC_ENABLED") var isBiometricEnabled: Bool = false
+    @AppStorage("ENABLE_NAV_SOUND") var enableNavSound: Bool = true
     @AppStorage("IntegrationList") var integrationListS: String = ""
     @AppStorage("HealthcheckList") var healthCheckList: String = ""
     @AppStorage("current_Tab") var selectedTab: Tab = .domains
@@ -24,6 +25,7 @@ struct ProfilView: View {
     @Binding var popToRootTab: Tab
     @State var showLoginView = false
     @State var enableBio = false
+    @State var enableNavSou = true
     @State var accountList: [Account] = []
     @State var activeAccount: Account = Account()
     
@@ -75,6 +77,21 @@ struct ProfilView: View {
                             NavigationLink("Account Status", destination: AccountView())
                             NavigationLink("Logs", destination: LogView())
                             NavigationLink("Meine IP", destination: IPView())
+                            Button(action: { withAnimation { enableNavSou.toggle() } }) {
+                                HStack {
+                                    Text("Tabsound")
+                                    Spacer()
+                                    Toggle("", isOn: $enableNavSou)
+                                        .labelsHidden()
+                                        .tint(Color("ip64_color"))
+                                        .onChange(of: enableNavSou) { isSoundEnabled in
+                                            withAnimation {
+                                                enableNavSound = isSoundEnabled
+                                            }
+                                        }
+                                }
+                            }
+                            .tint(Color("primaryText"))
                         }
                         Section("Sicherheit") {
                             Button(action: { withAnimation { enableBio.toggle() } }) {
@@ -136,6 +153,7 @@ struct ProfilView: View {
                     .onAppear {
                         newAccount = false
                         enableBio = isBiometricEnabled
+                        enableNavSou = enableNavSound
                         loadUser = true
                         if (!accountListJson.isEmpty) {
                             do {

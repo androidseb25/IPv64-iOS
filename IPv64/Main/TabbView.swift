@@ -13,6 +13,7 @@ struct TabbView: View {
     @AppStorage("BIOMETRIC_ENABLED") var isBiometricEnabled: Bool = false
     @AppStorage("AccountInfos") var accountInfosJson: String = ""
     @AppStorage("AccountList") var accountListJson: String = ""
+    @AppStorage("ENABLE_NAV_SOUND") var enableNavSound: Bool = true
     @AppStorage("DomainResult") var listOfDomainsString: String = ""
     @AppStorage("current_Tab") var selectedTab: Tab = .domains
     
@@ -83,9 +84,10 @@ struct TabbView: View {
                 }
                 
                 selectedTab = newTab
-                
-                await HapticManager.shared.fireHaptic(of: .tabSelection)
-                await SoundEffectManager.shared.playSound(of: .tabSelection)
+                if (enableNavSound) {
+                    await HapticManager.shared.fireHaptic(of: .tabSelection)
+                    await SoundEffectManager.shared.playSound(of: .tabSelection)
+                }
             }
             
         })) {
