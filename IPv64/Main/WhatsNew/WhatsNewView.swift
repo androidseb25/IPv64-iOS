@@ -14,7 +14,8 @@ struct WhatsNewView: View {
     
     var whatsNewList = [
         WhatsNewObj(imageName: "ant.circle", title: "Fehlerbehebung", subtitle: "Es wurden in diesem Update ein Paar Fehler behoben, die zur Steigerung der Performance und der Nutzbarkeit dienen"),
-        WhatsNewObj(imageName: "person.circle", title: "Multi-User Support", subtitle: "Ihr könnt jetzt mehr als 1 Account in der App hinterlegen um Private & Firmenaccount über ein Gerät zuverwalten!")
+        WhatsNewObj(imageName: "person.circle", title: "Multi-User Support", subtitle: "Ihr könnt jetzt mehr als 1 Account in der App hinterlegen um Private & Firmenaccount über ein Gerät zuverwalten!"),
+        WhatsNewObj(imageName: "switch.2", title: "Toggle hinzugefügt", subtitle: "Es wurde ein neuer Toggle Switch hinzugefügt der den Tabsound in der Navigationleiste steuert!")
     ]
     
     var body: some View {
