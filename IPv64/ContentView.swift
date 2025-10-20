@@ -8,14 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var userStorage = UserStorage.shared
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if (userStorage.ShowWelcomeView) {
+            WelcomeView()
+        } else if userStorage.ShowLoginView || userStorage.ApiKey.isEmpty {
+            NavigationStack {
+                LoginView()
+            }
+        } else {
+            if #available(iOS 26.0, *) {
+                TabbarView()
+                    .tint(.orange)
+            } else {
+                TabbarView18()
+                    .tint(.orange)
+            }
         }
-        .padding()
     }
 }
 

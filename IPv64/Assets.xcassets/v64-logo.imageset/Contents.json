@@ -1,0 +1,22 @@
+{
+  "images" : [
+    {
+      "filename" : "ipv64-iOS-Default-1024x1024@1x.png",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "ipv64-iOS-Dark-1024x1024@1x.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

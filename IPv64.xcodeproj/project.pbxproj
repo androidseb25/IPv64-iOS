@@ -6,8 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9A8CA8AF2EA6969D0073978F /* ipv64.icon in Resources */ = {isa = PBXBuildFile; fileRef = 9A8CA8AD2EA6969D0073978F /* ipv64.icon */; };
+		9A8CA8B02EA6969D0073978F /* ipv64_beta.icon in Resources */ = {isa = PBXBuildFile; fileRef = 9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		9A5178D32EA3995200731FFB /* IPv64.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IPv64.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A5178D32EA3995200731FFB /* IPv64.net.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IPv64.net.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A8CA8AD2EA6969D0073978F /* ipv64.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ipv64.icon; sourceTree = "<group>"; };
+		9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ipv64_beta.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +39,8 @@
 		9A5178CA2EA3995200731FFB = {
 			isa = PBXGroup;
 			children = (
+				9A8CA8AD2EA6969D0073978F /* ipv64.icon */,
+				9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */,
 				9A5178D52EA3995200731FFB /* IPv64 */,
 				9A5178D42EA3995200731FFB /* Products */,
 			);
@@ -40,7 +49,7 @@
 		9A5178D42EA3995200731FFB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9A5178D32EA3995200731FFB /* IPv64.app */,
+				9A5178D32EA3995200731FFB /* IPv64.net.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +57,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9A5178D22EA3995200731FFB /* IPv64 */ = {
+		9A5178D22EA3995200731FFB /* IPv64.net */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9A5178DE2EA3995300731FFB /* Build configuration list for PBXNativeTarget "IPv64" */;
+			buildConfigurationList = 9A5178DE2EA3995300731FFB /* Build configuration list for PBXNativeTarget "IPv64.net" */;
 			buildPhases = (
 				9A5178CF2EA3995200731FFB /* Sources */,
 				9A5178D02EA3995200731FFB /* Frameworks */,
@@ -63,11 +72,11 @@
 			fileSystemSynchronizedGroups = (
 				9A5178D52EA3995200731FFB /* IPv64 */,
 			);
-			name = IPv64;
+			name = IPv64.net;
 			packageProductDependencies = (
 			);
 			productName = IPv64;
-			productReference = 9A5178D32EA3995200731FFB /* IPv64.app */;
+			productReference = 9A5178D32EA3995200731FFB /* IPv64.net.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -99,7 +108,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9A5178D22EA3995200731FFB /* IPv64 */,
+				9A5178D22EA3995200731FFB /* IPv64.net */,
 			);
 		};
 /* End PBXProject section */
@@ -109,6 +118,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A8CA8AF2EA6969D0073978F /* ipv64.icon in Resources */,
+				9A8CA8B02EA6969D0073978F /* ipv64_beta.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,26 +260,35 @@
 		9A5178DF2EA3995300731FFB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = ipv64_beta;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to scanthe QR code for the API Key.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -281,26 +301,35 @@
 		9A5178E02EA3995300731FFB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = ipv64_beta;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to scanthe QR code for the API Key.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -322,7 +351,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9A5178DE2EA3995300731FFB /* Build configuration list for PBXNativeTarget "IPv64" */ = {
+		9A5178DE2EA3995300731FFB /* Build configuration list for PBXNativeTarget "IPv64.net" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9A5178DF2EA3995300731FFB /* Debug */,
