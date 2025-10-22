@@ -19,6 +19,7 @@ public class UserStorage: ObservableObject {
         @AppStorage("SHOW_LOGIN_VIEW", store: UserStorage.sharedDefault) var ShowLoginView: Bool = false
         @AppStorage("ENABLLE_LOCKSCREEN", store: UserStorage.sharedDefault) var EnableLogscreen: Bool = false
         @AppStorage("API_KEY", store: UserStorage.sharedDefault) var ApiKey: String = ""
+        @AppStorage("USER_ACCOUNTS", store: UserStorage.sharedDefault) var UserAccounts: Data = "".data(using: .utf8)!
         
         init() { }
     }
@@ -58,6 +59,12 @@ public class UserStorage: ObservableObject {
         }
     }
     
+    @Published public var UserAccounts: Data = "".data(using: .utf8)! {
+        didSet {
+            storage.UserAccounts = UserAccounts
+        }
+    }
+    
     private init() {
         guard let sharedDefaults = UserStorage.sharedDefault else {
             print("Failed to access shared UserDefaults.")
@@ -76,6 +83,7 @@ public class UserStorage: ObservableObject {
         ShowLoginView = storage.ShowLoginView
         EnableLogscreen = storage.EnableLogscreen
         ApiKey = storage.ApiKey
+        UserAccounts = storage.UserAccounts
     }
     
     public func clear() {
@@ -84,5 +92,6 @@ public class UserStorage: ObservableObject {
         ShowLoginView = false
         EnableLogscreen = false
         ApiKey = ""
+        UserAccounts = "".data(using: .utf8)!
     }
 }

@@ -17,9 +17,22 @@
 		9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ipv64_beta.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		9A4FA4282EA92C4900137AA1 /* Exceptions for "IPv64" folder in "Copy Bundle Resources" phase from "IPv64.net" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 9A5178D12EA3995200731FFB /* Resources */;
+			membershipExceptions = (
+				Models/AccountInfo.swift,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9A5178D52EA3995200731FFB /* IPv64 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9A4FA4282EA92C4900137AA1 /* Exceptions for "IPv64" folder in "Copy Bundle Resources" phase from "IPv64.net" target */,
+			);
 			path = IPv64;
 			sourceTree = "<group>";
 		};

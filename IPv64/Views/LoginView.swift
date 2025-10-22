@@ -11,7 +11,11 @@ import SwiftUI
 
 struct LoginView: View {
     
+    @Environment(\.presentationMode) var presentationMode
+    
     @StateObject private var userStorage = UserStorage.shared
+    
+    @State var isFromAddUser: Bool = false
     
     @State private var showQrSheet = false
     @State private var showSpinner = false
@@ -20,11 +24,13 @@ struct LoginView: View {
     
     @State private var apiKey = ""
     
+    @State private var user = User.empty
+    
     var body: some View {
         VStack {
             if #available(iOS 26.0, *) {
                 content
-                    .setColorGradient(.orange)
+                    .setColorGradient((showQrSheet || isFromAddUser) ? .clear : .orange)
             } else {
                 content
             }
@@ -41,11 +47,28 @@ struct LoginView: View {
                 }
             }
         }
-        .sheet(isPresented: $showQrSheet) {
+        .sheet(isPresented: $showQrSheet.animation()) {
             QRScannerView() { key in
+                
+                let isContains = user.list.contains(where: { $0.ApiKey == key })
+                
+                if (isContains) {
+                    return
+                }
+                
+                user.ApiKey = key
+                user.Username = user.list.count > 0 ? "Default User \(user.list.count)" : "Default User"
+                user.Information = ""
+                user.save()
+                
                 apiKey = key
                 userStorage.ApiKey = key
-                userStorage.ShowLoginView = false
+                
+                if (isFromAddUser) {
+                    presentationMode.wrappedValue.dismiss()
+                } else {
+                    userStorage.ShowLoginView = false
+                }
             }.onDisappear {
                 withAnimation {
                     showQrSheet = false
@@ -55,7 +78,6 @@ struct LoginView: View {
         }
         .task {
             await permissisenCheck()
-            apiKey = userStorage.ApiKey
         }
         .alert("No Camera Permission", isPresented: $showDeniedAlert) {
             Button("Open Settings") {
@@ -124,8 +146,25 @@ struct LoginView: View {
     private var letsgoBtn: some View {
         return Button (action: {
             withAnimation {
+                
+                let isContains = user.list.contains(where: { $0.ApiKey == apiKey })
+                
+                if (isContains) {
+                    return
+                }
+                
+                user.ApiKey = apiKey
+                user.Username = user.list.count > 0 ? "Default User \(user.list.count)" : "Default User"
+                user.Information = ""
+                user.save()
+                
                 userStorage.ApiKey = apiKey
-                userStorage.ShowLoginView = false
+                
+                if (isFromAddUser) {
+                    presentationMode.wrappedValue.dismiss()
+                } else {
+                    userStorage.ShowLoginView = false
+                }
             }
         }) {
             Text("Login")

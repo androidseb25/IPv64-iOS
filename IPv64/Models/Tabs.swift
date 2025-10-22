@@ -59,6 +59,8 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
             return "Notification"
         case .settings:
             return "Settings"
+        case .account:
+            return "Account"
         default:
             return ""
         }

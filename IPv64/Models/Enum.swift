@@ -29,3 +29,15 @@ enum CameraPermission {
         }
     }
 }
+
+enum AlertType: Int, Identifiable {
+    case logout, logoutSuccess, other
+    
+    public var id: Int {
+        rawValue
+    }
+    
+    public var uuidString: String {
+        UUID().uuidString
+    }
+}
