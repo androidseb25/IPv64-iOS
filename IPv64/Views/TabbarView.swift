@@ -20,25 +20,30 @@ struct TabbarView: View {
         TabView(selection: .init(get: {
             selectedTab
         }, set: { newTab in
-                Task {
-                    withAnimation {
-                        if newTab == selectedTab {
-                            /// Stupid hack to trigger onChange binding in tab views.
-                            popToRootTab = .other
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                                popToRootTab = selectedTab
-                            }
+            Task {
+                withAnimation {
+                    if newTab == selectedTab {
+                        /// Stupid hack to trigger onChange binding in tab views.
+                        popToRootTab = .other
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                            popToRootTab = selectedTab
                         }
-                        
-                        selectedTab = newTab
                     }
+                    
+                    selectedTab = newTab
                 }
+            }
         })) {
             ForEach(availableTabs) { tab in
                 Tab(tab.labelNew, systemImage: tab.iconName, value: tab) {
                     NavigationStack {
                         tab.makeContentView(popToRootTab: $popToRootTab)
                     }
+                }
+            }
+            Tab(Tabs.account.labelNew, systemImage: Tabs.account.iconName, value: Tabs.account, role: .search) {
+                NavigationStack {
+                    AccountView(popToRootTab: $popToRootTab)
                 }
             }
         }

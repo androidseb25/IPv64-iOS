@@ -61,6 +61,12 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
             return "Settings"
         case .account:
             return "Account"
+        case .log:
+            return "Logs"
+        case .myip:
+            return "My IP"
+        case .about:
+            return "About"
         default:
             return ""
         }
@@ -107,6 +113,8 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
             return "bell.badge"
         case .settings:
             return "gearshape"
+        case .account:
+            return "person.circle"
         default:
             return "app.dashed"
         }

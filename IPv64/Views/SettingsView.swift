@@ -32,8 +32,10 @@ struct SettingsView: View {
     private var listView: some View {
         List {
             Section("General") {
-                NavigationLink(value: Tabs.account.route) {
-                    Text("Account")
+                if #unavailable(iOS 26.0) {
+                    NavigationLink(value: Tabs.account.route) {
+                        Text("Account")
+                    }
                 }
                 NavigationLink(value: Tabs.log.route) {
                     Text("Logs")
@@ -51,7 +53,11 @@ struct SettingsView: View {
                 NavigationLink(value: Tabs.about.route) {
                     Text("About")
                 }
-                Button(action: {}) {
+                Button(action: {
+                    if let url = URL(string: "https://www.youtube.com/c/RaspberryPiCloud") {
+                        UIApplication.shared.open(url)
+                    }
+                }) {
                     Text("YouTube")
                         .foregroundStyle(systemColorScheme == .dark ? Color.white : Color.black)
                 }

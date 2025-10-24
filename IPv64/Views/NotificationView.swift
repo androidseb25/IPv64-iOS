@@ -12,11 +12,12 @@ struct NotificationView: View {
     @Binding var popToRootTab: Tabs
     @StateObject private var api = ApiService()
     
+    @State private var integrationResult: IntegrationResult = .empty
+    
     var body: some View {
         NavigationStack {
             if #available(iOS 26.0, *) {
                 listView
-                //                    .setColorGradient((showAccount || showServerMap) ? .clear : .orange)
                     .setColorGradient(.orange)
             } else {
                 listView
@@ -26,25 +27,26 @@ struct NotificationView: View {
     
     private var listView: some View {
         List {
-//            ForEach(response64.cloudrouter, id: \.vrf_id) { router in
-//                Section(router.name) {
-//                    ForEach(router.gw, id: \.id) { gw in
-//                        NavigationLink(destination: PeerView(gw: gw)) {
-//                            TunnelItemView(gw: gw)
-//                        }
-//                    }
-//                }
-//            }
+            ForEach(integrationResult.integrations.sorted(by: \.integrationName), id: \.id) { integration in
+                NotificationItemView(integration: integration)
+            }
         }
         .showLoading($api.isLoading)
         .navigationTitle(Tabs.notification.labelNew)
         .navigationBarTitleDisplayMode(.inline)
         .refreshable {
-//            GetResponse64()
+            GetIntegrations()
         }
         .onAppear {
-//            GetResponse64()
-//            vpnManager.loadManager()
+            GetIntegrations()
+        }
+    }
+    
+    private func GetIntegrations() {
+        Task {
+            if let res = await api.GetIntegrations() {
+                integrationResult = res
+            }
         }
     }
 }

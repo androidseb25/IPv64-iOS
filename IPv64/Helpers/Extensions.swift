@@ -75,3 +75,68 @@ extension SettingsView {
         return true
     }
 }
+
+// MARK: - Parser-Helfer
+
+extension IntegrationResult {
+    static func parse(jsonData: Data) throws -> IntegrationResult {
+        let decoder = JSONDecoder()
+        return try decoder.decode(IntegrationResult.self, from: jsonData)
+    }
+    
+    static func parse(jsonString: String) throws -> IntegrationResult {
+        guard let data = jsonString.data(using: .utf8) else {
+            throw NSError(domain: "IntegrationResult", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid UTF-8"])
+        }
+        return try parse(jsonData: data)
+    }
+}
+
+// MARK: - Parser-Helfer
+
+extension DomainResult {
+    static func parse(jsonData: Data) throws -> DomainResult {
+        try JSONDecoder().decode(DomainResult.self, from: jsonData)
+    }
+
+    static func parse(jsonString: String) throws -> DomainResult {
+        guard let data = jsonString.data(using: .utf8) else {
+            throw NSError(domain: "DomainResult", code: -1,
+                          userInfo: [NSLocalizedDescriptionKey: "Invalid UTF-8"])
+        }
+        return try parse(jsonData: data)
+    }
+}
+
+extension Sequence {
+    func sorted(by keyPath: KeyPath<Element, String>) -> [Element] {
+        sorted { ($0[keyPath: keyPath]) < ($1[keyPath: keyPath]) }
+    }
+}
+
+extension String {
+    func v64domains() -> [String] {
+        return [
+            "ipv64.net",
+            "ipv64.de",
+            "any64.de",
+            "api64.de",
+            "dns64.de",
+            "dyndns64.de",
+            "eth64.de",
+            "dynipv6.de",
+            "home64.de",
+            "iot64.de",
+            "lan64.de",
+            "nas64.de",
+            "root64.de",
+            "route64.de",
+            "srv64.de",
+            "tcp64.de",
+            "udp64.de",
+            "vpn64.de",
+            "wan64.de",
+            "Own Domain"
+        ]
+    }
+}
