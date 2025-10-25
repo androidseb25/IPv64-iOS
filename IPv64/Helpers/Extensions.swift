@@ -139,4 +139,18 @@ extension String {
             "Own Domain"
         ]
     }
+    
+    func v64DnsRecordTypes() -> [String] {
+        return [
+            "A",
+            "AAAA",
+            "TXT",
+            "MX",
+            "NS",
+            "SRV",
+            "CNAME",
+            "TLSA",
+            "CAA"
+        ]
+    }
 }

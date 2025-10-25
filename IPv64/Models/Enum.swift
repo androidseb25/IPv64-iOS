@@ -31,7 +31,7 @@ enum CameraPermission {
 }
 
 enum AlertType: Int, Identifiable {
-    case logout, logoutSuccess, other
+    case logout, logoutSuccess, apiError, apiSuccess, apiSuccessDelete, apiSuccessUpdate, updateAlert, deleteDNSAlert, deleteDomainAlert, other
     
     public var id: Int {
         rawValue

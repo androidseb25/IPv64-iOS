@@ -13,23 +13,29 @@ struct UserView: View {
     @Environment(\.colorScheme) var systemColorScheme
     
     @State private var user: User = .empty
+    @State private var selectedUser: User = .empty
+    @State private var showEditUserSheet: Bool = false
     
     var body: some View {
         NavigationStack {
             VStack {
                 List {
-                    //                    if #available(iOS 26.0, *) {
                     ForEach(user.list, id: \.uuid) { u in
-                        UserItemView(user: u)
+                        UserItemView(user: Binding(
+                            get: { u },
+                            set: { _ = $0 }   // ← schreibt zurück in die Quelle
+                        ))
+                        .swipeActions {
+                            Button {
+                                selectedUser = u
+                                showEditUserSheet.toggle()
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+                            .tint(.orange)
+                            .labelStyle(.iconOnly)
+                        }
                     }
-                    //                    } else {
-                    //                        LazyVStack {
-                    //                            ForEach(selectedCRS, id: \.name) { crs in
-                    //                                ServerItemView(crs: crs)
-                    //                            }
-                    //                        }
-                    //                        .padding(.top, 10)
-                    //                    }
                 }
             }
             .padding(.horizontal, 5)
@@ -38,15 +44,16 @@ struct UserView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem {
-                    NavigationLink(destination: LoginView(isFromAddUser: true).onDisappear {
-                        withAnimation {
-//                            dismiss()
-                        }
-                    }, label: {
+                    NavigationLink(destination: LoginView(isFromAddUser: true), label: {
                         Label("Add", systemImage: "person.badge.plus")
                     })
                     .tint(.orange)
                 }
+            }
+        }
+        .sheet(isPresented: $showEditUserSheet.animation()) {
+            UserEditView(user: $selectedUser).onDisappear {
+                selectedUser = .empty
             }
         }
     }

@@ -12,7 +12,7 @@ struct UserItemView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var systemColorScheme
     
-    @State var user: User
+    @Binding var user: User
     
     var body: some View {
         Button(action: {
@@ -50,6 +50,6 @@ struct UserItemView: View {
 #Preview {
     let user = User(Username: "Test", ApiKey: "Test", Information: "Test")
     List {
-        UserItemView(user: user)
+        UserItemView(user: .constant(user))
     }
 }

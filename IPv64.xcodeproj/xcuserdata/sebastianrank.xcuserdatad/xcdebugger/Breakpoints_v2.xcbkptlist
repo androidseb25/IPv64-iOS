@@ -3,4 +3,52 @@
    uuid = "2513B93A-667D-401B-9D9B-B9346C204630"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7A79AB51-D208-4DA7-9408-5E4559DA786E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "IPv64/Helpers/ApiService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "270"
+            endingLineNumber = "270"
+            landmarkName = "UpdateDNSRecord(urlDNSUpdate:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "7A79AB51-D208-4DA7-9408-5E4559DA786E - c3f43b5fc2ede597"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for IPv64_net.ApiService.UpdateDNSRecord(urlDNSUpdate: Swift.String) async -&gt; Swift.Optional&lt;IPv64_net.IPUpdateResult&gt;"
+                  moduleName = "IPv64.net.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sebastianrank/Programmierung/XCode/IPv64/IPv64/Helpers/ApiService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "270"
+                  endingLineNumber = "270">
+               </Location>
+               <Location
+                  uuid = "7A79AB51-D208-4DA7-9408-5E4559DA786E - 6c2dcce5b3fe8794"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for IPv64_net.ApiService.UpdateDNSRecord(urlDNSUpdate: Swift.String) async -&gt; Swift.Optional&lt;IPv64_net.IPUpdateResult&gt;"
+                  moduleName = "IPv64.net.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/sebastianrank/Programmierung/XCode/IPv64/IPv64/Helpers/ApiService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "270"
+                  endingLineNumber = "270">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

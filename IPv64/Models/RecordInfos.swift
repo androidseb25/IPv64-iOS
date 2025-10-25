@@ -8,7 +8,7 @@ import Foundation
 
 // MARK: - RecordInfos
 
-struct RecordInfos: Codable, Equatable, Identifiable {
+struct RecordInfos: Codable, Equatable, Identifiable, Hashable {
     var recordId: Int?
     var content: String?
     var ttl: Int?
@@ -39,4 +39,20 @@ struct RecordInfos: Codable, Equatable, Identifiable {
         recordId: 0, content: "", ttl: 0, type: "",
         praefix: "", lastUpdate: "", recordKey: "", deactivated: 0, failoverPolicy: "0"
     )
+    
+    var LastUpdate: String {
+        guard let date = DateFormatter.db.date(from: lastUpdate ?? "0001-01-01 00:00:00")
+        else { return "01.01.0001 00:00:00" }
+        
+        return date.formatted(
+            .dateTime
+                .hour(.twoDigits(amPM: .omitted))
+                .minute(.twoDigits)
+                .second(.twoDigits)
+                .day(.twoDigits)
+                .month(.twoDigits)
+                .year(.defaultDigits)
+                .locale(Locale(identifier: "de_DE"))
+        )
+    }
 }

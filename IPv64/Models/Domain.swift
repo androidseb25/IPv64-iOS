@@ -9,11 +9,11 @@ import SwiftUI
 
 // MARK: - Domain
 
-struct Domain: Codable, Equatable {
+struct Domain: Codable, Equatable, Hashable {
     var updates: Int?
     var wildcard: Int?
     var domainUpdateHash: String?
-    var records: [RecordInfos]?
+    var records: [RecordInfos] = []
     
     // zusätzliche optionale Felder aus Beispiel
     var ipv6prefix: String?
@@ -44,12 +44,10 @@ struct Domain: Codable, Equatable {
     }
     
     var isSameTypeAAddress: Bool {
-        guard let records else { return false }
         return records.contains { $0.type == "A" && $0.content == ipv4 }
     }
     
     var isSameTypeAAAAAddress: Bool {
-        guard let records else { return false }
         return records.contains { $0.type == "AAAA" && $0.content == ipv6 }
     }
     
