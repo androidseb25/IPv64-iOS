@@ -14,6 +14,9 @@ struct NotificationView: View {
     
     @State private var integrationResult: IntegrationResult = .empty
     
+    @State private var alertType: AlertType?
+    @State private var apiErrorMessage: String = ""
+    
     var body: some View {
         NavigationStack {
             if #available(iOS 26.0, *) {
@@ -40,12 +43,25 @@ struct NotificationView: View {
         .onAppear {
             GetIntegrations()
         }
+        .alert(item: $alertType) { type in
+            switch type {
+            case .apiError:
+                return Alert(title: Text("Something went wrong."), message: Text("Something went wrong with the API. Please try again later. \n\n\(apiErrorMessage)"), dismissButton: .cancel(Text("OK")))
+            default:
+                return Alert(title: Text(""))
+            }
+        }
     }
     
     private func GetIntegrations() {
         Task {
             if let res = await api.GetIntegrations() {
-                integrationResult = res
+                if (res.status.contains("200")) {
+                    integrationResult = res
+                } else {
+                    apiErrorMessage = "\(res.status)\n\(res.info)"
+                    alertType = .apiError
+                }
             }
         }
     }

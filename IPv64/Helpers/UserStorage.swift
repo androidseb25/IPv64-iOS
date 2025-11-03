@@ -18,15 +18,17 @@ public class UserStorage: ObservableObject {
         @AppStorage("SHOW_WELCOME_VIEW", store: UserStorage.sharedDefault) var ShowWelcomeView: Bool = true
         @AppStorage("SHOW_LOGIN_VIEW", store: UserStorage.sharedDefault) var ShowLoginView: Bool = false
         @AppStorage("ENABLLE_LOCKSCREEN", store: UserStorage.sharedDefault) var EnableLogscreen: Bool = false
+        @AppStorage("IS_INIT_DOMAIN", store: UserStorage.sharedDefault) var IsInitDomain: Bool = false
         @AppStorage("API_KEY", store: UserStorage.sharedDefault) var ApiKey: String = ""
         @AppStorage("USER_ACCOUNTS", store: UserStorage.sharedDefault) var UserAccounts: Data = "".data(using: .utf8)!
+        @AppStorage("IN_APP_SWITCHER", store: UserStorage.sharedDefault) var InAppSwitcher: Bool = false
         
         init() { }
     }
     
     
     public static let shared = UserStorage()
-    nonisolated(unsafe) public static let sharedDefault = UserDefaults(suiteName: "de.rpicloud.IPv64")
+    nonisolated(unsafe) public static let sharedDefault = UserDefaults(suiteName: "group.ipv64.net")
     private let storage = Storage()
     
     @Published public var SelectedTab: Tabs = .domain {
@@ -50,6 +52,18 @@ public class UserStorage: ObservableObject {
     @Published public var EnableLogscreen: Bool = false {
         didSet {
             storage.EnableLogscreen = EnableLogscreen
+        }
+    }
+    
+    @Published public var IsInitDomain: Bool = true {
+        didSet {
+            storage.IsInitDomain = IsInitDomain
+        }
+    }
+    
+    @Published public var InAppSwitcher: Bool = false {
+        didSet {
+            storage.InAppSwitcher = InAppSwitcher
         }
     }
     
@@ -82,8 +96,10 @@ public class UserStorage: ObservableObject {
         ShowWelcomeView = storage.ShowWelcomeView
         ShowLoginView = storage.ShowLoginView
         EnableLogscreen = storage.EnableLogscreen
+        IsInitDomain = storage.IsInitDomain
         ApiKey = storage.ApiKey
         UserAccounts = storage.UserAccounts
+        InAppSwitcher = storage.InAppSwitcher
     }
     
     public func clear() {
@@ -91,6 +107,8 @@ public class UserStorage: ObservableObject {
         ShowWelcomeView = true
         ShowLoginView = false
         EnableLogscreen = false
+        InAppSwitcher = false
+        IsInitDomain = true
         ApiKey = ""
         UserAccounts = "".data(using: .utf8)!
     }

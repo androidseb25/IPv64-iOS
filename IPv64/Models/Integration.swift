@@ -11,7 +11,7 @@ import SwiftUI
 
 struct Integration: Codable, Identifiable, Equatable {
     var integration: String = ""         // z.B. "ntfy", "discord", ...
-    var integrationId: Int?
+    var integrationId: Int = 0
     var integrationName: String = ""
     var options: IntegrationOptions?
     var addTime: String = ""
@@ -21,7 +21,7 @@ struct Integration: Codable, Identifiable, Equatable {
     var selectedState: Bool = false
     var keyName: String? = nil        // Der dynamische JSON-Key ("Discord", "Ntfy", ...)
     
-    var id: Int { integrationId ?? Int(bitPattern: ObjectIdentifier(self as AnyObject)) }
+    var id: Int { integrationId }
     
     enum CodingKeys: String, CodingKey {
         case integration = "integration"

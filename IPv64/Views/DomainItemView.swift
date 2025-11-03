@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DomainItemView: View {
     
-    @Binding var domain: Domain
+    let domain: Domain
     
     var body: some View {
         HStack(alignment: .top) {
@@ -39,9 +39,9 @@ struct DomainItemView: View {
 }
 
 #Preview {
-    var domain: Domain = Domain(updates: Optional(0), wildcard: Optional(1), domainUpdateHash: Optional("pIWgUltDMxkn6GFaHizRJV495uYKPvSN"), records: [RecordInfos(recordId: Optional(120762), content: Optional("37.247.65.25"), ttl: Optional(60), type: Optional("A"), praefix: Optional(""), lastUpdate: Optional("2024-04-16 07:48:17"), recordKey: Optional("r6lhGUXD1RxMBdNQVPYz53oTmJELAKSf"), deactivated: Optional(0), failoverPolicy: Optional("0")), RecordInfos(recordId: Optional(399283), content: Optional("10 rblwal"), ttl: Optional(60), type: Optional("MX"), praefix: Optional("vijomc"), lastUpdate: Optional("2025-09-05 16:40:06"), recordKey: Optional("moRXclzW3kOEpJNyYAPxZav0Ks2HwUeb"), deactivated: Optional(0), failoverPolicy: Optional("0"))], ipv6prefix: Optional(""), dualstack: Optional(""), deactivated: Optional(0), fqdn: "gitlabrunner1.iot64.de", ipv4: "0.0.0.0", ipv6: "::1")
+    var domain: Domain = Domain(updates: Optional(0), wildcard: Optional(1), domainUpdateHash: Optional("212316516"), records: [RecordInfos(recordId: Optional(120762), content: Optional("5.59.522.240"), ttl: Optional(60), type: Optional("A"), praefix: Optional(""), lastUpdate: Optional("2024-04-16 07:48:17"), recordKey: Optional("5411651265145691465"), deactivated: Optional(0), failoverPolicy: Optional("0")), RecordInfos(recordId: Optional(399283), content: Optional("10 451561"), ttl: Optional(60), type: Optional("MX"), praefix: Optional("vijomc"), lastUpdate: Optional("2025-09-05 16:40:06"), recordKey: Optional("545sd631as65d416wsa"), deactivated: Optional(0), failoverPolicy: Optional("0"))], ipv6prefix: Optional(""), dualstack: Optional(""), deactivated: Optional(0), fqdn: "test.iot64.de", ipv4: "0.0.0.0", ipv6: "::1")
     
     List {
-        DomainItemView(domain: .constant(domain))
+        DomainItemView(domain: domain)
     }
 }

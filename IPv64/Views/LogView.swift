@@ -25,9 +25,9 @@ struct LogView: View {
     
     private var listView: some View {
         List {
-            LazyVStack(spacing: 10) {
+            Section {
                 if (logs.logs.isEmpty) {
-                    Text("No logs found!")
+                    ContentUnavailableView("No logs found", systemImage: "magnifyingglass")
                 } else {
                     ForEach(logs.logs, id: \.id) { log in
                         LogItemView(log: log)

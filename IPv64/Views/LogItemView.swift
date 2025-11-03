@@ -29,7 +29,6 @@ struct LogItemView: View {
                 .foregroundStyle(.gray)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.bottom)
     }
 }
 

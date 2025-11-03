@@ -37,6 +37,7 @@ struct IPv64App: App {
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
+        UserStorage.shared.IsInitDomain = true
     }
     
     var body: some Scene {

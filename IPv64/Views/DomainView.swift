@@ -13,6 +13,7 @@ struct DomainView: View {
     
     @Binding var popToRootTab: Tabs
     @StateObject private var api = ApiService()
+    @StateObject private var userStorage = UserStorage.shared
     
     @State private var domainResult: DomainResult = .empty
     @State var v4: MyIP = .emptyV4
@@ -20,7 +21,6 @@ struct DomainView: View {
     
     @State private var showNewDomainSheet: Bool = false
     @State private var isDomainChanged: Bool = false
-    @State private var initView: Bool = true
     
     @State private var alertType: AlertType?
     @State private var apiErrorMessage: String = ""
@@ -44,10 +44,7 @@ struct DomainView: View {
                     Section(domain) {
                         ForEach(filtered.sorted(by: \.fqdn), id: \.fqdn) { subDomain in
                             NavigationLink(value: subDomain) {
-                                DomainItemView(domain: Binding(
-                                    get: { subDomain },
-                                    set: { _ = $0 }   // ← schreibt zurück in die Quelle
-                                ))
+                                DomainItemView(domain: subDomain)
                                 .tag(subDomain.fqdn)
                             }
                         }
@@ -77,9 +74,9 @@ struct DomainView: View {
             GetIp()
         }
         .onAppear {
-            if (isDomainChanged || initView) {
+            if (isDomainChanged || userStorage.IsInitDomain) {
                 isDomainChanged = false
-                initView = false
+                userStorage.IsInitDomain = false
                 GetIp()
             }
         }
@@ -94,7 +91,7 @@ struct DomainView: View {
         .alert(item: $alertType) { type in
             switch type {
             case .apiError:
-                return Alert(title: Text("Something went wrong."), message: Text("\(apiErrorMessage)\n\nPlease try again later."), dismissButton: .cancel(Text("OK")))
+                return Alert(title: Text("Something went wrong."), message: Text("Something went wrong with the API. Please try again later. \n\n\(apiErrorMessage)"), dismissButton: .cancel(Text("OK")))
             default:
                 return Alert(title: Text(""))
             }
@@ -103,15 +100,15 @@ struct DomainView: View {
     
     private func GetDomains() {
         Task {
-            if let res = await api.GetDomains() {
+            if var res = await api.GetDomains() {
                 if (res.status.contains("200")) {
-                    domainResult = res
-                    domainResult.subdomains = domainResult.subdomains.map { domain in
+                    res.subdomains = res.subdomains.map { domain in
                         var d = domain
                         d.ipv4 = v4.ip ?? "0.0.0.0"
                         d.ipv6 = v6.ip ?? "::"
                         return d
                     }
+                    domainResult = res
                 } else {
                     apiErrorMessage = "\(res.status)\n\(res.info)"
                     alertType = .apiError

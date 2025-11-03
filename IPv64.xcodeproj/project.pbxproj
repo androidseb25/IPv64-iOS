@@ -276,6 +276,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to scanthe QR code for the API Key.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Need to unlock the app, when Privacy settings enabled.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -287,7 +288,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.beta;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -318,6 +319,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to scanthe QR code for the API Key.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Need to unlock the app, when Privacy settings enabled.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -329,7 +331,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.beta;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

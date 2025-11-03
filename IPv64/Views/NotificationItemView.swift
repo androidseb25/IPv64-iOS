@@ -37,6 +37,6 @@ struct NotificationItemView: View {
 }
 
 #Preview {
-    var integration = Integration(integration: "telegram", integrationId: Optional(1109), integrationName: "Telegram Bot", options: Optional(IPv64_net.IntegrationOptions(serverurl: nil, downprio: nil, upprio: nil, number: nil, countrycode: nil, completenumber: nil, key: nil, webhookurl: nil, pinguser: nil, pinggroup: nil, email: nil, devicetoken: nil, apptoken: nil, priority: nil)), addTime: "2023-03-09 11:18:12", lastUsed: "2023-03-09 11:18:12", selectedState: false, keyName: Optional("Telegram Bot"))
+    var integration = Integration(integration: "telegram", integrationId: 1109, integrationName: "Telegram Bot", options: Optional(IPv64_net.IntegrationOptions(serverurl: nil, downprio: nil, upprio: nil, number: nil, countrycode: nil, completenumber: nil, key: nil, webhookurl: nil, pinguser: nil, pinggroup: nil, email: nil, devicetoken: nil, apptoken: nil, priority: nil)), addTime: "2023-03-09 11:18:12", lastUsed: "2023-03-09 11:18:12", selectedState: false, keyName: Optional("Telegram Bot"))
     NotificationItemView(integration: integration)
 }

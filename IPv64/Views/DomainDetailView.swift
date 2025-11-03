@@ -54,10 +54,8 @@ struct DomainDetailView: View {
                 }
             }
             Section("General") {
-                Text("Wildcard:")
-                    .badge(domain.isWildcardString)
-                Text("Updates:")
-                    .badge("\(domain.updates ?? 0)")
+                LabeledContent("Wildcard:", value: domain.isWildcardString)
+                LabeledContent("Updates:", value: "\(domain.updates ?? 0)")
                 Text("Domain Update URL")
                     .badge("swipe")
                     .swipeActions {
@@ -73,16 +71,11 @@ struct DomainDetailView: View {
             }
             ForEach(domain.records, id: \.recordId) { record in
                 Section(record.type ?? "") {
-                    Text("Präfix:")
-                        .badge(record.praefix ?? "")
-                    Text("TTL:")
-                        .badge(record.ttl ?? 0)
-                    Text("Typ:")
-                        .badge(record.type ?? "")
-                    Text("Value:")
-                        .badge(record.content ?? "")
-                    Text("last update:")
-                        .badge(record.LastUpdate)
+                    LabeledContent("Präfix:", value: record.praefix ?? "")
+                    LabeledContent("TTL:", value: "\(record.ttl ?? 0)")
+                    LabeledContent("Typ:", value: record.type ?? "")
+                    LabeledContent("Value:", value: record.content ?? "")
+                    LabeledContent("last update:", value: record.LastUpdate)
                     Button(action: {
                         withAnimation {
                             selectedRecord = record

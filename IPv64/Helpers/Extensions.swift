@@ -110,7 +110,7 @@ extension DomainResult {
 
 extension Sequence {
     func sorted(by keyPath: KeyPath<Element, String>) -> [Element] {
-        sorted { ($0[keyPath: keyPath]) < ($1[keyPath: keyPath]) }
+        sorted { ($0[keyPath: keyPath]).lowercased() < ($1[keyPath: keyPath]).lowercased() }
     }
 }
 

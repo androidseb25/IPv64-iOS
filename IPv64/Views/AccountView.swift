@@ -137,11 +137,10 @@ struct AccountView: View {
     
     @ViewBuilder
     private func labeled(_ title: String, badge: String, color: Color? = nil) -> some View {
-        Text(title)
-            .badge(
-                Text(badge)
-                    .foregroundStyle(color ?? .primary)
-            )
+        LabeledContent(title) {
+            Text(badge)
+                .foregroundStyle(color ?? .primary)
+        }
     }
 }
 

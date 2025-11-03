@@ -33,6 +33,7 @@ struct TabbarView: View {
                     selectedTab = newTab
                 }
             }
+            UserStorage.shared.IsInitDomain = true
         })) {
             ForEach(availableTabs) { tab in
                 Tab(tab.labelNew, systemImage: tab.iconName, value: tab) {
@@ -75,6 +76,7 @@ struct TabbarView18: View {
                 }
                 
                 selectedTab = newTab
+                UserStorage.shared.IsInitDomain = true
             }
             
         })) {

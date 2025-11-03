@@ -5,7 +5,6 @@
 //  Created by Sebastian Rank on 20.10.25.
 //
 
-
 import Foundation
 import Combine
 
@@ -243,7 +242,7 @@ class ApiService: ObservableObject {
     }
     
     @MainActor
-    func UpdateDNSRecord(urlDNSUpdate: String) async -> IPUpdateResult? {        
+    func UpdateDNSRecord(urlDNSUpdate: String) async -> IPUpdateResult? {
         isLoading = true
         
         guard let url = URL(string: urlDNSUpdate) else {
@@ -299,10 +298,10 @@ class ApiService: ObservableObject {
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw URLError(.badServerResponse)
             }
-
+            
             // Default fallback
             var result = AddDomainResult(info: "unknown error", status: "\(httpResponse.statusCode)", add_domain: "unknown error")
-
+            
             switch httpResponse.statusCode {
             case 200..<300:
                 // OK – decode your normal success response
@@ -376,8 +375,175 @@ class ApiService: ObservableObject {
             return result
         } catch let error {
             isLoading = false
-            print("Failed to Post Domain", error)
+            print("Failed to PostDNSRecord", error)
             return nil
         }
     }
+    
+    @MainActor
+    func GetHealthchecks() async -> HealthCheckResult? {
+        let urlString = "\(apiUrl)?get_healthchecks&events"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = UserStorage.shared.ApiKey
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+            request.httpMethod = "GET"
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            let (data, _) = try await URLSession.shared.data(for: request)
+            
+            let result = try JsonDecoder.decode(HealthCheckResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to GetHealthchecks", error)
+            return nil
+        }
+    }
+    
+    @MainActor func PostStartPauseHealthcheck(startPause: String, hcToken: String) async -> AddDomainResult? {
+        let urlString = "\(apiUrl)"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = UserStorage.shared.ApiKey
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+            request.httpMethod = "POST"
+            //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            request.httpBody = "\(startPause)=\(hcToken)".data(using: .utf8)
+            
+            let (data, _) = try await URLSession.shared.data(for: request)
+            
+            let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to PostStartPauseHealthcheck", error)
+            return nil
+        }
+    }
+    
+    @MainActor func PostHealthcheck(add_healthcheck: String, alarm_count: Int, alarm_unit: Int) async -> AddDomainResult? {
+        let urlString = "\(apiUrl)"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = UserStorage.shared.ApiKey
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+            request.httpMethod = "POST"
+            //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            request.httpBody = "add_healthcheck=\(add_healthcheck)&alarm_count=\(alarm_count)&alarm_unit=\(alarm_unit)".data(using: .utf8)
+            
+            let (data, _) = try await URLSession.shared.data(for: request)
+            
+            let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to PostHealthcheck", error)
+            return nil
+        }
+    }
+    
+    @MainActor func DeleteHealthcheck(hcToken: String) async -> AddDomainResult? {
+        let urlString = "\(apiUrl)"
+        
+        isLoading = true
+        
+        guard let url = URL(string: urlString) else {
+            isLoading = false
+            return nil
+        }
+        
+        do {
+            let token = UserStorage.shared.ApiKey
+            var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+            request.httpMethod = "DELETE"
+            //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField:"Content-Type");
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+            request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+            JsonEncoder.outputFormatting = .prettyPrinted
+            
+            request.httpBody = "del_healthcheck=\(hcToken)".data(using: .utf8)
+            
+            let (data, _) = try await URLSession.shared.data(for: request)
+            
+            let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
+            isLoading = false
+            return result
+        } catch let error {
+            isLoading = false
+            print("Failed to DeleteHealthcheck", error)
+            return nil
+        }
+    }
+    
+    @MainActor func PostEditHealthcheck(healthcheck: HealthCheck) async -> AddDomainResult? {
+            let urlString = "\(apiUrl)"
+            
+            isLoading = true
+            
+            guard let url = URL(string: urlString) else {
+                isLoading = false
+                return nil
+            }
+            
+            do {
+                let token = UserStorage.shared.ApiKey
+                var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+                request.httpMethod = "POST"
+                //request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON
+                request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")        // the expected response is also JSON
+                request.setValue("Authorization: Bearer \(token)", forHTTPHeaderField: "Authorization")
+                JsonEncoder.outputFormatting = .prettyPrinted
+                
+                let body = "edit_healthcheck=\(healthcheck.healthtoken)&healthcheck_name=\(healthcheck.name)&alarm_count=\(healthcheck.alarm_count)&alarm_unit=\(healthcheck.alarm_unit)&integration=\(healthcheck.integration_id)&grace_count=\(healthcheck.grace_count)&grace_unit=\(healthcheck.grace_unit)&alarm_down=\(healthcheck.alarm_down)&alarm_up=\(healthcheck.alarm_up)"
+                
+                request.httpBody = body.data(using: .utf8)
+                
+                let (data, _) = try await URLSession.shared.data(for: request)
+                
+                let result = try JsonDecoder.decode(AddDomainResult.self, from: data)
+                isLoading = false
+                return result
+            } catch let error {
+                isLoading = false
+                print("Failed to PostEditHealthcheck", error)
+                return nil
+            }
+        }
 }
