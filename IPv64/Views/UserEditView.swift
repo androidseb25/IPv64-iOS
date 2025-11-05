@@ -22,6 +22,13 @@ struct UserEditView: View {
                 Section("Information") {
                     TextField("Information", text: $user.Information)
                 }
+                Section("Widgets") {
+                    Toggle("Use this User for the Widgets", isOn: Binding(get: { UserStorage.shared.ApiKeyWidget == self.user.ApiKey }, set: {
+                        if ($0) {
+                            UserStorage.shared.ApiKeyWidget = self.user.ApiKey
+                        }
+                    })).disabled(UserStorage.shared.ApiKeyWidget == self.user.ApiKey)
+                }
             }
             .navigationTitle(Text("Edit User"))
             .navigationBarTitleDisplayMode(.inline)

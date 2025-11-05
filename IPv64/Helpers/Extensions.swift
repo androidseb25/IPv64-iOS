@@ -19,15 +19,6 @@ extension View {
     }
 }
 
-extension DateFormatter {
-    static let db: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "de_DE")
-        f.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return f
-    }()
-}
-
 extension View {
     @ViewBuilder
     func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {

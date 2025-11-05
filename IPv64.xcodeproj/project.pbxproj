@@ -7,26 +7,100 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A0C48032EBA963700BEDFEA /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A0C48022EBA963700BEDFEA /* WidgetKit.framework */; };
+		9A0C48052EBA963700BEDFEA /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A0C48042EBA963700BEDFEA /* SwiftUI.framework */; };
+		9A0C48142EBA963800BEDFEA /* IPv64WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9A0C48002EBA963700BEDFEA /* IPv64WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9A8CA8AF2EA6969D0073978F /* ipv64.icon in Resources */ = {isa = PBXBuildFile; fileRef = 9A8CA8AD2EA6969D0073978F /* ipv64.icon */; };
 		9A8CA8B02EA6969D0073978F /* ipv64_beta.icon in Resources */ = {isa = PBXBuildFile; fileRef = 9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		9A0C48122EBA963800BEDFEA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9A5178CB2EA3995200731FFB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9A0C47FF2EBA963700BEDFEA;
+			remoteInfo = IPv64WidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9A0C48152EBA963800BEDFEA /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9A0C48142EBA963800BEDFEA /* IPv64WidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		9A0C48002EBA963700BEDFEA /* IPv64WidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = IPv64WidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0C48022EBA963700BEDFEA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		9A0C48042EBA963700BEDFEA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		9A0C481A2EBA967E00BEDFEA /* IPv64WidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IPv64WidgetExtension.entitlements; sourceTree = "<group>"; };
 		9A2777102EAD457E0025862B /* IPv64-net-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "IPv64-net-Info.plist"; sourceTree = "<group>"; };
 		9A5178D32EA3995200731FFB /* IPv64.net.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IPv64.net.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A8CA8AD2EA6969D0073978F /* ipv64.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ipv64.icon; sourceTree = "<group>"; };
 		9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ipv64_beta.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9A0C48182EBA963800BEDFEA /* Exceptions for "IPv64Widget" folder in "IPv64WidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 9A0C47FF2EBA963700BEDFEA /* IPv64WidgetExtension */;
+		};
+		9A0C481E2EBA99D100BEDFEA /* Exceptions for "IPv64" folder in "IPv64WidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Helpers/SharedExtensions.swift,
+				Models/DummyData.swift,
+				Models/Enum.swift,
+				Models/HealthCheck.swift,
+				Models/HealthCheckResult.swift,
+				Models/HealthEvents.swift,
+				Views/HealthcheckEventView.swift,
+			);
+			target = 9A0C47FF2EBA963700BEDFEA /* IPv64WidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		9A0C48062EBA963700BEDFEA /* IPv64Widget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9A0C48182EBA963800BEDFEA /* Exceptions for "IPv64Widget" folder in "IPv64WidgetExtension" target */,
+			);
+			path = IPv64Widget;
+			sourceTree = "<group>";
+		};
 		9A5178D52EA3995200731FFB /* IPv64 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9A0C481E2EBA99D100BEDFEA /* Exceptions for "IPv64" folder in "IPv64WidgetExtension" target */,
+			);
 			path = IPv64;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9A0C47FD2EBA963700BEDFEA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A0C48052EBA963700BEDFEA /* SwiftUI.framework in Frameworks */,
+				9A0C48032EBA963700BEDFEA /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9A5178D02EA3995200731FFB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -37,13 +111,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9A0C48012EBA963700BEDFEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9A0C48022EBA963700BEDFEA /* WidgetKit.framework */,
+				9A0C48042EBA963700BEDFEA /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		9A5178CA2EA3995200731FFB = {
 			isa = PBXGroup;
 			children = (
+				9A0C481A2EBA967E00BEDFEA /* IPv64WidgetExtension.entitlements */,
 				9A2777102EAD457E0025862B /* IPv64-net-Info.plist */,
 				9A8CA8AD2EA6969D0073978F /* ipv64.icon */,
 				9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */,
 				9A5178D52EA3995200731FFB /* IPv64 */,
+				9A0C48062EBA963700BEDFEA /* IPv64Widget */,
+				9A0C48012EBA963700BEDFEA /* Frameworks */,
 				9A5178D42EA3995200731FFB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -52,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				9A5178D32EA3995200731FFB /* IPv64.net.app */,
+				9A0C48002EBA963700BEDFEA /* IPv64WidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -59,6 +146,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		9A0C47FF2EBA963700BEDFEA /* IPv64WidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9A0C48192EBA963800BEDFEA /* Build configuration list for PBXNativeTarget "IPv64WidgetExtension" */;
+			buildPhases = (
+				9A0C47FC2EBA963700BEDFEA /* Sources */,
+				9A0C47FD2EBA963700BEDFEA /* Frameworks */,
+				9A0C47FE2EBA963700BEDFEA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				9A0C48062EBA963700BEDFEA /* IPv64Widget */,
+			);
+			name = IPv64WidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = IPv64WidgetExtension;
+			productReference = 9A0C48002EBA963700BEDFEA /* IPv64WidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		9A5178D22EA3995200731FFB /* IPv64.net */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9A5178DE2EA3995300731FFB /* Build configuration list for PBXNativeTarget "IPv64.net" */;
@@ -66,10 +175,12 @@
 				9A5178CF2EA3995200731FFB /* Sources */,
 				9A5178D02EA3995200731FFB /* Frameworks */,
 				9A5178D12EA3995200731FFB /* Resources */,
+				9A0C48152EBA963800BEDFEA /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				9A0C48132EBA963800BEDFEA /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				9A5178D52EA3995200731FFB /* IPv64 */,
@@ -88,9 +199,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2600;
+				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 2610;
 				TargetAttributes = {
+					9A0C47FF2EBA963700BEDFEA = {
+						CreatedOnToolsVersion = 26.1;
+					};
 					9A5178D22EA3995200731FFB = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
@@ -111,11 +225,19 @@
 			projectRoot = "";
 			targets = (
 				9A5178D22EA3995200731FFB /* IPv64.net */,
+				9A0C47FF2EBA963700BEDFEA /* IPv64WidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		9A0C47FE2EBA963700BEDFEA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9A5178D12EA3995200731FFB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -128,6 +250,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9A0C47FC2EBA963700BEDFEA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9A5178CF2EA3995200731FFB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -137,7 +266,79 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		9A0C48132EBA963800BEDFEA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9A0C47FF2EBA963700BEDFEA /* IPv64WidgetExtension */;
+			targetProxy = 9A0C48122EBA963800BEDFEA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		9A0C48162EBA963800BEDFEA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = IPv64WidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 41;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IPv64Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = IPv64Widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.IPv64Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9A0C48172EBA963800BEDFEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = IPv64WidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 41;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IPv64Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = IPv64Widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.IPv64Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		9A5178DC2EA3995300731FFB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -268,7 +469,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -311,7 +512,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IPv64/IPv64.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -350,6 +551,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9A0C48192EBA963800BEDFEA /* Build configuration list for PBXNativeTarget "IPv64WidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9A0C48162EBA963800BEDFEA /* Debug */,
+				9A0C48172EBA963800BEDFEA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9A5178CE2EA3995200731FFB /* Build configuration list for PBXProject "IPv64" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
