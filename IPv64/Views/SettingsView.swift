@@ -53,6 +53,11 @@ struct SettingsView: View {
                 NavigationLink(value: Tabs.about.route) {
                     Text("About")
                 }
+                #if DEBUG
+                NavigationLink(value: Tabs.syslog.route) {
+                    Text("System Logs")
+                }
+                #endif
                 Button(action: {
                     if let url = URL(string: "https://www.youtube.com/c/RaspberryPiCloud") {
                         UIApplication.shared.open(url)
@@ -82,6 +87,8 @@ struct SettingsView: View {
                 Tabs.myip.makeContentView(popToRootTab: $popToRootTab)
             case Tabs.about.route:
                 Tabs.about.makeContentView(popToRootTab: $popToRootTab)
+            case Tabs.syslog.route:
+                Tabs.syslog.makeContentView(popToRootTab: $popToRootTab)
             default:
                 EmptyView()
             }

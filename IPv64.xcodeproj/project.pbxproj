@@ -12,6 +12,8 @@
 		9A0C48142EBA963800BEDFEA /* IPv64WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9A0C48002EBA963700BEDFEA /* IPv64WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9A8CA8AF2EA6969D0073978F /* ipv64.icon in Resources */ = {isa = PBXBuildFile; fileRef = 9A8CA8AD2EA6969D0073978F /* ipv64.icon */; };
 		9A8CA8B02EA6969D0073978F /* ipv64_beta.icon in Resources */ = {isa = PBXBuildFile; fileRef = 9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */; };
+		9AD116FC2EBCAC2000EE7E81 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD116FB2EBCAC2000EE7E81 /* SwiftyBeaver */; };
+		9AD116FF2EBCAC8400EE7E81 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD116FE2EBCAC8400EE7E81 /* SwiftyBeaver */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,9 +68,20 @@
 				Models/HealthCheck.swift,
 				Models/HealthCheckResult.swift,
 				Models/HealthEvents.swift,
+				Models/iLogger.swift,
 				Views/HealthcheckEventView.swift,
 			);
 			target = 9A0C47FF2EBA963700BEDFEA /* IPv64WidgetExtension */;
+		};
+		9AD116F32EBC94AF00EE7E81 /* Exceptions for "IPv64Widget" folder in "IPv64.net" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppIntent.swift,
+				HealthCheckEntity.swift,
+				Services/ApiServiceWidget.swift,
+				Services/UserStorageWidget.swift,
+			);
+			target = 9A5178D22EA3995200731FFB /* IPv64.net */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -76,6 +89,7 @@
 		9A0C48062EBA963700BEDFEA /* IPv64Widget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				9AD116F32EBC94AF00EE7E81 /* Exceptions for "IPv64Widget" folder in "IPv64.net" target */,
 				9A0C48182EBA963800BEDFEA /* Exceptions for "IPv64Widget" folder in "IPv64WidgetExtension" target */,
 			);
 			path = IPv64Widget;
@@ -98,6 +112,7 @@
 			files = (
 				9A0C48052EBA963700BEDFEA /* SwiftUI.framework in Frameworks */,
 				9A0C48032EBA963700BEDFEA /* WidgetKit.framework in Frameworks */,
+				9AD116FF2EBCAC8400EE7E81 /* SwiftyBeaver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9AD116FC2EBCAC2000EE7E81 /* SwiftyBeaver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +179,7 @@
 			);
 			name = IPv64WidgetExtension;
 			packageProductDependencies = (
+				9AD116FE2EBCAC8400EE7E81 /* SwiftyBeaver */,
 			);
 			productName = IPv64WidgetExtension;
 			productReference = 9A0C48002EBA963700BEDFEA /* IPv64WidgetExtension.appex */;
@@ -187,6 +204,7 @@
 			);
 			name = IPv64.net;
 			packageProductDependencies = (
+				9AD116FB2EBCAC2000EE7E81 /* SwiftyBeaver */,
 			);
 			productName = IPv64;
 			productReference = 9A5178D32EA3995200731FFB /* IPv64.net.app */;
@@ -219,6 +237,9 @@
 			);
 			mainGroup = 9A5178CA2EA3995200731FFB;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9A5178D42EA3995200731FFB /* Products */;
 			projectDirPath = "";
@@ -579,6 +600,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9AD116FB2EBCAC2000EE7E81 /* SwiftyBeaver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			productName = SwiftyBeaver;
+		};
+		9AD116FE2EBCAC8400EE7E81 /* SwiftyBeaver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			productName = SwiftyBeaver;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9A5178CB2EA3995200731FFB /* Project object */;
 }

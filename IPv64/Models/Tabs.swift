@@ -11,7 +11,7 @@ import SwiftUI
 
 public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
     
-    case domain, healthcheck, notification, settings, account, log, myip, about, other
+    case domain, healthcheck, notification, settings, account, log, myip, about, syslog, other
     
     public var id: Int {
         rawValue
@@ -40,6 +40,8 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
             AccountView(popToRootTab: popToRootTab)
         case .log:
             LogView(popToRootTab: popToRootTab)
+        case .syslog:
+            LoggerView(popToRootTab: popToRootTab, showToolbar: false)
         case .myip:
             MyIpView(popToRootTab: popToRootTab)
         case .about:
@@ -63,6 +65,8 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
             return "Account"
         case .log:
             return "Logs"
+        case .syslog:
+            return "System Logs"
         case .myip:
             return "My IP"
         case .about:
@@ -82,6 +86,8 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
             return "settings.myip"
         case .about:
             return "settings.about"
+        case .syslog:
+            return "settings.syslog"
         default:
             return ""
         }

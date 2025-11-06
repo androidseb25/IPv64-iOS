@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import SwiftyBeaver
 
 extension UserStorage: @unchecked Sendable {}
 
@@ -96,6 +97,7 @@ public class UserStorage: ObservableObject {
         let userDefaultsDict = sharedDefaults.dictionaryRepresentation()
         for (key, value) in userDefaultsDict {
             print("\(key): \(value)")
+            iLogger.log.info("UserStorage: \(key): \(value)")
         }
         #endif
         

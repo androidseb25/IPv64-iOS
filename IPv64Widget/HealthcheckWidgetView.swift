@@ -7,6 +7,7 @@
 
 import SwiftUI
 import WidgetKit
+import SwiftyBeaver
 
 struct HealthcheckWidgetView: View {
     
@@ -103,23 +104,31 @@ struct HealthcheckWidgetView: View {
     
     fileprivate func GetColumn(start: Int, end: Int) -> ArraySlice<HealthCheckEntity> {
         if (items.count < start) {
+            iLogger.log.info("items.count < start")
             return []
         }
         if (items.count > end) {
+            iLogger.log.info("items.count > end")
             return items[start...end]
         }
         if (items.count == 1) {
+            iLogger.log.info("items.count == 1")
             return items[start...start]
         }
         if (items.count == 0) {
+            iLogger.log.info("items.count == 0")
             return []
         }
         if (items.count < end) {
+            iLogger.log.info("items.count < end")
             if (items.count == start) {
+                iLogger.log.info("items.count == start")
                 return []
             }
+            iLogger.log.info("items[start...items.count-1]")
             return items[start...items.count-1]
         } else {
+            iLogger.log.info("items[start...end-1]")
             return items[start...end-1]
         }
     }

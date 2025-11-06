@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftyBeaver
 
 class ApiServiceWidget: ObservableObject {
     
@@ -30,6 +31,7 @@ class ApiServiceWidget: ObservableObject {
         
         do {
             let token = UserStorageWidget.shared.ApiKey
+            iLogger.log.info("Token: \(token)")
             var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "GET"
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")  // the request is JSON

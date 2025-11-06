@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 struct UserEditView: View {
     
@@ -26,8 +27,18 @@ struct UserEditView: View {
                     Toggle("Use this User for the Widgets", isOn: Binding(get: { UserStorage.shared.ApiKeyWidget == self.user.ApiKey }, set: {
                         if ($0) {
                             UserStorage.shared.ApiKeyWidget = self.user.ApiKey
+                            Task {
+                                _ = try? await ClearHealthCheckCacheIntent().perform()
+                                ClearHealthCheckCacheIntent().setApiKey(self.user.ApiKey)
+                                WidgetCenter.shared.reloadAllTimelines()
+                            }
                         }
                     })).disabled(UserStorage.shared.ApiKeyWidget == self.user.ApiKey)
+                    Button("Force Refresh") {
+                        WidgetCenter.shared.reloadTimelines(ofKind: "HealthcheckSmallWidget")
+                        WidgetCenter.shared.reloadTimelines(ofKind: "HealthcheckMediumWidget")
+                        WidgetCenter.shared.reloadTimelines(ofKind: "HealthcheckLargeWidget")
+                    }
                 }
             }
             .navigationTitle(Text("Edit User"))
