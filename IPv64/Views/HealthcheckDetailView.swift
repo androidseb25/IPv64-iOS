@@ -12,7 +12,7 @@ struct HealthcheckDetailView: View {
     @Environment(\.colorScheme) var systemColorScheme
     @Environment(\.dismiss) var dismiss
     
-    @State var hc: HealthCheck
+    let hc: HealthCheck
     @Binding var isChanged: Bool
     
     @State private var showEditHc: Bool = false

@@ -38,6 +38,10 @@ struct IPv64App: App {
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
         UserStorage.shared.IsInitDomain = true
+        
+        if (UserStorage.shared.ApiKeyWidget.count == 0 && !User.empty.list.isEmpty) {
+            UserStorage.shared.ApiKeyWidget = User.empty.list.first!.ApiKey
+        }
     }
     
     var body: some Scene {

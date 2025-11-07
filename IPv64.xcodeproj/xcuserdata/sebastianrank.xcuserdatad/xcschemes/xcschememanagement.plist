@@ -14,6 +14,24 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>IPv64WidgetExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>9A0C47FF2EBA963700BEDFEA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9A5178D22EA3995200731FFB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 	</dict>
 </dict>
 </plist>

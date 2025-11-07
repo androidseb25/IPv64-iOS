@@ -13,7 +13,7 @@ struct HcActionTip: Tip {
         Text("Swipe for action")
     }
     var message: Text? {
-        Text("Swipe on a Halthcheck to do delete or start/pause the Healthcheck")
+        Text("Swipe on a Healthcheck to do delete or start/pause the Healthcheck")
     }
     var image: Image? {
         Image(systemName: "appwindow.swipe.rectangle")

@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import SwiftyBeaver
 
 extension UserStorage: @unchecked Sendable {}
 
@@ -20,6 +21,7 @@ public class UserStorage: ObservableObject {
         @AppStorage("ENABLLE_LOCKSCREEN", store: UserStorage.sharedDefault) var EnableLogscreen: Bool = false
         @AppStorage("IS_INIT_DOMAIN", store: UserStorage.sharedDefault) var IsInitDomain: Bool = false
         @AppStorage("API_KEY", store: UserStorage.sharedDefault) var ApiKey: String = ""
+        @AppStorage("API_KEY_WIDGET", store: UserStorage.sharedDefault) var ApiKeyWidget: String = ""
         @AppStorage("USER_ACCOUNTS", store: UserStorage.sharedDefault) var UserAccounts: Data = "".data(using: .utf8)!
         @AppStorage("IN_APP_SWITCHER", store: UserStorage.sharedDefault) var InAppSwitcher: Bool = false
         
@@ -73,6 +75,12 @@ public class UserStorage: ObservableObject {
         }
     }
     
+    @Published public var ApiKeyWidget: String = "" {
+        didSet {
+            storage.ApiKeyWidget = ApiKeyWidget
+        }
+    }
+    
     @Published public var UserAccounts: Data = "".data(using: .utf8)! {
         didSet {
             storage.UserAccounts = UserAccounts
@@ -89,6 +97,7 @@ public class UserStorage: ObservableObject {
         let userDefaultsDict = sharedDefaults.dictionaryRepresentation()
         for (key, value) in userDefaultsDict {
             print("\(key): \(value)")
+            iLogger.log.info("UserStorage: \(key): \(value)")
         }
         #endif
         
@@ -98,6 +107,7 @@ public class UserStorage: ObservableObject {
         EnableLogscreen = storage.EnableLogscreen
         IsInitDomain = storage.IsInitDomain
         ApiKey = storage.ApiKey
+        ApiKeyWidget = storage.ApiKeyWidget
         UserAccounts = storage.UserAccounts
         InAppSwitcher = storage.InAppSwitcher
     }
@@ -110,6 +120,7 @@ public class UserStorage: ObservableObject {
         InAppSwitcher = false
         IsInitDomain = true
         ApiKey = ""
+        ApiKeyWidget = ""
         UserAccounts = "".data(using: .utf8)!
     }
 }
