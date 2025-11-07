@@ -1,8 +1,8 @@
 //
-//  HealthcheckProvider.swift
+//  HealthProvider.swift
 //  IPv64WidgetExtension
 //
-//  Created by Sebastian Rank on 05.11.25.
+//  Created by Sebastian Rank on 07.11.25.
 //
 
 import Foundation
@@ -29,7 +29,17 @@ struct HealthProvider<I: WidgetConfigurationIntent>: AppIntentTimelineProvider {
     
     func placeholder(in context: Context) -> Entry {
         iLogger.log.info("\(String(describing: I.self)) placeholdered")
-        return .init(date: .now, configuration: I(), items: sample(for: I.self))
+        
+        var entryCount = 2
+        
+        if (I.self == type(of: MediumHealthchecksIntent.self)) {
+            entryCount = 4
+        } else if (I.self == type(of: LargeHealthchecksIntent.self)) {
+            entryCount = 10
+        }
+        
+        
+        return .init(date: .now, configuration: I(), items: sample(for: I.self, count: entryCount))
     }
     
     func snapshot(for configuration: I, in context: Context) async -> Entry {
@@ -72,8 +82,8 @@ struct HealthProvider<I: WidgetConfigurationIntent>: AppIntentTimelineProvider {
         Calendar.current.date(byAdding: .minute, value: minutes, to: .now) ?? .now.addingTimeInterval(900)
     }
     
-    private func sample<T>(for _: T.Type) -> [HealthCheckEntity] {
-        HealthCheckEntity.sampleList
+    private func sample<T>(for _: T.Type, count: Int) -> [HealthCheckEntity] {
+        Array(HealthCheckEntity.sampleList.prefix(count))
     }
     
     private func mapAll(_ res: HealthCheckResult) -> [HealthCheckEntity] {
@@ -83,7 +93,6 @@ struct HealthProvider<I: WidgetConfigurationIntent>: AppIntentTimelineProvider {
     // Gemeinsamer Fetch mit Cache-Nutzung
     private func fetchOrCached() async -> HealthCheckResult? {
 //        if let c = await HealthCheckCache.shared.getCached() { return c }
-        _ = UserStorageWidget.shared
         if let fresh = await api.GetHealthchecks() {
             if (fresh.status.contains("200")) {
                 Task { @MainActor in

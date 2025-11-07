@@ -2,13 +2,20 @@
 //  AppIntent.swift
 //  IPv64Widget
 //
-//  Created by Sebastian Rank on 04.11.25.
+//  Created by Sebastian Rank on 07.11.25.
 //
 
 import WidgetKit
 import AppIntents
 
-import AppIntents
+struct ConfigurationAppIntent: WidgetConfigurationIntent {
+    static var title: LocalizedStringResource { "Configuration" }
+    static var description: IntentDescription { "This is an example widget." }
+
+    // An example configurable parameter.
+    @Parameter(title: "Favorite Emoji", default: "😃")
+    var favoriteEmoji: String
+}
 
 struct SmallHealthchecksIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource = "Small Widget"

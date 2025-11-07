@@ -29,15 +29,11 @@ struct UserEditView: View {
                             UserStorage.shared.ApiKeyWidget = self.user.ApiKey
                             Task {
                                 _ = try? await ClearHealthCheckCacheIntent().perform()
-                                ClearHealthCheckCacheIntent().setApiKey(self.user.ApiKey)
-                                WidgetCenter.shared.reloadAllTimelines()
                             }
                         }
                     })).disabled(UserStorage.shared.ApiKeyWidget == self.user.ApiKey)
                     Button("Force Refresh") {
-                        WidgetCenter.shared.reloadTimelines(ofKind: "HealthcheckSmallWidget")
-                        WidgetCenter.shared.reloadTimelines(ofKind: "HealthcheckMediumWidget")
-                        WidgetCenter.shared.reloadTimelines(ofKind: "HealthcheckLargeWidget")
+                        WidgetCenter.shared.reloadAllTimelines()
                     }
                 }
             }

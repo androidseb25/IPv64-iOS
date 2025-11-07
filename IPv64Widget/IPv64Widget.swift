@@ -1,12 +1,12 @@
 //
-//  HealthcheckWidgetBundle.swift
-//  IPv64WidgetExtension
+//  IPv64Widget.swift
+//  IPv64Widget
 //
-//  Created by Sebastian Rank on 05.11.25.
+//  Created by Sebastian Rank on 07.11.25.
 //
 
-import SwiftUI
 import WidgetKit
+import SwiftUI
 
 struct HealthcheckSmallWidget: Widget {
     var body: some WidgetConfiguration {
@@ -59,15 +59,6 @@ struct HealthcheckLargeWidget: Widget {
             .systemLarge
             // , .systemExtraLarge // für macOS hinzufügen, falls gewünscht
         ])
-    }
-}
-
-@main
-struct HealthcheckWidgetBundle: WidgetBundle {
-    var body: some Widget {
-        HealthcheckSmallWidget()
-        HealthcheckMediumWidget()
-        HealthcheckLargeWidget()
     }
 }
 

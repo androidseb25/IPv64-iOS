@@ -2,13 +2,14 @@
 //  HealthCheckEntity.swift
 //  IPv64WidgetExtension
 //
-//  Created by Sebastian Rank on 05.11.25.
+//  Created by Sebastian Rank on 07.11.25.
 //
 
 import Foundation
 import AppIntents
 import SwiftUI
 import SwiftyBeaver
+import WidgetKit
 
 struct HealthCheckEntity: AppEntity, Identifiable, Hashable {
     static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "Healthcheck")
@@ -261,11 +262,8 @@ struct ClearHealthCheckCacheIntent: AppIntent {
     
     func perform() async throws -> some IntentResult {
         await HealthCheckCache.shared.clear()
+        WidgetCenter.shared.reloadAllTimelines()
         return .result()
-    }
-    
-    func setApiKey(_ apiKey: String) {
-        UserStorageWidget.shared.ApiKey = apiKey
     }
 }
 

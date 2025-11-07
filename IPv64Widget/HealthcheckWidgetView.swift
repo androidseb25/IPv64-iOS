@@ -2,9 +2,10 @@
 //  HealthcheckWidgetView.swift
 //  IPv64WidgetExtension
 //
-//  Created by Sebastian Rank on 05.11.25.
+//  Created by Sebastian Rank on 07.11.25.
 //
 
+import Foundation
 import SwiftUI
 import WidgetKit
 import SwiftyBeaver
@@ -16,10 +17,14 @@ struct HealthcheckWidgetView: View {
     let items: [HealthCheckEntity]
     
     var body: some View {
-        if widgetFamily == .systemSmall {
-            smallWidget
+        if (items.count > 0) {
+            if widgetFamily == .systemSmall {
+                smallWidget
+            } else {
+                mediumLargeWidget
+            }
         } else {
-            mediumLargeWidget
+            Text("No Configuration found")
         }
     }
     

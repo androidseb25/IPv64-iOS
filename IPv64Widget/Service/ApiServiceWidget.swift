@@ -30,7 +30,7 @@ class ApiServiceWidget: ObservableObject {
         }
         
         do {
-            let token = UserStorageWidget.shared.ApiKey
+            let token = GetApiKey()
             iLogger.log.info("Token: \(token)")
             var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
             request.httpMethod = "GET"
@@ -49,5 +49,13 @@ class ApiServiceWidget: ObservableObject {
             print("Failed to GetHealthchecks", error)
             return nil
         }
+    }
+    
+    private func GetApiKey() -> String {
+        if let defaults = UserDefaults(suiteName: "group.ipv64.net") {
+            return defaults.string(forKey: "API_KEY_WIDGET") ?? ""
+        }
+        return "No Key Found"
+        // return UserStorageWidget.shared.ApiKey
     }
 }
