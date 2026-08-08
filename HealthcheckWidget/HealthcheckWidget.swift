@@ -12,6 +12,7 @@ import Intents
 struct Provider: IntentTimelineProvider {
     
     @AppStorage("HealthcheckList") var healthCheckList: String = ""
+    @AppStorage("WidgetUpdateInterval") var widgetUpdateInterval: Double = 15.0
     
     func placeholder(in context: Context) -> SimpleEntry {
         var count = 2
@@ -102,7 +103,7 @@ struct Provider: IntentTimelineProvider {
                 }
             }
             let entry = SimpleEntry(date: .now, configuration: configuration, healthcheck: [])
-            let timeline = Timeline(entries: [entry], policy: .after(.now.advanced(by: 15 * 60)))
+            let timeline = Timeline(entries: [entry], policy: .after(.now.advanced(by: widgetUpdateInterval * 60)))
             completion(timeline)
         }
     }
@@ -111,6 +112,7 @@ struct Provider: IntentTimelineProvider {
 struct ProviderFour: IntentTimelineProvider {
     
     @AppStorage("HealthcheckList") var healthCheckList: String = ""
+    @AppStorage("WidgetUpdateInterval") var widgetUpdateInterval: Double = 15.0
     
     func placeholder(in context: Context) -> SimpleFourEntry {
         var count = 2
@@ -229,7 +231,7 @@ struct ProviderFour: IntentTimelineProvider {
                 }
             }*/
             let entry = SimpleFourEntry(date: .now, configuration: configuration, healthcheck: [])
-            let timeline = Timeline(entries: [entry], policy: .after(.now.advanced(by: 15 * 60)))
+            let timeline = Timeline(entries: [entry], policy: .after(.now.advanced(by: widgetUpdateInterval * 60)))
             completion(timeline)
         }
     }
@@ -238,6 +240,7 @@ struct ProviderFour: IntentTimelineProvider {
 struct ProviderStatic: TimelineProvider {
     
     @AppStorage("HealthcheckList") var healthCheckList: String = ""
+    @AppStorage("WidgetUpdateInterval") var widgetUpdateInterval: Double = 15.0
     
     func placeholder(in context: Context) -> SimpleEntryStatic {
         var count = 2
@@ -318,7 +321,7 @@ struct ProviderStatic: TimelineProvider {
             let sorted = hcr.domain.prefix(count).sorted { $0.name > $1.name }
             let shrinkedEventList = Array(sorted)
             let entry = SimpleEntryStatic(date: .now, healthcheck: shrinkedEventList)
-            let timeline = Timeline(entries: [entry], policy: .after(.now.advanced(by: 15 * 60)))
+            let timeline = Timeline(entries: [entry], policy: .after(.now.advanced(by: widgetUpdateInterval * 60)))
             completion(timeline)
         }
     }
