@@ -16,7 +16,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9A0C47FF2EBA963700BEDFEA"
+               BlueprintIdentifier = "9A68F3462EBE088C0033CC42"
                BuildableName = "IPv64WidgetExtension.appex"
                BlueprintName = "IPv64WidgetExtension"
                ReferencedContainer = "container:IPv64.xcodeproj">

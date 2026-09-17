@@ -24,6 +24,7 @@ public class UserStorage: ObservableObject {
         @AppStorage("API_KEY_WIDGET", store: UserStorage.sharedDefault) var ApiKeyWidget: String = ""
         @AppStorage("USER_ACCOUNTS", store: UserStorage.sharedDefault) var UserAccounts: Data = "".data(using: .utf8)!
         @AppStorage("IN_APP_SWITCHER", store: UserStorage.sharedDefault) var InAppSwitcher: Bool = false
+        @AppStorage("LAST_BUILD_NUMBER", store: UserStorage.sharedDefault) var LAST_BUILD_NUMBER: String = ""
         
         init() { }
     }
@@ -87,19 +88,25 @@ public class UserStorage: ObservableObject {
         }
     }
     
+    @Published public var LAST_BUILD_NUMBER: String = "" {
+        didSet {
+            storage.LAST_BUILD_NUMBER = LAST_BUILD_NUMBER
+        }
+    }
+    
     private init() {
         guard let sharedDefaults = UserStorage.sharedDefault else {
             print("Failed to access shared UserDefaults.")
             return
         }
         
-        #if DEBUG
+#if DEBUG
         let userDefaultsDict = sharedDefaults.dictionaryRepresentation()
         for (key, value) in userDefaultsDict {
             print("\(key): \(value)")
             iLogger.log.info("UserStorage: \(key): \(value)")
         }
-        #endif
+#endif
         
         SelectedTab = storage.SelectedTab
         ShowWelcomeView = storage.ShowWelcomeView
@@ -110,6 +117,7 @@ public class UserStorage: ObservableObject {
         ApiKeyWidget = storage.ApiKeyWidget
         UserAccounts = storage.UserAccounts
         InAppSwitcher = storage.InAppSwitcher
+        LAST_BUILD_NUMBER = storage.LAST_BUILD_NUMBER
     }
     
     public func clear() {
@@ -122,5 +130,6 @@ public class UserStorage: ObservableObject {
         ApiKey = ""
         ApiKeyWidget = ""
         UserAccounts = "".data(using: .utf8)!
+        LAST_BUILD_NUMBER = ""
     }
 }

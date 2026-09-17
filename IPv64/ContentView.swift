@@ -14,6 +14,8 @@ struct ContentView: View {
     @StateObject var networkMonitor = NetworkMonitor()
     @StateObject private var biometrics = Biometrics()
     @StateObject private var userStorage = UserStorage.shared
+    @State private var showWhatsNew = false
+    @State private var activeSheet: ActiveSheet? = nil
     
     var body: some View {
         ZStack {
@@ -50,6 +52,35 @@ struct ContentView: View {
                 biometrics.isAuthenticated = false
                 userStorage.InAppSwitcher = false
             }
+        }
+        .onAppear {
+            let bnd = Int(userStorage.LAST_BUILD_NUMBER) ?? 0
+            
+            if bnd != Int(Bundle.main.buildNumber) && !userStorage.ShowWelcomeView {
+                withAnimation {
+                    showWhatsNew = true
+                    activeSheet = .whatsnew
+                }
+            }
+        }
+        .sheet(item: $activeSheet) { item in
+            showActiveSheet(item: item)
+        }
+    }
+    
+    @ViewBuilder
+    private func showActiveSheet(item: ActiveSheet?) -> some View {
+        switch item {
+        case .whatsnew:
+            if #available(iOS 26.0, *) {
+                WhatsNewView26(activeSheet: $activeSheet, isPresented: $showWhatsNew, isFromSetting: true)
+                    .interactiveDismissDisabled(true)
+            } else {
+                WhatsNewView(activeSheet: $activeSheet, isPresented: $showWhatsNew, isFromSetting: true)
+                    .interactiveDismissDisabled(true)
+            }
+        default:
+            EmptyView()
         }
     }
 }
