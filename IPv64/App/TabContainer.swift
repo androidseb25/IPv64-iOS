@@ -14,7 +14,7 @@ struct TabContainer<Root: View>: View {
         Group {
             if router.usesSplitView {
                 NavigationSplitView {
-                    root()
+                    root().appScreenBackground()
                 } detail: {
                     NavigationStack(path: $router.path) {
                         Group {
@@ -29,7 +29,7 @@ struct TabContainer<Root: View>: View {
                 }
             } else {
                 NavigationStack(path: $router.path) {
-                    root().appReadableWidth().navigationDestination(for: Route.self) { RouteDestination(route: $0) }
+                    root().appReadableWidth().appScreenBackground().navigationDestination(for: Route.self) { RouteDestination(route: $0) }
                 }
             }
         }

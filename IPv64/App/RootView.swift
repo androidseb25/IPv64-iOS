@@ -15,6 +15,7 @@ struct RootView: View {
                 NavigationStack { WelcomeView() }
             }
         }
+        .tint(.orange)
         .accessibilityHidden(session.isLocked)
         .lockWindow(isPresented: session.isLocked) {
             LockView { Task { await authenticate() } }

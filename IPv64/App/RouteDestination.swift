@@ -5,7 +5,7 @@ struct RouteDestination: View {
     let route: Route
 
     var body: some View {
-        screen.appReadableWidth()
+        screen.appReadableWidth().appScreenBackground()
     }
 
     @ViewBuilder private var screen: some View {

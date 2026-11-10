@@ -27,10 +27,13 @@ struct DomainListView: View {
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
             }
-            Section {
-                ForEach(visible, id: \.id) { domain in
-                    if let name = domain.name {
-                        row(domain, name: name)
+            // One section per zone, as in the 2.0 app.
+            ForEach(zones, id: \.self) { zone in
+                Section(zone) {
+                    ForEach(visible.filter { DynDNSLogic.baseDomain($0.name ?? "") == zone }, id: \.id) { domain in
+                        if let name = domain.name {
+                            row(domain, name: name)
+                        }
                     }
                 }
             }
@@ -60,6 +63,12 @@ struct DomainListView: View {
         .errorAlert($error) { Task { await load(pull: false) } }
     }
 
+    private var zones: [String] {
+        var seen: [String] = []
+        for zone in visible.map({ DynDNSLogic.baseDomain($0.name ?? "") }) where !seen.contains(zone) { seen.append(zone) }
+        return seen
+    }
+
     private var visible: [Domain] {
         guard let domains else { return [] }
         return DynDNSLogic.sortedByZone(domains.filter { filter.matches(kind: $0.kind, name: $0.name ?? "") })
@@ -83,17 +92,16 @@ struct DomainListView: View {
         var parts = ["Updates: \(domain.updateCount ?? 0)", "Wildcard: \(domain.wildcard == true ? "yes" : "no")"]
         if DynDNSLogic.isOwn(kind: domain.kind, name: name) { parts.append("Own domain") }
         return NavigationLink(value: Route.domainDetail(name: name)) {
-            HStack {
+            HStack(alignment: .firstTextBaseline, spacing: 10) {
+                Circle().fill(status.color).frame(width: 10, height: 10).accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(verbatim: name)
-                    Text(verbatim: parts.joined(separator: " · ")).font(.caption).foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 8)
-                VStack(alignment: .trailing, spacing: 4) {
-                    StatusChip(status.label, color: status.color)
-                    if domain.active == false { StatusChip("Inactive", color: .ipv64Gray) }
+                    Text(verbatim: name).font(.headline)
+                    ForEach(parts, id: \.self) { Text(verbatim: $0).font(.subheadline) }
+                    Text(status.label).font(.caption).foregroundStyle(status.color)
+                    if domain.active == false { Text("Inactive").font(.caption).foregroundStyle(.secondary) }
                 }
             }
+            .padding(.vertical, 4)
         }
         .task(id: "\(name)-\(detail != nil)") { await ensureDetail(name) }
     }

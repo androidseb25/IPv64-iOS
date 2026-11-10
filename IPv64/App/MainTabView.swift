@@ -36,6 +36,7 @@ struct MainTabView: View {
         #if DEBUG
         .task {
             await nodes.connectMockNodes()
+            await nodes.refreshModules()   // the DNS64 tab exists only after this
             applyMockSelection()
         }
         #endif
