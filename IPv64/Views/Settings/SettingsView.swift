@@ -30,10 +30,11 @@ struct SettingsView: View {
     private var listView: some View {
         List {
             Section("General") {
-                if #unavailable(iOS 26.0) {
-                    NavigationLink(value: Tabs.account.route) {
-                        Text("Account")
-                    }
+                NavigationLink(value: Tabs.account.route) {
+                    Text("Account")
+                }
+                NavigationLink(value: Tabs.notification.route) {
+                    Text("Notification")
                 }
                 NavigationLink(value: Tabs.log.route) {
                     Text("Logs")
@@ -79,6 +80,8 @@ struct SettingsView: View {
             switch route {
             case Tabs.account.route:
                 Tabs.account.makeContentView(popToRootTab: $popToRootTab)
+            case Tabs.notification.route:
+                Tabs.notification.makeContentView(popToRootTab: $popToRootTab)
             case Tabs.log.route:
                 Tabs.log.makeContentView(popToRootTab: $popToRootTab)
             case Tabs.myip.route:

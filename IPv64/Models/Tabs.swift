@@ -11,7 +11,8 @@ import SwiftUI
 
 public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
     
-    case domain, healthcheck, notification, settings, account, log, myip, about, syslog, other
+    // New cases go last: the raw value is persisted in CURRENT_TAB.
+    case domain, healthcheck, notification, settings, account, log, myip, about, syslog, other, cdn, proxy64, dns64
     
     public var id: Int {
         rawValue
@@ -21,8 +22,12 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
         UUID().uuidString
     }
     
-    static func tabList() -> [Tabs] {
-        return [.domain, .healthcheck, .notification, .settings]
+    /// Tab bar as in Android 2.1.0 (`Tabs.tabList`): Proxy64 replaces CDN64 and DNS64 appears only while a
+    /// connected node has that module active. `.settings` is the More tab.
+    static func tabList(proxyActive: Bool, dnsActive: Bool) -> [Tabs] {
+        var list: [Tabs] = [.domain, .healthcheck, proxyActive ? .proxy64 : .cdn]
+        if dnsActive { list.append(.dns64) }
+        return list + [.settings]
     }
     
     @MainActor @ViewBuilder
@@ -46,6 +51,11 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
             MyIpView(popToRootTab: popToRootTab)
         case .about:
             AboutView(popToRootTab: popToRootTab)
+        case .cdn, .proxy64, .dns64:
+            // Screens follow in a later step.
+            ContentUnavailableView(labelNew, systemImage: iconName)
+                .navigationTitle(labelNew)
+                .navigationBarTitleDisplayMode(.inline)
         default:
             EmptyView()
         }
@@ -54,13 +64,19 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
     var labelNew: String {
         switch self {
         case .domain:
-            return "Domain"
+            return "Domains"
         case .healthcheck:
-            return "Healthcheck"
+            return "Healthchecks"
         case .notification:
             return "Notification"
         case .settings:
-            return "Settings"
+            return "More"
+        case .cdn:
+            return "CDN64"
+        case .proxy64:
+            return "Proxy64"
+        case .dns64:
+            return "DNS64"
         case .account:
             return "Account"
         case .log:
@@ -86,6 +102,8 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
             return "settings.myip"
         case .about:
             return "settings.about"
+        case .notification:
+            return "settings.notification"
         case .syslog:
             return "settings.syslog"
         default:
@@ -118,7 +136,13 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
         case .notification:
             return "bell.badge"
         case .settings:
-            return "gearshape"
+            return "ellipsis"
+        case .cdn:
+            return "cloud"
+        case .proxy64:
+            return "arrow.left.arrow.right"
+        case .dns64:
+            return "server.rack"
         case .account:
             return "person.circle"
         default:
