@@ -25,7 +25,7 @@ struct AccountDetailView: View {
             }
         }
         .confirmDialog($confirm)
-        .safeAreaInset(edge: .bottom) { SnackbarText(message: $message) }
+        .appBottomBar { SnackbarText(message: $message) }
         .onAppear {
             if let flash = router.flash {
                 router.flash = nil

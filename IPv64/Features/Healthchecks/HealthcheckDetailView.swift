@@ -81,7 +81,7 @@ struct HealthcheckDetailView: View {
         .loadingOverlay(busy)
         .errorAlert($error)
         .confirmDialog($confirm)
-        .safeAreaInset(edge: .bottom) {
+        .appBottomBar {
             VStack(spacing: 0) {
                 if let waiting {
                     HStack(spacing: 12) { ProgressView(); Text(verbatim: waiting) }

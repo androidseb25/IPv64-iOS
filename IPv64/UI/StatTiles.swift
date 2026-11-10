@@ -26,31 +26,36 @@ struct StatTile: View {
         .padding(.horizontal, 8)
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .appCard()
         .accessibilityElement(children: .combine)
     }
 }
 
-/// Equal-size tiles in an adaptive grid (as many columns as fit at 100 pt minimum width).
+/// Equal-size tiles in an adaptive grid (as many columns as fit at `minWidth`).
 struct StatTiles<Content: View>: View {
     private let spacing: CGFloat
+    private let minWidth: CGFloat
     private let content: Content
 
-    init(spacing: CGFloat = 8, @ViewBuilder content: () -> Content) {
+    init(spacing: CGFloat = 8, minWidth: CGFloat = 100, @ViewBuilder content: () -> Content) {
         self.spacing = spacing
+        self.minWidth = minWidth
         self.content = content()
     }
 
     var body: some View {
-        EqualTilesLayout(spacing: spacing) { content }
+        AppGlassGroup(spacing: spacing) {
+            EqualTilesLayout(spacing: spacing, minWidth: minWidth) { content }
+        }
             .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
             .listRowBackground(Color.clear)
     }
 }
 
-private struct EqualTilesLayout: Layout {
+/// Equal-size cells, as many columns as fit at `minWidth` (all rows as tall as the tallest cell).
+struct EqualTilesLayout: Layout {
     let spacing: CGFloat
-    private let minWidth: CGFloat = 100
+    let minWidth: CGFloat
 
     private func columns(_ width: CGFloat, count: Int) -> Int {
         max(1, min(count, Int((width + spacing) / (minWidth + spacing))))

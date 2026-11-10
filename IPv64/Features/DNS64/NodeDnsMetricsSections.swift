@@ -30,31 +30,23 @@ struct NodeDnsMetricsSections: View {
             let blocked = s?.blocked ?? 0
             let cached = s?.cached ?? 0
             Section {
-                Grid(horizontalSpacing: 8, verticalSpacing: 8) {
-                    GridRow {
-                        DnsKpiTile("Queries", Formatters.count(total),
-                                   caption: String(localized: "≈ \(Formatters.count(dns64PerHour(total: total, hours: range.hours))) per hour"))
-                        DnsKpiTile("Blocked", Formatters.count(blocked),
-                                   caption: String(localized: "\(dns64Percent(blocked, of: total)) % of queries"))
-                    }
-                    GridRow {
-                        DnsKpiTile("From cache", Formatters.count(cached),
-                                   caption: String(localized: "\(dns64Percent(cached, of: total)) % answered instantly"))
-                        DnsKpiTile("Clients", Formatters.count(s?.clients ?? 0), caption: nil)
-                    }
-                    GridRow {
-                        DnsKpiTile("Ø Upstream", s?.avgUpstreamMs.map { "\(dns64Ms($0)) ms" } ?? "–", caption: nil)
-                        DnsKpiTile("Blocklists", Formatters.count(summary.blocklistSize ?? 0), caption: String(localized: "domains"))
-                    }
+                StatTiles(minWidth: 150) {
+                    DnsKpiTile("Queries", Formatters.count(total),
+                               caption: String(localized: "≈ \(Formatters.count(dns64PerHour(total: total, hours: range.hours))) per hour"))
+                    DnsKpiTile("Blocked", Formatters.count(blocked),
+                               caption: String(localized: "\(dns64Percent(blocked, of: total)) % of queries"))
+                    DnsKpiTile("From cache", Formatters.count(cached),
+                               caption: String(localized: "\(dns64Percent(cached, of: total)) % answered instantly"))
+                    DnsKpiTile("Clients", Formatters.count(s?.clients ?? 0), caption: nil)
+                    DnsKpiTile("Ø Upstream", s?.avgUpstreamMs.map { "\(dns64Ms($0)) ms" } ?? "–", caption: nil)
+                    DnsKpiTile("Blocklists", Formatters.count(summary.blocklistSize ?? 0), caption: String(localized: "domains"))
                 }
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets())
             }
         }
     }
 }
 
-/// KPI tile; stretches to the row height of its Grid row so tiles are equally tall.
+/// KPI tile; stretches to the cell size of `StatTiles` so tiles are equally tall.
 private struct DnsKpiTile: View {
     let label: LocalizedStringKey
     let value: String
@@ -75,7 +67,7 @@ private struct DnsKpiTile: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .padding(12)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .appCard()
         .accessibilityElement(children: .combine)
     }
 }

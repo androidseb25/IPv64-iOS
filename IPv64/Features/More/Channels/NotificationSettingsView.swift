@@ -160,22 +160,25 @@ private struct DayChips: View {
     private static let labels: [LocalizedStringKey] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
+        // Scrolls only when the seven chips don't fit (narrow width, large Dynamic Type).
+        ViewThatFits(in: .horizontal) {
+            chips
+            ScrollView(.horizontal, showsIndicators: false) { chips }
+        }
+    }
+
+    private var chips: some View {
+        AppGlassGroup {
+            HStack(spacing: 6) {
                 ForEach(0..<7, id: \.self) { index in
                     let day = index + 1
                     let selected = days.contains(day)
                     Button {
                         if selected { days.remove(day) } else { days.insert(day) }
                     } label: {
-                        Text(Self.labels[index])
-                            .font(.subheadline)
-                            .foregroundStyle(Color.primary)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .appChip(selected: selected)
+                        Text(Self.labels[index]).font(.subheadline)
                     }
-                    .buttonStyle(.plain)
+                    .appChipButtonStyle(selected: selected)
                     .accessibilityAddTraits(selected ? .isSelected : [])
                 }
             }

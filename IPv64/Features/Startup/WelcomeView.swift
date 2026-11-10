@@ -22,7 +22,7 @@ struct WelcomeView: View {
                     .font(.headline)
                     .frame(maxWidth: .infinity, minHeight: 37)
             }
-            .buttonStyle(.borderedProminent)
+            .appGlassButtonStyle(prominent: true)
             .buttonBorderShape(.capsule)
             .controlSize(.large)
             .padding(.bottom, 32)

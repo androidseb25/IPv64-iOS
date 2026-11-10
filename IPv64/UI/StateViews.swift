@@ -26,7 +26,7 @@ extension View {
                         Text(text).font(.body)
                     }
                     .padding(24)
-                    .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .appGlass()
                     .padding(.horizontal, 32)
                 }
                 .transition(.opacity)

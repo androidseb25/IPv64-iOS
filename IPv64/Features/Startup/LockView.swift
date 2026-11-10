@@ -13,7 +13,7 @@ struct LockView: View {
                 .foregroundStyle(.tint)
                 .accessibilityHidden(true)
             Button("Start Authentication", action: onAuthenticate)
-                .buttonStyle(.borderedProminent)
+                .appGlassButtonStyle(prominent: true)
                 .buttonBorderShape(.capsule)
                 .controlSize(.large)
         }

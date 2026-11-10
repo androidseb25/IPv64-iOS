@@ -103,8 +103,7 @@ struct HealthcheckListView: View {
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
-            Menu("Filter", systemImage: status == .all && exec == .all
-                 ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill") {
+            Menu("Filter", systemImage: AppSymbol.filter(active: status != .all || exec != .all)) {
                 Picker("Status", selection: $status) {
                     ForEach(HcStatusFilter.allCases, id: \.self) { filter in
                         Text(verbatim: "\(filter.label) \(count(filter))").tag(filter)

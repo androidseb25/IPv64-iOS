@@ -29,17 +29,16 @@ struct ActionTile: View {
                     .multilineTextAlignment(.center)
             }
             .foregroundStyle(role == .destructive ? Color.ipv64Red : Color.accentColor)
-            .padding(.horizontal, 4)
-            .padding(.vertical, 10)
-            .frame(maxWidth: .infinity, minHeight: 64, maxHeight: .infinity)
+            .frame(maxWidth: .infinity, minHeight: 44, maxHeight: .infinity)
             .contentShape(Rectangle())
         }
-        .buttonStyle(AppTileButtonStyle())
+        .appTileButtonStyle()
         .opacity(isEnabled ? 1 : 0.38)
     }
 }
 
-/// Equal-width action buttons in one row. In a `List` it forms its own transparent row.
+/// Equal-width action buttons in one row; wraps into equal tiles when the captions don't fit
+/// (narrow width, large Dynamic Type). In a `List` it forms its own transparent row.
 struct ActionTileRow<Content: View>: View {
     private let content: Content
 
@@ -47,8 +46,11 @@ struct ActionTileRow<Content: View>: View {
 
     var body: some View {
         AppGlassGroup {
-            HStack(spacing: 8) { content }
-                .fixedSize(horizontal: false, vertical: true)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) { content }
+                    .fixedSize(horizontal: false, vertical: true)
+                EqualTilesLayout(spacing: 8, minWidth: 120) { content }
+            }
         }
         .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
         .listRowBackground(Color.clear)

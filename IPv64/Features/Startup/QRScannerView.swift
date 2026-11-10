@@ -18,7 +18,7 @@ struct QRScannerView: View {
             Button("Cancel", systemImage: "xmark") { dismiss() }
                 .labelStyle(.iconOnly)
                 .font(.title3)
-                .buttonStyle(.bordered)
+                .appGlassButtonStyle()
                 .buttonBorderShape(.circle)
                 .padding(16)
         }
