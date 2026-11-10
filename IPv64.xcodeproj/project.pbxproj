@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C3D100000000000000000002 /* IPv64NotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C3D100000000000000000001 /* IPv64NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C3D100000000000000000003 /* SecNtfy in Frameworks */ = {isa = PBXBuildFile; productRef = C3D100000000000000000004 /* SecNtfy */; };
 		B1A0000000000000000000A1 /* IPv64 in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B1 /* IPv64 */; };
 		B1A0000000000000000000A2 /* SecNtfy in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B2 /* SecNtfy */; };
 		B1A0000000000000000000A3 /* IPv64 in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B3 /* IPv64 */; };
@@ -22,26 +20,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C3D100000000000000000005 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A5178CB2EA3995200731FFB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C3D100000000000000000009;
-			remoteInfo = IPv64NotificationService;
-		};
 		9A68F3542EBE088D0033CC42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9A5178CB2EA3995200731FFB /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 9A68F3462EBE088C0033CC42;
 			remoteInfo = IPv64WidgetExtension;
-		};
-		D4E100000000000000000008 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A5178CB2EA3995200731FFB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9A5178D22EA3995200731FFB;
-			remoteInfo = IPv64.net;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -53,7 +37,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				9A68F3562EBE088D0033CC42 /* IPv64WidgetExtension.appex in Embed Foundation Extensions */,
-				C3D100000000000000000002 /* IPv64NotificationService.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -61,7 +44,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		C3D100000000000000000001 /* IPv64NotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = IPv64NotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A0C48022EBA963700BEDFEA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		9A0C48042EBA963700BEDFEA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		9A2777102EAD457E0025862B /* IPv64-net-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "IPv64-net-Info.plist"; sourceTree = "<group>"; };
@@ -70,18 +52,9 @@
 		9A68F35D2EBE08F70033CC42 /* IPv64WidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IPv64WidgetExtension.entitlements; sourceTree = "<group>"; };
 		9A8CA8AD2EA6969D0073978F /* ipv64.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ipv64.icon; sourceTree = "<group>"; };
 		9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ipv64_beta.icon; sourceTree = "<group>"; };
-		D4E100000000000000000001 /* IPv64Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IPv64Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		C3D100000000000000000007 /* Exceptions for "IPv64NotificationService" folder in "IPv64NotificationService" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-				IPv64NotificationService.entitlements,
-			);
-			target = C3D100000000000000000009 /* IPv64NotificationService */;
-		};
 		9A68F3572EBE088D0033CC42 /* Exceptions for "IPv64Widget" folder in "IPv64WidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -92,22 +65,31 @@
 		9A68F3622EBE0A370033CC42 /* Exceptions for "IPv64" folder in "IPv64WidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Core/SecureStore.swift,
-				Core/iLogger.swift,
+				Helpers/SharedExtensions.swift,
+				Helpers/SecureStore.swift,
+				Helpers/APITransport.swift,
+				Helpers/WidgetHealthCache.swift,
+				Models/Enum.swift,
+				Models/HealthCheck.swift,
+				Models/HealthCheckResult.swift,
+				Models/HealthEvents.swift,
+				Models/iLogger.swift,
+				Views/Healthcheck/HealthcheckEventView.swift,
 			);
 			target = 9A68F3462EBE088C0033CC42 /* IPv64WidgetExtension */;
+		};
+		9A68F36D2EBE0C460033CC42 /* Exceptions for "IPv64Widget" folder in "IPv64.net" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppIntent.swift,
+				Service/ApiServiceWidget.swift,
+				Service/HealthCheckEntity.swift,
+			);
+			target = 9A5178D22EA3995200731FFB /* IPv64.net */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		C3D100000000000000000008 /* IPv64NotificationService */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C3D100000000000000000007 /* Exceptions for "IPv64NotificationService" folder in "IPv64NotificationService" target */,
-			);
-			path = IPv64NotificationService;
-			sourceTree = "<group>";
-		};
 		9A5178D52EA3995200731FFB /* IPv64 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -119,27 +101,15 @@
 		9A68F34A2EBE088C0033CC42 /* IPv64Widget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				9A68F36D2EBE0C460033CC42 /* Exceptions for "IPv64Widget" folder in "IPv64.net" target */,
 				9A68F3572EBE088D0033CC42 /* Exceptions for "IPv64Widget" folder in "IPv64WidgetExtension" target */,
 			);
 			path = IPv64Widget;
 			sourceTree = "<group>";
 		};
-		D4E100000000000000000002 /* IPv64Tests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = IPv64Tests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		C3D10000000000000000000B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C3D100000000000000000003 /* SecNtfy in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9A5178D02EA3995200731FFB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -158,13 +128,6 @@
 				9A68F3482EBE088C0033CC42 /* WidgetKit.framework in Frameworks */,
 				9A68F35C2EBE08C80033CC42 /* SwiftyBeaver in Frameworks */,
 				B1A0000000000000000000A3 /* IPv64 in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D4E100000000000000000005 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,8 +152,6 @@
 				9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */,
 				9A5178D52EA3995200731FFB /* IPv64 */,
 				9A68F34A2EBE088C0033CC42 /* IPv64Widget */,
-				C3D100000000000000000008 /* IPv64NotificationService */,
-				D4E100000000000000000002 /* IPv64Tests */,
 				9A0C48012EBA963700BEDFEA /* Frameworks */,
 				9A5178D42EA3995200731FFB /* Products */,
 			);
@@ -201,8 +162,6 @@
 			children = (
 				9A5178D32EA3995200731FFB /* IPv64.net.app */,
 				9A68F3472EBE088C0033CC42 /* IPv64WidgetExtension.appex */,
-				C3D100000000000000000001 /* IPv64NotificationService.appex */,
-				D4E100000000000000000001 /* IPv64Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -210,29 +169,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C3D100000000000000000009 /* IPv64NotificationService */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C3D10000000000000000000F /* Build configuration list for PBXNativeTarget "IPv64NotificationService" */;
-			buildPhases = (
-				C3D10000000000000000000A /* Sources */,
-				C3D10000000000000000000B /* Frameworks */,
-				C3D10000000000000000000C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				C3D100000000000000000008 /* IPv64NotificationService */,
-			);
-			name = IPv64NotificationService;
-			packageProductDependencies = (
-				C3D100000000000000000004 /* SecNtfy */,
-			);
-			productName = IPv64NotificationService;
-			productReference = C3D100000000000000000001 /* IPv64NotificationService.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		9A5178D22EA3995200731FFB /* IPv64.net */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9A5178DE2EA3995300731FFB /* Build configuration list for PBXNativeTarget "IPv64.net" */;
@@ -246,7 +182,6 @@
 			);
 			dependencies = (
 				9A68F3552EBE088D0033CC42 /* PBXTargetDependency */,
-				C3D100000000000000000006 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				9A5178D52EA3995200731FFB /* IPv64 */,
@@ -285,29 +220,6 @@
 			productReference = 9A68F3472EBE088C0033CC42 /* IPv64WidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		D4E100000000000000000003 /* IPv64Tests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D4E100000000000000000009 /* Build configuration list for PBXNativeTarget "IPv64Tests" */;
-			buildPhases = (
-				D4E100000000000000000004 /* Sources */,
-				D4E100000000000000000005 /* Frameworks */,
-				D4E100000000000000000006 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D4E100000000000000000007 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				D4E100000000000000000002 /* IPv64Tests */,
-			);
-			name = IPv64Tests;
-			packageProductDependencies = (
-			);
-			productName = IPv64Tests;
-			productReference = D4E100000000000000000001 /* IPv64Tests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -323,13 +235,6 @@
 					};
 					9A68F3462EBE088C0033CC42 = {
 						CreatedOnToolsVersion = 26.1;
-					};
-					C3D100000000000000000009 = {
-						CreatedOnToolsVersion = 26.1;
-					};
-					D4E100000000000000000003 = {
-						CreatedOnToolsVersion = 26.1;
-						TestTargetID = 9A5178D22EA3995200731FFB;
 					};
 				};
 			};
@@ -354,20 +259,11 @@
 			targets = (
 				9A5178D22EA3995200731FFB /* IPv64.net */,
 				9A68F3462EBE088C0033CC42 /* IPv64WidgetExtension */,
-				C3D100000000000000000009 /* IPv64NotificationService */,
-				D4E100000000000000000003 /* IPv64Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		C3D10000000000000000000C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9A5178D12EA3995200731FFB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -384,23 +280,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D4E100000000000000000006 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		C3D10000000000000000000A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9A5178CF2EA3995200731FFB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -415,100 +297,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D4E100000000000000000004 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C3D100000000000000000006 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C3D100000000000000000009 /* IPv64NotificationService */;
-			targetProxy = C3D100000000000000000005 /* PBXContainerItemProxy */;
-		};
 		9A68F3552EBE088D0033CC42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9A68F3462EBE088C0033CC42 /* IPv64WidgetExtension */;
 			targetProxy = 9A68F3542EBE088D0033CC42 /* PBXContainerItemProxy */;
 		};
-		D4E100000000000000000007 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 9A5178D22EA3995200731FFB /* IPv64.net */;
-			targetProxy = D4E100000000000000000008 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		C3D10000000000000000000D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = IPv64NotificationService/IPv64NotificationService.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 43;
-				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = IPv64NotificationService/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = IPv64NotificationService;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 2.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.NotificationService;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		C3D10000000000000000000E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = IPv64NotificationService/IPv64NotificationService.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 43;
-				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = IPv64NotificationService/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = IPv64NotificationService;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 2.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.NotificationService;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		9A5178DC2EA3995300731FFB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -562,7 +361,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -621,7 +420,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -646,14 +445,14 @@
 				INFOPLIST_FILE = "IPv64-net-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to scan the QR code for the API Key.";
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "Face ID unlocks the app when the lockscreen is enabled.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to scanthe QR code for the API Key.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Need to unlock the app, when Privacy settings enabled.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -670,7 +469,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -689,14 +488,14 @@
 				INFOPLIST_FILE = "IPv64-net-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to scan the QR code for the API Key.";
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "Face ID unlocks the app when the lockscreen is enabled.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to scanthe QR code for the API Key.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Need to unlock the app, when Privacy settings enabled.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -713,7 +512,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -743,7 +542,7 @@
 				INFOPLIST_FILE = IPv64Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64Widget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -767,7 +566,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 26.1;
 			};
@@ -798,7 +597,7 @@
 				INFOPLIST_FILE = IPv64Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64Widget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -822,67 +621,15 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 26.1;
-			};
-			name = Release;
-		};
-		D4E10000000000000000000A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
-				ENABLE_TESTABILITY = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64Tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IPv64.net.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/IPv64.net";
-			};
-			name = Debug;
-		};
-		D4E10000000000000000000B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64Tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IPv64.net.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/IPv64.net";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C3D10000000000000000000F /* Build configuration list for PBXNativeTarget "IPv64NotificationService" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C3D10000000000000000000D /* Debug */,
-				C3D10000000000000000000E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		9A5178CE2EA3995200731FFB /* Build configuration list for PBXProject "IPv64" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -906,15 +653,6 @@
 			buildConfigurations = (
 				9A68F3592EBE088D0033CC42 /* Debug */,
 				9A68F35A2EBE088D0033CC42 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D4E100000000000000000009 /* Build configuration list for PBXNativeTarget "IPv64Tests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D4E10000000000000000000A /* Debug */,
-				D4E10000000000000000000B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -949,11 +687,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C3D100000000000000000004 /* SecNtfy */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B1A0000000000000000000C2 /* XCRemoteSwiftPackageReference "SecNtfy-SPM" */;
-			productName = SecNtfy;
-		};
 		B1A0000000000000000000B1 /* IPv64 */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B1A0000000000000000000C1 /* XCRemoteSwiftPackageReference "IPv64-SPM" */;

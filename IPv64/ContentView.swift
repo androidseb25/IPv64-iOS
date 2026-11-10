@@ -1,0 +1,100 @@
+//
+//  ContentView.swift
+//  IPv64
+//
+//  Created by Sebastian Rank on 18.10.25.
+//
+
+import SwiftUI
+
+struct ContentView: View {
+    
+    @Environment(\.scenePhase) var scenePhase
+    
+    @StateObject var networkMonitor = NetworkMonitor()
+    @StateObject private var biometrics = Biometrics()
+    @StateObject private var userStorage = UserStorage.shared
+    @State private var showWhatsNew = false
+    @State private var activeSheet: ActiveSheet? = nil
+    
+    var body: some View {
+        ZStack {
+            if (userStorage.ShowWelcomeView) {
+                WelcomeView()
+            } else if !biometrics.isAuthenticated && userStorage.EnableLogscreen {
+                BiometricsLockView()
+                    .environmentObject(biometrics)
+            } else if userStorage.ShowLoginView || userStorage.ApiKey.isEmpty {
+                NavigationStack {
+                    LoginView()
+                }
+            } else {
+                TabbarView()
+                    .id(userStorage.sessionID)
+                    .tint(.orange)
+                    .safeAreaInset(edge: .top, spacing: 0) {
+                        if !networkMonitor.isConnected {
+                            Label("Offline · Showing previously loaded data", systemImage: "wifi.slash")
+                                .font(.footnote)
+                                .frame(maxWidth: .infinity)
+                                .padding(8)
+                                .background(.thinMaterial)
+                        }
+                    }
+            }
+        }
+        .alert("Secure storage unavailable", isPresented: Binding(
+            get: { userStorage.storageError != nil },
+            set: { if !$0 { userStorage.storageError = nil } }
+        )) {
+            Button("OK", role: .cancel) { userStorage.storageError = nil }
+        } message: {
+            Text(userStorage.storageError ?? "")
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                userStorage.InAppSwitcher = false
+            } else if newPhase == .inactive {
+                biometrics.isAuthenticated = false
+                userStorage.InAppSwitcher = true
+            } else if newPhase == .background {
+                biometrics.disableFields = false
+                biometrics.isAuthenticated = false
+                userStorage.InAppSwitcher = false
+            }
+        }
+        .onAppear {
+            let bnd = Int(userStorage.LAST_BUILD_NUMBER) ?? 0
+            
+            if bnd != Int(Bundle.main.buildNumber) && !userStorage.ShowWelcomeView {
+                withAnimation {
+                    showWhatsNew = true
+                    activeSheet = .whatsnew
+                }
+            }
+        }
+        .sheet(item: $activeSheet) { item in
+            showActiveSheet(item: item)
+        }
+    }
+    
+    @ViewBuilder
+    private func showActiveSheet(item: ActiveSheet?) -> some View {
+        switch item {
+        case .whatsnew:
+            if #available(iOS 26.0, *) {
+                WhatsNewView26(activeSheet: $activeSheet, isPresented: $showWhatsNew, isFromSetting: true)
+                    .interactiveDismissDisabled(true)
+            } else {
+                WhatsNewView(activeSheet: $activeSheet, isPresented: $showWhatsNew, isFromSetting: true)
+                    .interactiveDismissDisabled(true)
+            }
+        default:
+            EmptyView()
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}

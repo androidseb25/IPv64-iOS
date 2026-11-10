@@ -48,16 +48,16 @@ struct HealthProvider<I: WidgetConfigurationIntent>: AppIntentTimelineProvider {
 
         guard let snapshot = await HealthCheckCache.shared.fetchOrCached() else {
             // Configuration entities can outlive their account; do not show their old status as current.
-            let unavailable = selected.map { HealthCheckEntity(id: $0.id, name: $0.name, states: []) }
+            let unavailable = selected.map { HealthCheckEntity(id: $0.id, name: $0.name, events: []) }
             let entry = Entry(date: .now, configuration: configuration, items: unavailable, isStale: true)
             return Timeline(entries: [entry], policy: .after(nextRefresh()))
         }
 
         let byID = Dictionary(snapshot.checks.map {
-            ($0.token, HealthCheckEntity(id: $0.token, name: $0.name, states: $0.states))
+            ($0.healthtoken, HealthCheckEntity(id: $0.healthtoken, name: $0.name, events: $0.events))
         }, uniquingKeysWith: { first, _ in first })
         // Preserve every slot, including its own fallback when that check is unavailable.
-        let items = selected.map { byID[$0.id] ?? HealthCheckEntity(id: $0.id, name: $0.name, states: []) }
+        let items = selected.map { byID[$0.id] ?? HealthCheckEntity(id: $0.id, name: $0.name, events: []) }
         let hasMissingCheck = selected.contains { byID[$0.id] == nil }
         let entry = Entry(date: .now, configuration: configuration, items: items,
                           updatedAt: snapshot.updatedAt, isStale: snapshot.isStale || hasMissingCheck)
