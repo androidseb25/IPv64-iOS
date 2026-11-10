@@ -58,3 +58,23 @@ final class ConnectedNodes {
         refresh()
     }
 }
+
+#if DEBUG
+extension ConnectedNodes {
+    /// Mock smoke tests: `-MOCK_NODES http://localhost:8064/node/api,http://localhost:8064/node2/api` connects
+    /// these nodes directly (any key) for the active account, so node features can be checked without typing.
+    func connectMockNodes() async {
+        guard AppConfig.mockBase != nil, session.isLoggedIn,
+              let raw = UserDefaults.standard.string(forKey: "MOCK_NODES") else { return }
+        for input in raw.split(separator: ",") {
+            guard let url = LocalNodeURL.normalizeLocalNodeUrl(String(input)),
+                  let client = NodeClientFactory.client(url: url, key: "node64_mock"),
+                  let status = try? await client.node.status(),
+                  let id = status.node?.id, !id.isEmpty else { continue }
+            try? LocalNodeStore.save(id: id, url: url, key: "node64_mock", owner: owner, name: status.node?.name)
+            if let modules = status.modules { LocalNodeStore.saveModules(id, modules: modules) }
+        }
+        refresh()
+    }
+}
+#endif

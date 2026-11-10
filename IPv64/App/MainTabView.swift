@@ -33,6 +33,9 @@ struct MainTabView: View {
         .onChange(of: selected) { nodes.refresh() }
         // Module state: on start and whenever the connected ids change …
         .task(id: nodes.ids) { await nodes.refreshModules() }
+        #if DEBUG
+        .task { await nodes.connectMockNodes() }
+        #endif
         // … and when the app returns to the foreground (module toggled in the node web UI).
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { Task { await nodes.refreshModules() } }
