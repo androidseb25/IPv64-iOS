@@ -72,14 +72,11 @@ struct StatusChip: View {
     }
 
     var body: some View {
-        text
-            .font(.caption2.weight(.semibold))
-            .lineLimit(1)
-            .fixedSize()
-            .foregroundStyle(color)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 2)
-            .background(color.opacity(0.15), in: Capsule())
+        // 2.0 look: coloured dot and text instead of a Material-style capsule.
+        HStack(spacing: 5) {
+            Circle().fill(color).frame(width: 8, height: 8)
+            text.font(.footnote).lineLimit(1).fixedSize().foregroundStyle(color)
+        }
     }
 }
 

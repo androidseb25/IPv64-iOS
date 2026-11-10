@@ -38,7 +38,6 @@ struct NodeDnsView: View {
             }
         }
         .navigationTitle(title)
-        .navigationBarTitleDisplayMode(nodeId == nil ? .large : .inline)
         .loadingOverlay(busy != nil, text: busy ?? "Updating...")
         .errorAlert($error)
         .task(id: LoadKey(id: currentId, range: range, resume: resumeToken)) { await load() }
