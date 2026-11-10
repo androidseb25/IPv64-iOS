@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B1A0000000000000000000A1 /* IPv64 in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B1 /* IPv64 */; };
+		B1A0000000000000000000A2 /* SecNtfy in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B2 /* SecNtfy */; };
+		B1A0000000000000000000A3 /* IPv64 in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B3 /* IPv64 */; };
 		9A68F3482EBE088C0033CC42 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A0C48022EBA963700BEDFEA /* WidgetKit.framework */; };
 		9A68F3492EBE088C0033CC42 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A0C48042EBA963700BEDFEA /* SwiftUI.framework */; };
 		9A68F3562EBE088D0033CC42 /* IPv64WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9A68F3472EBE088C0033CC42 /* IPv64WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -112,6 +115,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AD116FC2EBCAC2000EE7E81 /* SwiftyBeaver in Frameworks */,
+				B1A0000000000000000000A1 /* IPv64 in Frameworks */,
+				B1A0000000000000000000A2 /* SecNtfy in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,6 +127,7 @@
 				9A68F3492EBE088C0033CC42 /* SwiftUI.framework in Frameworks */,
 				9A68F3482EBE088C0033CC42 /* WidgetKit.framework in Frameworks */,
 				9A68F35C2EBE08C80033CC42 /* SwiftyBeaver in Frameworks */,
+				B1A0000000000000000000A3 /* IPv64 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,6 +189,8 @@
 			name = IPv64.net;
 			packageProductDependencies = (
 				9AD116FB2EBCAC2000EE7E81 /* SwiftyBeaver */,
+				B1A0000000000000000000B1 /* IPv64 */,
+				B1A0000000000000000000B2 /* SecNtfy */,
 			);
 			productName = IPv64;
 			productReference = 9A5178D32EA3995200731FFB /* IPv64.net.app */;
@@ -206,6 +214,7 @@
 			name = IPv64WidgetExtension;
 			packageProductDependencies = (
 				9A68F35B2EBE08C80033CC42 /* SwiftyBeaver */,
+				B1A0000000000000000000B3 /* IPv64 */,
 			);
 			productName = IPv64WidgetExtension;
 			productReference = 9A68F3472EBE088C0033CC42 /* IPv64WidgetExtension.appex */;
@@ -240,6 +249,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
+				B1A0000000000000000000C1 /* XCLocalSwiftPackageReference "../IPv64-SPM" */,
+				B1A0000000000000000000C2 /* XCRemoteSwiftPackageReference "SecNtfy-SPM" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9A5178D42EA3995200731FFB /* Products */;
@@ -350,7 +361,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -409,7 +420,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -441,7 +452,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -458,7 +469,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -484,7 +495,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -501,7 +512,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -531,7 +542,7 @@
 				INFOPLIST_FILE = IPv64Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64Widget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -555,7 +566,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 26.1;
 			};
@@ -586,7 +597,7 @@
 				INFOPLIST_FILE = IPv64Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = IPv64Widget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -610,7 +621,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 26.1;
 			};
@@ -648,7 +659,22 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		B1A0000000000000000000C1 /* XCLocalSwiftPackageReference "../IPv64-SPM" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../IPv64-SPM";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
+		B1A0000000000000000000C2 /* XCRemoteSwiftPackageReference "SecNtfy-SPM" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SecNtfy/SecNtfy-SPM";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.1;
+			};
+		};
 		9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
@@ -660,6 +686,19 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B1A0000000000000000000B1 /* IPv64 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = IPv64;
+		};
+		B1A0000000000000000000B2 /* SecNtfy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B1A0000000000000000000C2 /* XCRemoteSwiftPackageReference "SecNtfy-SPM" */;
+			productName = SecNtfy;
+		};
+		B1A0000000000000000000B3 /* IPv64 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = IPv64;
+		};
 		9A68F35B2EBE08C80033CC42 /* SwiftyBeaver */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
