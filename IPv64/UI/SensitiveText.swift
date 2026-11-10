@@ -33,9 +33,8 @@ struct SensitiveText: View {
                 Label(isRevealed.wrappedValue ? "Hide" : "Show",
                       systemImage: isRevealed.wrappedValue ? "eye.slash" : "eye")
                     .labelStyle(.iconOnly)
-                    .frame(width: 44, height: 44)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderless)
             .foregroundStyle(.secondary)
         }
     }

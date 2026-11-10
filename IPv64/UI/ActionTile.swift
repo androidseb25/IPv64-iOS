@@ -19,35 +19,39 @@ struct ActionTile: View {
 
     var body: some View {
         Button(role: role, action: action) {
-            VStack(spacing: 8) {
+            VStack(spacing: 4) {
                 Image(systemName: systemImage)
-                    .font(.system(size: 20))
-                    .foregroundStyle(role == .destructive ? Color.ipv64Red : Color.primary)
-                    .frame(width: 40, height: 40)
-                    .background(role == .destructive ? tint.opacity(0.15) : Color(.secondarySystemFill), in: Circle())
+                    .font(.title3)
+                    .frame(height: 28)
                 Text(label)
                     .font(.caption)
-                    .foregroundStyle(role == .destructive ? Color.ipv64Red : Color.primary)
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity, minHeight: 88, maxHeight: .infinity)
+            .foregroundStyle(role == .destructive ? Color.ipv64Red : Color.accentColor)
+            .padding(.horizontal, 4)
+            .padding(.vertical, 10)
+            .frame(maxWidth: .infinity, minHeight: 64, maxHeight: .infinity)
+            .contentShape(Rectangle())
         }
         .buttonStyle(AppTileButtonStyle())
         .opacity(isEnabled ? 1 : 0.38)
     }
 }
 
+/// Equal-width action buttons in one row. In a `List` it forms its own transparent row.
 struct ActionTileRow<Content: View>: View {
     private let content: Content
 
     init(@ViewBuilder content: () -> Content) { self.content = content() }
 
     var body: some View {
-        HStack(spacing: 8) { content }
-            .fixedSize(horizontal: false, vertical: true)
+        AppGlassGroup {
+            HStack(spacing: 8) { content }
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+        .listRowBackground(Color.clear)
     }
 }
 

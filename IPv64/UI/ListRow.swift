@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ListRow<Trailing: View>: View {
     @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.appInCard) private var inCard
 
     private let title: Text
     private let subtitle: Text?
@@ -61,11 +62,11 @@ struct ListRow<Trailing: View>: View {
     }
 
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 12) {
             if let systemImage {
                 Image(systemName: systemImage)
                     .foregroundStyle(iconTint)
-                    .frame(width: 22)
+                    .frame(width: 28)
                     .accessibilityHidden(true)
             }
             VStack(alignment: .leading, spacing: 2) {
@@ -84,15 +85,14 @@ struct ListRow<Trailing: View>: View {
             if let badge {
                 Text(verbatim: badge).font(.subheadline.weight(.semibold)).foregroundStyle(.tint)
             }
-            if showChevron {
+            if showChevron && inCard {
                 Image(systemName: "chevron.right")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .accessibilityHidden(true)
             }
         }
-        .padding(.vertical, 8)
-        .frame(minHeight: 56)
+        .padding(.vertical, 2)
         .contentShape(Rectangle())
         .opacity(isEnabled ? 1 : 0.38)
     }
@@ -160,38 +160,37 @@ struct InfoRow: View {
     }
 
     var body: some View {
-        HStack(spacing: 8) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(label).font(.footnote).foregroundStyle(.secondary)
+        LabeledContent {
+            HStack(spacing: 8) {
                 if let raw {
                     if sensitive {
                         SensitiveText(raw, monospaced: monospaced)
                     } else {
                         Text(verbatim: raw)
                             .font(monospaced ? .body.monospaced() : .body)
-                            .foregroundStyle(valueColor ?? .primary)
+                            .foregroundStyle(valueColor ?? .secondary)
+                            .multilineTextAlignment(.trailing)
                             .textSelection(.enabled)
                     }
                 } else {
-                    Text(verbatim: "–").font(.body).foregroundStyle(valueColor ?? .primary)
+                    Text(verbatim: "–").foregroundStyle(valueColor ?? .secondary)
+                }
+                if copyable, let raw {
+                    Button {
+                        Clipboard.copy(raw, sensitive: sensitive)
+                        copied += 1
+                    } label: {
+                        Label("Copy", systemImage: "doc.on.doc").labelStyle(.iconOnly)
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundStyle(.secondary)
+                    .accessibilityLabel(Text("Copy \(Text(label))"))
+                    .sensoryFeedback(.success, trigger: copied)
                 }
             }
-            Spacer(minLength: 0)
-            if copyable, let raw {
-                Button {
-                    Clipboard.copy(raw, sensitive: sensitive)
-                    copied += 1
-                } label: {
-                    Image(systemName: "doc.on.doc").frame(width: 44, height: 44)
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
-                .accessibilityLabel(Text("Copy \(Text(label))"))
-                .sensoryFeedback(.success, trigger: copied)
-            }
+        } label: {
+            Text(label)
         }
-        .padding(.vertical, 12)
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

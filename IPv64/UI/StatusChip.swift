@@ -73,12 +73,13 @@ struct StatusChip: View {
 
     var body: some View {
         text
-            .font(.caption.weight(.semibold))
+            .font(.caption2.weight(.semibold))
             .lineLimit(1)
+            .fixedSize()
             .foregroundStyle(color)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 3)
-            .background(color.opacity(0.18), in: Capsule())
+            .padding(.horizontal, 8)
+            .padding(.vertical, 2)
+            .background(color.opacity(0.15), in: Capsule())
     }
 }
 

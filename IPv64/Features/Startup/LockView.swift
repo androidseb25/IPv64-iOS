@@ -4,15 +4,17 @@ import UIKit
 /// Lock screen (spec 01 §3b): icon + "Start Authentication".
 struct LockView: View {
     let onAuthenticate: () -> Void
+    @ScaledMetric private var iconSize = 65.0
 
     var body: some View {
         VStack(spacing: 25) {
             Image(systemName: Biometrics.symbol)
-                .font(.system(size: 65))
+                .font(.system(size: iconSize))
                 .foregroundStyle(.tint)
                 .accessibilityHidden(true)
             Button("Start Authentication", action: onAuthenticate)
                 .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.capsule)
                 .controlSize(.large)
         }
         .padding(16)
