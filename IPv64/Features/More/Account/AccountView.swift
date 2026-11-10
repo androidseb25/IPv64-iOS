@@ -10,28 +10,23 @@ struct AccountView: View {
     @State private var error: ErrorText?
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 8) {
-                if let account = session.accounts.current {
-                    ListGroup {
-                        NavigationLink(value: Route.accountDetails) {
-                            ListRow(verbatim: account.username, subtitle: account.displayInformation,
-                                    systemImage: "person.crop.circle", showChevron: true)
-                        }
-                        .buttonStyle(.plain)
+        List {
+            if let account = session.accounts.current {
+                Section {
+                    NavigationLink(value: Route.accountDetails) {
+                        ListRow(verbatim: account.username, subtitle: account.displayInformation,
+                                systemImage: "person.crop.circle")
                     }
                 }
-                if let me {
-                    content(me)
-                }
             }
-            .padding(16)
-            .frame(maxWidth: 700)
-            .frame(maxWidth: .infinity)
+            if let me {
+                content(me)
+            }
         }
-        .background(Color(.systemGroupedBackground))
+        .environment(\.appNativeList, true)
+        .refreshable { await load() }
         .navigationTitle("Account")
-        .loadingOverlay(isLoading)
+        .loadingOverlay(isLoading && me == nil)
         .privacyProtected()
         .task(id: session.accountRevision) { await load() }
         .errorAlert($error) { Task { await load() } }

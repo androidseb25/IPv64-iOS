@@ -26,14 +26,23 @@ extension View {
     }
 }
 
-/// Pressed feedback for tiles; solid surface because tiles live in scroll views.
+/// Contacts-style action button surface: interactive Liquid Glass on iOS 26+, grouped fill before.
 struct AppTileButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .opacity(configuration.isPressed ? 0.6 : 1)
-            .scaleEffect(configuration.isPressed ? 0.98 : 1)
-            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
+        surface(configuration.label, pressed: configuration.isPressed)
+    }
+
+    private let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
+
+    @ViewBuilder
+    private func surface(_ label: some View, pressed: Bool) -> some View {
+        if #available(iOS 26, *) {
+            label.glassEffect(.regular.interactive(), in: shape)
+        } else {
+            label
+                .background(Color(.secondarySystemGroupedBackground), in: shape)
+                .opacity(pressed ? 0.6 : 1)
+        }
     }
 }
 

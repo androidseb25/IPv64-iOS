@@ -23,10 +23,11 @@ struct WelcomeView: View {
                     .frame(maxWidth: .infinity, minHeight: 37)
             }
             .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
             .controlSize(.large)
             .padding(.bottom, 32)
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 20)
         .frame(maxWidth: 700)
         .frame(maxWidth: .infinity)
     }

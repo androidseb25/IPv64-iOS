@@ -36,16 +36,14 @@ struct SheetScaffold<Content: View>: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
-                    if let subtitle { Text(subtitle).font(.subheadline).foregroundStyle(.secondary) }
-                    content
+            Form {
+                if let subtitle {
+                    Section { Text(subtitle).font(.subheadline).foregroundStyle(.secondary) }
+                        .listRowBackground(Color.clear)
                 }
-                .padding(16)
-                .frame(maxWidth: 700)
-                .frame(maxWidth: .infinity)
+                content
             }
-            .background(Color(.systemGroupedBackground))
+            .environment(\.appNativeList, true)
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

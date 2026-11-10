@@ -15,36 +15,28 @@ struct LoginView: View {
     @State private var alert: LoginAlert?
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 0) {
-                Group {
-                    Text("**1.** Go to ipv64.net and log in to your account.")
-                    Text("**2.** Select the **Account** button at the top.")
-                    Text("**3.** A drop-down menu will open. Select **API**.")
-                    Text("**4.** You will now see a list of API keys (if you have already created more than one). Select the one you want to use by tapping the QR code button.")
-                    Text("**5.** Open the QR code scanner in this app and scan the QR code.")
-                    Text("**6.** Done! You are now logged in.")
-                }
-                .padding(.top, 16)
+        Form {
+            Section {
+                Text("**1.** Go to ipv64.net and log in to your account.")
+                Text("**2.** Select the **Account** button at the top.")
+                Text("**3.** A drop-down menu will open. Select **API**.")
+                Text("**4.** You will now see a list of API keys (if you have already created more than one). Select the one you want to use by tapping the QR code button.")
+                Text("**5.** Open the QR code scanner in this app and scan the QR code.")
+                Text("**6.** Done! You are now logged in.")
+            }
+            Section {
                 TextField("API Key", text: $apiKey)
-                    .textFieldStyle(.roundedBorder)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
                     .font(.callout)
-                    .padding(.top, 25)
-                Button(action: login) {
-                    Text("Login")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity, minHeight: 37)
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-                .disabled(apiKey.isEmpty)
-                .padding(.top, 16)
+                    .submitLabel(.go)
+                    .onSubmit(login)
             }
-            .padding(.horizontal, 16)
-            .frame(maxWidth: 700)
-            .frame(maxWidth: .infinity)
+            Section {
+                Button("Login", action: login)
+                    .frame(maxWidth: .infinity)
+                    .disabled(apiKey.isEmpty)
+            }
         }
         .navigationTitle("Login")
         .toolbar {

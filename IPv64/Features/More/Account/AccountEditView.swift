@@ -26,12 +26,9 @@ struct AccountEditView: View {
                 Text("Removes this entry from this device only. The account and its API key stay valid on ipv64.net.")
             }
         }
-        .frame(maxWidth: 700)
-        .frame(maxWidth: .infinity)
-        .background(Color(.systemGroupedBackground))
         .navigationTitle("Edit User")
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItem(placement: .topBarTrailing) {
                 Button("Remove account from this app", systemImage: "trash", role: .destructive, action: askRemove)
                     .disabled(account == nil)
             }

@@ -1,5 +1,12 @@
 import SwiftUI
 
+extension EnvironmentValues {
+    /// Set by `SheetScaffold` (Form): `ListGroup` / `FormSection` then render a native `Section`.
+    @Entry var appNativeList = false
+    /// Set by `ListGroup` cards: `ListRow` draws its own chevron only there (a `NavigationLink` in a List adds the system one).
+    @Entry var appInCard = false
+}
+
 struct SectionHeader: View {
     private let text: Text
 
@@ -45,12 +52,13 @@ struct GroupText: View {
             .font(.subheadline)
             .foregroundStyle(isError ? Color.ipv64Red : Color.secondary)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.vertical, 12)
+            .padding(.vertical, 4)
     }
 }
 
 /// Rounded card with an optional header; inserts `GroupDivider`s between its child views.
 struct ListGroup<Content: View>: View {
+    @Environment(\.appNativeList) private var native
     private let title: LocalizedStringKey?
     private let dividerInset: CGFloat
     private let content: Content
@@ -62,6 +70,14 @@ struct ListGroup<Content: View>: View {
     }
 
     var body: some View {
+        if native {
+            if let title { Section(title) { content } } else { Section { content } }
+        } else {
+            card
+        }
+    }
+
+    private var card: some View {
         Group(subviews: content) { subviews in
             if !subviews.isEmpty {
                 VStack(alignment: .leading, spacing: 0) {
@@ -69,10 +85,11 @@ struct ListGroup<Content: View>: View {
                     VStack(spacing: 0) {
                         ForEach(subviews: subviews) { subview in
                             if subview.id != subviews.first?.id { GroupDivider(inset: dividerInset) }
-                            subview.padding(.horizontal, 16)
+                            subview.padding(.horizontal, 16).padding(.vertical, 6).frame(minHeight: 44)
                         }
                     }
                     .frame(maxWidth: .infinity)
+                    .environment(\.appInCard, true)
                     .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
             }
@@ -82,6 +99,7 @@ struct ListGroup<Content: View>: View {
 
 /// Card whose content is one padded column (no automatic dividers).
 struct FormSection<Content: View>: View {
+    @Environment(\.appNativeList) private var native
     private let title: LocalizedStringKey?
     private let content: Content
 
@@ -91,10 +109,14 @@ struct FormSection<Content: View>: View {
     }
 
     var body: some View {
-        ListGroup(title) {
-            VStack(alignment: .leading, spacing: 8) { content }
-                .padding(.vertical, 16)
-                .frame(maxWidth: .infinity, alignment: .leading)
+        if native {
+            ListGroup(title) { content }
+        } else {
+            ListGroup(title) {
+                VStack(alignment: .leading, spacing: 8) { content }
+                    .padding(.vertical, 10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
     }
 }
