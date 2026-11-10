@@ -82,6 +82,17 @@ nonisolated func withUniqueIds(_ list: [Account]) -> (list: [Account], repaired:
     return (result, repaired)
 }
 
+/// "Default User", then "Default User 1", "Default User 2", … – the first name no account uses yet.
+nonisolated func nextDefaultUsername(_ accounts: [Account]) -> String {
+    var username = "Default User"
+    var i = 1
+    while accounts.contains(where: { $0.username == username }) {
+        username = "Default User \(i)"
+        i += 1
+    }
+    return username
+}
+
 /// Verbatim Android texts of the account removal flow (spec 01 §3.4).
 nonisolated enum AccountRemovalText {
     static func confirm(_ account: Account, accounts: [Account], activeKey: String) -> String {
@@ -149,13 +160,7 @@ final class AccountStore {
         let exists = accounts.contains { $0.apiKey == apiKey }
         if exists && isFromUser { return .alreadyAdded }
         if !exists {
-            var username = "Default User"
-            var i = 1
-            while accounts.contains(where: { $0.username == username }) {
-                username = "Default User \(i)"
-                i += 1
-            }
-            persist(accounts + [Account(username: username, apiKey: apiKey)])
+            persist(accounts + [Account(username: nextDefaultUsername(accounts), apiKey: apiKey)])
         }
         guard !isFromUser else { return .added }
         setActiveKey(apiKey)

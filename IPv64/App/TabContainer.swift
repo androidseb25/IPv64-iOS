@@ -29,7 +29,7 @@ struct TabContainer<Root: View>: View {
                 }
             } else {
                 NavigationStack(path: $router.path) {
-                    root().navigationDestination(for: Route.self) { RouteDestination(route: $0) }
+                    root().appReadableWidth().navigationDestination(for: Route.self) { RouteDestination(route: $0) }
                 }
             }
         }

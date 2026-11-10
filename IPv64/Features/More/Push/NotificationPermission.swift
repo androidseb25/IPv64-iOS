@@ -49,11 +49,9 @@ struct NotificationPermissionActions: View {
         VStack(alignment: .leading, spacing: 12) {
             if permission == .canRequest {
                 Text("Allow IPv64.net to show notifications so alerts can reach you.")
-                HStack {
-                    Button("Allow notifications", systemImage: "bell", action: allow)
-                        .buttonStyle(.borderedProminent)
-                    Button("Settings", systemImage: "gear", action: openSettings)
-                        .buttonStyle(.bordered)
+                ViewThatFits(in: .horizontal) {
+                    HStack { permissionButtons }
+                    VStack(alignment: .leading) { permissionButtons }
                 }
             } else {
                 Text("Notifications are turned off for IPv64.net. Turn them on in the system settings.")
@@ -63,6 +61,13 @@ struct NotificationPermissionActions: View {
         }
         .font(.subheadline)
         .padding(.vertical, 4)
+    }
+
+    @ViewBuilder private var permissionButtons: some View {
+        Button("Allow notifications", systemImage: "bell", action: allow)
+            .buttonStyle(.borderedProminent)
+        Button("Settings", systemImage: "gear", action: openSettings)
+            .buttonStyle(.bordered)
     }
 
     private func allow() {

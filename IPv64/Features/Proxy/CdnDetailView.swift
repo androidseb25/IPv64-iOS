@@ -88,15 +88,14 @@ struct CdnDetailView: View {
         ToolbarItem(placement: .primaryAction) {
             Button("Settings", systemImage: "pencil") { router.push(.cdnSettings(token: token)) }.disabled(!enabled)
         }
-        ToolbarItem(placement: .primaryAction) {
-            Menu("More", systemImage: "ellipsis.circle") {
-                Button("Redeploy configuration") { act("Redeploying...", always: true) { api in _ = try await api.cdn.redeploy(token) } }
-                    .disabled(taskRunning)
-                Button("Move to another server") { askMove() }.disabled(taskRunning)
-                Button("Reset traffic counters") { askReset() }
-                Button("Remove from CDN", role: .destructive) { askRemove() }.disabled(taskRunning)
+        AppMoreMenu(disabled: !enabled) {
+            Button("Redeploy configuration", systemImage: "arrow.triangle.2.circlepath") {
+                act("Redeploying...", always: true) { api in _ = try await api.cdn.redeploy(token) }
             }
-            .disabled(!enabled)
+            .disabled(taskRunning)
+            Button("Move to another server", systemImage: "arrow.left.arrow.right") { askMove() }.disabled(taskRunning)
+            Button("Reset traffic counters", systemImage: "gobackward") { askReset() }
+            Button("Remove from CDN", systemImage: "trash", role: .destructive) { askRemove() }.disabled(taskRunning)
         }
     }
 

@@ -38,6 +38,7 @@ struct NodeDnsRecordsView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Add record", systemImage: "plus") { sheet = .new }
                 }
+                .appVisibilityPriorityHigh()
             }
         }
         .sheet(item: $sheet) { item in

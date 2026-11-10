@@ -123,26 +123,22 @@ struct NodeDetailView: View {
                 }
                 .disabled(isBusy)
             }
-            ToolbarItem(placement: .primaryAction) {
-                Menu {
-                    if remote == "full" && !directOnly {
-                        Button("Repair", systemImage: "wrench.and.screwdriver") { ask(NodeCommand(name: .repair)) }
-                            .disabled(isBusy || tracking != nil)
-                    }
-                    if remote == "full" && !directOnly && conflicts > 0 {
-                        Button("Resolve conflict", systemImage: "arrow.triangle.merge") { sheet = .resolve }
-                    }
-                    if isLocal && !directOnly {
-                        Button("Edit direct connection", systemImage: "network") { router.sheet = .directAccess(nodeId: nodeId) }
-                    }
-                    if isLocal {
-                        Button("Forget direct connection", systemImage: "network.slash") { askForget() }
-                    }
-                    if !directOnly {
-                        Button("Unlink node", systemImage: "link.badge.minus", role: .destructive) { sheet = .unlink }
-                    }
-                } label: {
-                    Label("More", systemImage: "ellipsis.circle")
+            AppMoreMenu {
+                if remote == "full" && !directOnly {
+                    Button("Repair", systemImage: "wrench.and.screwdriver") { ask(NodeCommand(name: .repair)) }
+                        .disabled(isBusy || tracking != nil)
+                }
+                if remote == "full" && !directOnly && conflicts > 0 {
+                    Button("Resolve conflict", systemImage: "arrow.triangle.merge") { sheet = .resolve }
+                }
+                if isLocal && !directOnly {
+                    Button("Edit direct connection", systemImage: "network") { router.sheet = .directAccess(nodeId: nodeId) }
+                }
+                if isLocal {
+                    Button("Forget direct connection", systemImage: "network.slash") { askForget() }
+                }
+                if !directOnly {
+                    Button("Unlink node", systemImage: "link.badge.minus", role: .destructive) { sheet = .unlink }
                 }
             }
         }

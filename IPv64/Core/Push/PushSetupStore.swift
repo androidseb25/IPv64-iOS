@@ -7,7 +7,9 @@ import CryptoKit
 /// account id is known, else the key hash `sha256(trim(apiKey))[:16]`. The token itself is never stored.
 nonisolated enum PushSetupStore {
     private static let prefix = "HC2_PUSH_SETUP."
-    private static var defaults: UserDefaults { UserDefaults(suiteName: AppConfig.appGroup) ?? .standard }
+    /// Test seam: an isolated suite replaces the app-group defaults.
+    nonisolated(unsafe) static var overrideDefaults: UserDefaults?
+    private static var defaults: UserDefaults { overrideDefaults ?? UserDefaults(suiteName: AppConfig.appGroup) ?? .standard }
 
     static func sha256Hex(_ text: String) -> String {
         SHA256.hash(data: Data(text.utf8)).map { String(format: "%02x", $0) }.joined()

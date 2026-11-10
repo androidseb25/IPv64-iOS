@@ -34,6 +34,7 @@ struct CdnSettingsView: View {
                 Button("Save", systemImage: "checkmark") { Task { await save() } }
                     .disabled(busy != nil || notAvailable != nil || form == nil)
             }
+            .appVisibilityPriorityHigh()
         }
         .loadingOverlay(busy != nil, text: busy ?? "")
         .errorAlert($error) { Task { await load() } }

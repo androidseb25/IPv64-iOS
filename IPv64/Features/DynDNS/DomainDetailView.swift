@@ -48,16 +48,12 @@ struct DomainDetailView: View {
             ToolbarItem(placement: .primaryAction) {
                 Button("New DNS record", systemImage: "plus") { sheet = .newRecord }.disabled(detail == nil)
             }
-            ToolbarItem(placement: .primaryAction) {
-                Menu {
-                    Button("Rotate update token", systemImage: "key") { askRotate() }
-                    Divider()
-                    Button("Reset domain", systemImage: "arrow.counterclockwise", role: .destructive) { askReset() }
-                    Button("Delete domain", systemImage: "trash", role: .destructive) { askDelete() }
-                } label: {
-                    Label("More actions", systemImage: "ellipsis.circle")
-                }
-                .disabled(detail == nil)
+            .appVisibilityPriorityHigh()
+            AppMoreMenu("More actions", disabled: detail == nil) {
+                Button("Rotate update token", systemImage: "key") { askRotate() }
+                Divider()
+                Button("Reset domain", systemImage: "arrow.counterclockwise", role: .destructive) { askReset() }
+                Button("Delete domain", systemImage: "trash", role: .destructive) { askDelete() }
             }
         }
         .task(id: "\(router.reloadToken)-\(session.accountRevision)") { await load() }

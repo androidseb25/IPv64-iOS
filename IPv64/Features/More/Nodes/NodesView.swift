@@ -44,6 +44,7 @@ struct NodesView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Add node", systemImage: "plus") { sheet = .add }
                 }
+                .appVisibilityPriorityHigh()
             }
             .task(id: LoadKey(reload: router.reloadToken, account: session.accountRevision)) { await load(showSpinner: !loaded) }
             .task(id: wait?.id) { await waitForNode() }

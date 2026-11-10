@@ -34,7 +34,10 @@ struct MainTabView: View {
         // Module state: on start and whenever the connected ids change …
         .task(id: nodes.ids) { await nodes.refreshModules() }
         #if DEBUG
-        .task { await nodes.connectMockNodes() }
+        .task {
+            await nodes.connectMockNodes()
+            applyMockSelection()
+        }
         #endif
         // … and when the app returns to the foreground (module toggled in the node web UI).
         .onChange(of: scenePhase) { _, phase in
@@ -45,7 +48,7 @@ struct MainTabView: View {
             await runPushLogic()
         }
         .fullScreenCover(isPresented: $showPushSetup) {
-            NavigationStack { PushSetupView() }
+            NavigationStack { PushSetupView().appReadableWidth() }
                 .environment(routers[.more])
         }
     }
@@ -58,6 +61,28 @@ struct MainTabView: View {
                          root: root)
         }
     }
+
+    #if DEBUG
+    /// Screenshot helper: `-MOCK_TAB more -MOCK_SELECT notificationSettings` (also `domain:<name>`, `hc:<token>`, `nodes`).
+    private func applyMockSelection() {
+        let defaults = UserDefaults.standard
+        if let raw = defaults.string(forKey: "MOCK_TAB"),
+           let tab = AppTab.allCases.first(where: { "\($0)".lowercased() == raw.lowercased() }) {
+            selected = tab
+        }
+        guard let raw = defaults.string(forKey: "MOCK_SELECT") else { return }
+        let parts = raw.split(separator: ":", maxSplits: 1).map(String.init)
+        let argument = parts.count > 1 ? parts[1] : ""
+        let route: Route? = switch parts.first {
+        case "domain": .domainDetail(name: argument)
+        case "hc": .healthcheckDetail(token: argument)
+        case "nodes": .nodes
+        case "notificationSettings": .notificationSettings
+        default: nil
+        }
+        if let route { routers[selected].show(route) }
+    }
+    #endif
 
     /// Spec 01 §2.4 push logic; restarted on every route / lock / key change.
     private func runPushLogic() async {

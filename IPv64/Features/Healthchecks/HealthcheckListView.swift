@@ -121,6 +121,7 @@ struct HealthcheckListView: View {
         ToolbarItem(placement: .primaryAction) {
             Button("New healthcheck", systemImage: "plus") { addTapped() }
         }
+        .appVisibilityPriorityHigh()
     }
 
     private func count(_ filter: HcStatusFilter) -> Int {

@@ -41,6 +41,7 @@ struct ApiKeysView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Button("New API key", systemImage: "plus") { showCreate = true }
                 }
+                .appVisibilityPriorityHigh()
             }
         }
         .refreshable { await load() }

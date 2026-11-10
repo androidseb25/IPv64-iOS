@@ -67,6 +67,7 @@ struct ChannelsView: View {
             Button("Refresh", systemImage: "arrow.clockwise") { Task { await load() } }
                 .disabled(isLoading)
         }
+        .appVisibilityPriorityLow()
         if channels != nil {
             ToolbarItem(placement: .primaryAction) {
                 Button("Add channel", systemImage: "plus") { router.push(.channelNew) }

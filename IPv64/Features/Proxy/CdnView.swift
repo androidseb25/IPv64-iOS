@@ -51,6 +51,7 @@ struct CdnView: View {
                     Button("Add domain to CDN", systemImage: "plus") { Task { await add() } }
                         .opacity(canCreate ? 1 : 0.4)
                 }
+                .appVisibilityPriorityHigh()
             }
         }
         .sheet(item: $sheet) { sheet in

@@ -47,6 +47,7 @@ struct DomainListView: View {
             ToolbarItem(placement: .primaryAction) {
                 Button("New domain", systemImage: "plus") { showNew = true }
             }
+            .appVisibilityPriorityHigh()
         }
         .refreshable { await load(pull: true) }
         .task(id: "\(router.reloadToken)-\(session.accountRevision)") { await load(pull: false) }

@@ -62,12 +62,10 @@ struct HealthcheckDetailView: View {
                 Button("Edit", systemImage: "pencil") { router.push(.healthcheckForm(token: token)) }
                     .disabled(detail == nil)
             }
-            ToolbarItem(placement: .primaryAction) {
-                Menu("More", systemImage: "ellipsis.circle") {
-                    Button("Refresh", systemImage: "arrow.clockwise") { Task { await load() } }
-                    Button("Delete", systemImage: "trash", role: .destructive) { askDelete() }
-                        .disabled(detail == nil)
-                }
+            AppMoreMenu {
+                Button("Refresh", systemImage: "arrow.clockwise") { Task { await load() } }
+                Button("Delete", systemImage: "trash", role: .destructive) { askDelete() }
+                    .disabled(detail == nil)
             }
         }
         .task { await load() }

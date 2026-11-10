@@ -36,6 +36,13 @@
 			remoteGlobalIDString = 9A68F3462EBE088C0033CC42;
 			remoteInfo = IPv64WidgetExtension;
 		};
+		D4E100000000000000000008 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9A5178CB2EA3995200731FFB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9A5178D22EA3995200731FFB;
+			remoteInfo = IPv64.net;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -63,6 +70,7 @@
 		9A68F35D2EBE08F70033CC42 /* IPv64WidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IPv64WidgetExtension.entitlements; sourceTree = "<group>"; };
 		9A8CA8AD2EA6969D0073978F /* ipv64.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ipv64.icon; sourceTree = "<group>"; };
 		9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ipv64_beta.icon; sourceTree = "<group>"; };
+		D4E100000000000000000001 /* IPv64Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IPv64Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -116,6 +124,11 @@
 			path = IPv64Widget;
 			sourceTree = "<group>";
 		};
+		D4E100000000000000000002 /* IPv64Tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = IPv64Tests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +161,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D4E100000000000000000005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -170,6 +190,7 @@
 				9A5178D52EA3995200731FFB /* IPv64 */,
 				9A68F34A2EBE088C0033CC42 /* IPv64Widget */,
 				C3D100000000000000000008 /* IPv64NotificationService */,
+				D4E100000000000000000002 /* IPv64Tests */,
 				9A0C48012EBA963700BEDFEA /* Frameworks */,
 				9A5178D42EA3995200731FFB /* Products */,
 			);
@@ -181,6 +202,7 @@
 				9A5178D32EA3995200731FFB /* IPv64.net.app */,
 				9A68F3472EBE088C0033CC42 /* IPv64WidgetExtension.appex */,
 				C3D100000000000000000001 /* IPv64NotificationService.appex */,
+				D4E100000000000000000001 /* IPv64Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -263,6 +285,29 @@
 			productReference = 9A68F3472EBE088C0033CC42 /* IPv64WidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		D4E100000000000000000003 /* IPv64Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D4E100000000000000000009 /* Build configuration list for PBXNativeTarget "IPv64Tests" */;
+			buildPhases = (
+				D4E100000000000000000004 /* Sources */,
+				D4E100000000000000000005 /* Frameworks */,
+				D4E100000000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D4E100000000000000000007 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D4E100000000000000000002 /* IPv64Tests */,
+			);
+			name = IPv64Tests;
+			packageProductDependencies = (
+			);
+			productName = IPv64Tests;
+			productReference = D4E100000000000000000001 /* IPv64Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -281,6 +326,10 @@
 					};
 					C3D100000000000000000009 = {
 						CreatedOnToolsVersion = 26.1;
+					};
+					D4E100000000000000000003 = {
+						CreatedOnToolsVersion = 26.1;
+						TestTargetID = 9A5178D22EA3995200731FFB;
 					};
 				};
 			};
@@ -306,6 +355,7 @@
 				9A5178D22EA3995200731FFB /* IPv64.net */,
 				9A68F3462EBE088C0033CC42 /* IPv64WidgetExtension */,
 				C3D100000000000000000009 /* IPv64NotificationService */,
+				D4E100000000000000000003 /* IPv64Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -328,6 +378,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9A68F3452EBE088C0033CC42 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E100000000000000000006 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -358,6 +415,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D4E100000000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -370,6 +434,11 @@
 			isa = PBXTargetDependency;
 			target = 9A68F3462EBE088C0033CC42 /* IPv64WidgetExtension */;
 			targetProxy = 9A68F3542EBE088D0033CC42 /* PBXContainerItemProxy */;
+		};
+		D4E100000000000000000007 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9A5178D22EA3995200731FFB /* IPv64.net */;
+			targetProxy = D4E100000000000000000008 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -759,6 +828,49 @@
 			};
 			name = Release;
 		};
+		D4E10000000000000000000A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IPv64.net.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/IPv64.net";
+			};
+			name = Debug;
+		};
+		D4E10000000000000000000B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IPv64.net.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/IPv64.net";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -794,6 +906,15 @@
 			buildConfigurations = (
 				9A68F3592EBE088D0033CC42 /* Debug */,
 				9A68F35A2EBE088D0033CC42 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D4E100000000000000000009 /* Build configuration list for PBXNativeTarget "IPv64Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D4E10000000000000000000A /* Debug */,
+				D4E10000000000000000000B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

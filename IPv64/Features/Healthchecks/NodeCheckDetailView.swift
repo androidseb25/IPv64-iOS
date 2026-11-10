@@ -41,11 +41,9 @@ struct NodeCheckDetailView: View {
                 Button("Edit", systemImage: "pencil") { router.push(.nodeCheckEdit(nodeId: nodeId, token: token)) }
                     .disabled(!editable)
             }
-            ToolbarItem(placement: .primaryAction) {
-                Menu("More", systemImage: "ellipsis.circle") {
-                    Button("Refresh", systemImage: "arrow.clockwise") { Task { await load() } }
-                    Button("Delete", systemImage: "trash", role: .destructive) { askDelete() }.disabled(chk == nil)
-                }
+            AppMoreMenu {
+                Button("Refresh", systemImage: "arrow.clockwise") { Task { await load() } }
+                Button("Delete", systemImage: "trash", role: .destructive) { askDelete() }.disabled(chk == nil)
             }
         }
         .task { await load() }

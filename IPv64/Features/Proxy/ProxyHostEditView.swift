@@ -57,6 +57,7 @@ struct ProxyHostEditView: View {
                 Button(create ? "Create" : "Save", systemImage: "checkmark") { Task { await save() } }
                     .disabled(!canSave)
             }
+            .appVisibilityPriorityHigh()
         }
         .sheet(isPresented: $showMode) {
             CdnModeSheet(hostLabel: form.firstName.nonBlank) { mode, healthcheck in

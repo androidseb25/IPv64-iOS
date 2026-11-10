@@ -38,6 +38,7 @@ struct NotificationSettingsView: View {
                 Button("Save", systemImage: "checkmark", action: save)
                     .disabled(!changed || !valid || isSaving)
             }
+            .appVisibilityPriorityHigh()
         }
         .loadingOverlay((isLoading && baseline == nil) || isSaving, text: isSaving ? "Saving..." : "Loading...")
         .refreshable { await load(pull: true) }

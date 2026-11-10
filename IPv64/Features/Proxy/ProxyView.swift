@@ -42,6 +42,7 @@ struct ProxyView: View {
             ToolbarItem(placement: .primaryAction) {
                 Button("New proxy host", systemImage: "plus", action: newHost)
             }
+            .appVisibilityPriorityHigh()
         }
         .confirmationDialog("Select node", isPresented: $pickNode, titleVisibility: .visible) {
             ForEach(nodes.proxyIds, id: \.self) { id in

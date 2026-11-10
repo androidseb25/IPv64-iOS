@@ -16,7 +16,7 @@ struct WelcomeView: View {
             .padding(.top, 32)
             Spacer()
             NavigationLink {
-                LoginView(isFromUser: false)
+                LoginView(isFromUser: false).appReadableWidth()
             } label: {
                 Text("Let's go!")
                     .font(.headline)

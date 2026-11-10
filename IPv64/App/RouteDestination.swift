@@ -5,6 +5,10 @@ struct RouteDestination: View {
     let route: Route
 
     var body: some View {
+        screen.appReadableWidth()
+    }
+
+    @ViewBuilder private var screen: some View {
         switch route {
         case .domainDetail(let name): DomainDetailView(name: name)
         case .domainSettings(let name): DomainSettingsView(name: name)

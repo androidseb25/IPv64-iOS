@@ -11,7 +11,9 @@ nonisolated enum LocalNodeStore {
     }
 
     private static let prefix = "NODE64_LOCAL."
-    private static var defaults: UserDefaults { UserDefaults(suiteName: AppConfig.appGroup) ?? .standard }
+    /// Test seam: an isolated suite replaces the app-group defaults.
+    nonisolated(unsafe) static var overrideDefaults: UserDefaults?
+    private static var defaults: UserDefaults { overrideDefaults ?? UserDefaults(suiteName: AppConfig.appGroup) ?? .standard }
     private static func key(_ id: String, _ field: String) -> String { "\(prefix)\(id).\(field)" }
     private static func secretAccount(_ id: String) -> String { "NODE64_KEY.\(id)" }
 
