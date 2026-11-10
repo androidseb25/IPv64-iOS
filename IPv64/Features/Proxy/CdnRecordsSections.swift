@@ -19,7 +19,7 @@ struct CdnRecordsSection: View {
                         Text("No A or AAAA records on this domain.").foregroundStyle(.secondary)
                     }
                     ForEach(records) { record in
-                        RecordRow(record: record, enabled: enabled, enable: enable, disable: disable)
+                        CdnRecordRow(record: record, enabled: enabled, enable: enable, disable: disable)
                     }
                 } else {
                     Text("Loading records…").foregroundStyle(.secondary)
@@ -29,7 +29,7 @@ struct CdnRecordsSection: View {
     }
 }
 
-private struct RecordRow: View {
+private struct CdnRecordRow: View {
     let record: Record
     let enabled: Bool
     let enable: (Record) -> Void
