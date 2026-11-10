@@ -3,7 +3,7 @@ import CryptoKit
 
 nonisolated struct WidgetHealthCachePayload: Codable, Sendable {
     let account: String
-    let checks: [HealthCheck]
+    let checks: [WidgetCheck]
     let updatedAt: Date
 }
 
@@ -17,7 +17,7 @@ nonisolated enum WidgetHealthCacheStore {
         return SHA256.hash(data: Data(key.utf8)).map { String(format: "%02x", $0) }.joined()
     }
 
-    static func write(checks: [HealthCheck]) {
+    static func write(checks: [WidgetCheck]) {
         guard let account = accountFingerprint(),
               let data = try? JSONEncoder().encode(WidgetHealthCachePayload(account: account, checks: checks, updatedAt: .now)),
               let defaults = UserDefaults(suiteName: suiteName) else { return }

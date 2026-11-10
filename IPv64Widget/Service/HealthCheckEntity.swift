@@ -11,16 +11,16 @@ import SwiftUI
 import WidgetKit
 import OSLog
 
-struct HealthCheckEntity: AppEntity, Identifiable, Hashable {
+nonisolated struct HealthCheckEntity: AppEntity, Identifiable, Hashable {
     static let noneID = "__ipv64_none__"
-    static let none = HealthCheckEntity(id: noneID, name: "Keine Auswahl", events: [])
+    static let none = HealthCheckEntity(id: noneID, name: "Keine Auswahl", states: [])
 
     static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Healthcheck")
     static let defaultQuery = HealthCheckQuery()
     
     var id: String
     var name: String
-    var events: [HealthEvents]
+    var states: [String]
     
     static var defaultDisplayRepresentation: DisplayRepresentation {
         .init(title: "No entry")
@@ -30,148 +30,17 @@ struct HealthCheckEntity: AppEntity, Identifiable, Hashable {
         .init(title: id == Self.noneID ? "Keine Auswahl" : "\(name)")
     }
     
-    static let sampleList: [HealthCheckEntity] = [
-        .init(id: "1", name: "API", events: [
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 4, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 1, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 4, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 3, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 4, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789")
-        ]),
-        .init(id: "2", name: "DB2", events: [
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 4, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 1, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 4, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 3, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 4, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789")
-        ]),
-        .init(id: "3", name: "DB3", events: [
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 4, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 1, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 4, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 3, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 4, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789")
-        ]),
-        .init(id: "4", name: "DB4", events: [
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 4, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 1, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 4, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 3, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 4, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789")
-        ]),
-        .init(id: "5", name: "DB5", events: [
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 4, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 1, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 4, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 3, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 4, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789")
-        ]),
-        .init(id: "6", name: "DB6", events: [
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 4, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 1, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 4, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 3, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 4, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789")
-        ]),
-        .init(id: "7", name: "DB7", events: [
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 4, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 1, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 4, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 3, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 4, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789")
-        ]),
-        .init(id: "8", name: "DB8", events: [
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 4, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 1, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 4, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 3, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 4, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789")
-        ]),
-        .init(id: "9", name: "DB9", events: [
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 4, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 1, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 4, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 3, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 4, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789")
-        ]),
-        .init(id: "10", name: "DB10", events: [
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 4, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 1, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 4, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 01:00:00", status: 3, text: "WARNING: Zeitlimit erreicht, Karenzzeit hat begonnen."),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 0, text: "123456789"),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 1, text: "GET Request von 194.126.177.83 -- Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"),
-            HealthEvents(event_time: "2023-01-01 00:00:00", status: 4, text: Optional("Healthcheck Einstellungen übernommen.")),
-            HealthEvents(event_time: "2023-01-01 00:45:00", status: 3, text: "123456789")
-        ])
-    ]
-    
-    /**
-     
-     */
+    static let sampleList: [HealthCheckEntity] = (1...10).map { i in
+        HealthCheckEntity(id: "\(i)", name: i == 1 ? "API" : "DB\(i)",
+                          states: ["up", "down", "degraded", "up", "paused", "up", "up", "down", "up", "up", "pending", "up"])
+    }
+
 }
 
 // MARK: - Shared, account-scoped cache
 
 nonisolated struct HealthCheckSnapshot: Sendable {
-    let checks: [HealthCheck]
+    let checks: [WidgetCheck]
     let updatedAt: Date
     let isStale: Bool
 }
@@ -183,7 +52,7 @@ public actor HealthCheckCache {
     private var payload: PersistedPayload?
     private var loadedRevision: String?
     private var loadedAccount: String?
-    private var inFlight: (id: UUID, account: String, task: Task<HealthCheckResult?, Never>)?
+    private var inFlight: (id: UUID, account: String, task: Task<[WidgetCheck]?, Never>)?
 
     private typealias PersistedPayload = WidgetHealthCachePayload
 
@@ -213,13 +82,11 @@ public actor HealthCheckCache {
             return snapshot(payload, isStale: false)
         }
 
-        let request: (id: UUID, account: String, task: Task<HealthCheckResult?, Never>)
+        let request: (id: UUID, account: String, task: Task<[WidgetCheck]?, Never>)
         if let existing = inFlight, existing.account == account {
             request = existing
         } else {
-            let task = Task { @MainActor in
-                await ApiServiceWidget().GetHealthchecks()
-            }
+            let task = Task { await WidgetAPI.fetchChecks() }
             request = (UUID(), account, task)
             inFlight = request
         }
@@ -233,8 +100,8 @@ public actor HealthCheckCache {
 
         if inFlight?.id == request.id {
             inFlight = nil
-            if let response, APITransport.isSuccessStatus(response.status) {
-                let fresh = PersistedPayload(account: account, checks: response.domain, updatedAt: .now)
+            if let response {
+                let fresh = PersistedPayload(account: account, checks: response, updatedAt: .now)
                 payload = fresh
                 if let data = try? JSONEncoder().encode(fresh) {
                     defaults?.set(data, forKey: WidgetHealthCacheStore.cacheKey)
@@ -291,7 +158,7 @@ struct HealthCheckQuery: EntityQuery {
         // the initial value for an unconfigured slot; putting the empty
         // sentinel first would make every new or reloaded widget appear empty.
         let checks = snapshot.checks.sortedWidget(by: \.name).map {
-            HealthCheckEntity(id: $0.healthtoken, name: $0.name, events: $0.events)
+            HealthCheckEntity(id: $0.token, name: $0.name, states: $0.states)
         }
         return checks + [HealthCheckEntity.none]
     }
@@ -307,13 +174,13 @@ struct HealthCheckQuery: EntityQuery {
             return identifiers.compactMap { id in
                 id == HealthCheckEntity.noneID
                     ? HealthCheckEntity.none
-                    : HealthCheckEntity(id: id, name: id, events: [])
+                    : HealthCheckEntity(id: id, name: id, states: [])
             }
         }
         let set = Set(identifiers)
-        let filtered = res.checks.filter { set.contains($0.healthtoken) }
+        let filtered = res.checks.filter { set.contains($0.token) }
         Logger(subsystem: "net.ipv64.widget", category: "query").notice("Available checks=\(res.checks.count) matched=\(filtered.count)")
-        var result = filtered.map { HealthCheckEntity(id: $0.healthtoken, name: $0.name, events: $0.events) }
+        var result = filtered.map { HealthCheckEntity(id: $0.token, name: $0.name, states: $0.states) }
         if set.contains(HealthCheckEntity.noneID) { result.insert(.none, at: 0) }
         return result
     }
