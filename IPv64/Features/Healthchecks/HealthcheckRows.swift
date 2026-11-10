@@ -17,15 +17,16 @@ struct HealthcheckRow: View {
     }
 
     var body: some View {
-        HStack(spacing: 12) {
+        let state = Hc2StateUi.from(check.state?.state?.rawValue, paused: check.paused)
+        HStack(alignment: .firstTextBaseline, spacing: 10) {
+            Circle().fill(state.color).frame(width: 10, height: 10)
             VStack(alignment: .leading, spacing: 2) {
-                Text(check.name?.nonBlank ?? String(localized: "(unnamed)")).lineLimit(1)
-                Text(verbatim: subtitle.joined(separator: "\n"))
-                    .font(.subheadline).foregroundStyle(.secondary).lineLimit(2)
+                Text(check.name?.nonBlank ?? String(localized: "(unnamed)")).font(.headline).lineLimit(1)
+                Text(verbatim: subtitle.joined(separator: "\n")).font(.subheadline).lineLimit(2)
+                Text(state.label).font(.caption).foregroundStyle(state.color)
             }
-            Spacer(minLength: 8)
-            StatusChip(state: Hc2StateUi.from(check.state?.state?.rawValue, paused: check.paused))
         }
+        .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
     }
 }
@@ -35,14 +36,16 @@ struct NodeCheckRow: View {
     let check: Node64.Check
 
     var body: some View {
-        HStack(spacing: 12) {
+        let color = nodeCheckStateColor(check.state?.state)
+        HStack(alignment: .firstTextBaseline, spacing: 10) {
+            Circle().fill(color).frame(width: 10, height: 10)
             VStack(alignment: .leading, spacing: 2) {
-                Text(check.name?.nonBlank ?? String(localized: "(unnamed)")).lineLimit(1)
-                Text(verbatim: subtitle).font(.subheadline).foregroundStyle(.secondary).lineLimit(1)
+                Text(check.name?.nonBlank ?? String(localized: "(unnamed)")).font(.headline).lineLimit(1)
+                Text(verbatim: subtitle).font(.subheadline).lineLimit(1)
+                Text(verbatim: nodeCheckStateLabel(check.state?.state)).font(.caption).foregroundStyle(color)
             }
-            Spacer(minLength: 8)
-            StatusChip(verbatim: nodeCheckStateLabel(check.state?.state), color: nodeCheckStateColor(check.state?.state))
         }
+        .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
     }
 
@@ -99,5 +102,52 @@ struct HealthcheckTargetSheet: View {
             }
         }
         .presentationDetents([.medium])
+    }
+}
+
+/// Coloured counter tile of the 2.0 healthcheck list; tapping it filters the list.
+struct HealthcheckCountTile: View {
+    let filter: HcStatusFilter
+    let count: Int
+    let isSelected: Bool
+    let action: () -> Void
+
+    private var color: Color {
+        switch filter {
+        case .up: .ipv64Green
+        case .degraded: .ipv64Orange
+        case .down: .ipv64Red
+        case .paused: .ipv64Teal
+        case .all: .ipv64Gray
+        }
+    }
+
+    private var symbol: String {
+        switch filter {
+        case .up: "bolt.heart"
+        case .degraded: "exclamationmark.triangle"
+        case .down: "bell.badge"
+        case .paused: "pause.circle"
+        case .all: "list.bullet"
+        }
+    }
+
+    var body: some View {
+        Button(action: action) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(verbatim: filter.label).font(.system(.title3, design: .rounded)).bold().lineLimit(1)
+                    Text(verbatim: "\(count)").font(.system(.title, design: .rounded))
+                }
+                Spacer()
+                Image(systemName: symbol).font(.title2)
+            }
+            .foregroundStyle(.white)
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(color.opacity(isSelected ? 1 : 0.85), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }

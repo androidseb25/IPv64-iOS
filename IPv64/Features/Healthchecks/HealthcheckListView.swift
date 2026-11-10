@@ -57,6 +57,15 @@ struct HealthcheckListView: View {
                 }
             } else {
                 List(selection: $router.selection) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 10)], spacing: 10) {
+                        ForEach([HcStatusFilter.up, .degraded, .down, .paused], id: \.self) { filter in
+                            HealthcheckCountTile(filter: filter, count: count(filter), isSelected: status == filter) {
+                                status = status == filter ? .all : filter
+                            }
+                        }
+                    }
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
                     if !visible.isEmpty {
                         Section {
                             ForEach(visible) { check in

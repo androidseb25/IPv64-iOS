@@ -28,53 +28,30 @@ struct ProxyHostRow: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(verbatim: (host.names ?? []).joined(separator: ", ").nonBlank ?? "–").font(.headline)
-            if !subtitle.isEmpty { Text(verbatim: subtitle).font(.subheadline).foregroundStyle(.secondary) }
-            ChipFlow(spacing: 6) {
-                ForEach(Array(chips.enumerated()), id: \.offset) { _, chip in
-                    StatusChip(verbatim: chip.text, color: chip.color.color)
+        // 2.0 look: status dot and plain text lines instead of chip rows.
+        let status = chips.prefix(1) + chips.dropFirst().filter { $0.color != .gray }
+        let options = chips.dropFirst().filter { $0.color == .gray }.map(\.text)
+        HStack(alignment: .firstTextBaseline, spacing: 10) {
+            Circle().fill(chips.first?.color.color ?? .ipv64Gray).frame(width: 10, height: 10)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: (host.names ?? []).joined(separator: ", ").nonBlank ?? "–").font(.headline)
+                if !subtitle.isEmpty { Text(verbatim: subtitle).font(.subheadline) }
+                ForEach(Array(status.enumerated()), id: \.offset) { _, chip in
+                    Text(verbatim: chip.text).font(.caption).foregroundStyle(chip.color.color)
+                }
+                if !options.isEmpty {
+                    Text(verbatim: options.joined(separator: " · ")).font(.caption).foregroundStyle(.secondary)
+                }
+                if let line = ProxyLogic.counterLine(requests: host.stats?.requests, errors: host.stats?.errors, blocked: host.stats?.blocked) {
+                    Text(verbatim: line).font(.caption).foregroundStyle(.secondary)
+                }
+                if let error = (host.routeError ?? host.certificateError)?.nonBlank {
+                    Text(verbatim: error).font(.caption).foregroundStyle(Color.ipv64Red)
                 }
             }
-            if let line = ProxyLogic.counterLine(requests: host.stats?.requests, errors: host.stats?.errors, blocked: host.stats?.blocked) {
-                Text(verbatim: line).font(.caption).foregroundStyle(.secondary)
-            }
-            if let error = (host.routeError ?? host.certificateError)?.nonBlank {
-                Text(verbatim: error).font(.caption).foregroundStyle(Color.ipv64Red)
-            }
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, 4)
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
-    }
-}
-
-/// Wrapping row of chips.
-struct ChipFlow: Layout {
-    var spacing: CGFloat = 6
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        layout(proposal.width ?? .infinity, subviews).size
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let result = layout(bounds.width, subviews)
-        for (subview, origin) in zip(subviews, result.origins) {
-            subview.place(at: CGPoint(x: bounds.minX + origin.x, y: bounds.minY + origin.y), proposal: .unspecified)
-        }
-    }
-
-    private func layout(_ width: CGFloat, _ subviews: Subviews) -> (size: CGSize, origins: [CGPoint]) {
-        var origins: [CGPoint] = []
-        var x: CGFloat = 0, y: CGFloat = 0, rowHeight: CGFloat = 0, maxX: CGFloat = 0
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if x > 0 && x + size.width > width { x = 0; y += rowHeight + 4; rowHeight = 0 }
-            origins.append(CGPoint(x: x, y: y))
-            x += size.width + spacing
-            maxX = max(maxX, x - spacing)
-            rowHeight = max(rowHeight, size.height)
-        }
-        return (CGSize(width: maxX, height: y + rowHeight), origins)
     }
 }
