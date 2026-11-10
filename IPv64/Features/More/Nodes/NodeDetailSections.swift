@@ -137,7 +137,7 @@ extension NodeDetailView {
                 Text("The node is offline. Commands are picked up when it reconnects.").font(.footnote).foregroundStyle(.secondary)
             }
             ForEach(info.checks) { check in
-                NodeCheckRow(check: check, canCommand: canCommand, disabled: isBusy || tracking != nil,
+                NodeDetailCheckRow(check: check, canCommand: canCommand, disabled: isBusy || tracking != nil,
                              onOpen: { router.push(.healthcheckDetail(token: check.token)) },
                              onCommand: { ask(NodeCommand.forCheck($0, check)) })
             }
@@ -217,7 +217,7 @@ private struct NodeModuleRow: View {
     }
 }
 
-private struct NodeCheckRow: View {
+private struct NodeDetailCheckRow: View {
     let check: HC2Check
     let canCommand: Bool
     let disabled: Bool
