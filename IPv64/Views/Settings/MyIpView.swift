@@ -51,16 +51,18 @@ struct MyIpView: View {
                     }
             }
         }
-        .showLoading($api.isLoading)
+        .showLoading(.constant(api.isLoading))
+        .apiErrors(api)
         .navigationTitle(Tabs.myip.labelNew)
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            if let resv4 = await api.GetMyIp() {
-                v4 = resv4
-            }
-            if let resv6 = await api.GetMyIp(false) {
-                v6 = resv6
-            }
+            async let ipv4 = api.GetMyIp()
+            async let ipv6 = api.GetMyIp(false)
+            let (resv4, resv6) = await (ipv4, ipv6)
+            guard !Task.isCancelled else { return }
+            if let resv4 { v4 = resv4 }
+            if let resv6 { v6 = resv6 }
+            if resv4 == nil && resv6 == nil { api.errorMessage = "Your IP addresses could not be retrieved. Check your connection and try again." }
         }
     }
 }

@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct HealthCheckResult: Codable {
+nonisolated struct HealthCheckResult: Codable, Sendable {
     
     var domain: [HealthCheck] = []
     var info: String = ""

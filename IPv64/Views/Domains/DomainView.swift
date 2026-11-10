@@ -1,58 +1,68 @@
-//
-//  DomainView.swift
-//  IPv64
-//
-//  Created by Sebastian Rank on 20.10.25.
-//
-
 import SwiftUI
 
 struct DomainView: View {
-    
-    @Environment(\.colorScheme) var systemColorScheme
-    
+    @Environment(\.colorScheme) private var systemColorScheme
     @Binding var popToRootTab: Tabs
     @StateObject private var api = ApiService()
-    @StateObject private var userStorage = UserStorage.shared
-    
-    @State private var domainResult: DomainResult = .empty
-    @State var v4: MyIP = .emptyV4
-    @State var v6: MyIP = .emptyV6
-    
-    @State private var showNewDomainSheet: Bool = false
-    @State private var isDomainChanged: Bool = false
-    
-    @State private var alertType: AlertType?
-    @State private var apiErrorMessage: String = ""
-    
-    var body: some View {
-        NavigationStack {
-            if #available(iOS 26.0, *) {
-                listView
-                    .setColorGradient(showNewDomainSheet ? .clear : .orange)
-            } else {
-                listView
-            }
-        }
+    @State private var domains: [Domain] = []
+    @State private var groups: [(name: String, domains: [Domain])] = []
+    @State private var search = ""
+    @State private var filter = DomainFilter.all
+    @State private var showNewDomainSheet = false
+    @State private var isDomainChanged = false
+    @State private var reloadVersion = 0
+    @State private var loadedAt: Date?
+    @State private var loadID: UUID?
+    private var isRefreshing: Bool { loadID != nil }
+
+    private enum DomainFilter: String, CaseIterable {
+        case all = "All", matching = "IP matches", different = "IP differs"
     }
-    
+
+    var body: some View {
+        if #available(iOS 26.0, *) {
+            listView.setColorGradient(showNewDomainSheet ? .clear : .orange)
+        } else { listView }
+    }
+
     private var listView: some View {
         List {
-            ForEach("".v64domains(), id: \.self) { domain in
-                let filtered = domainResult.subdomains.filter { $0.baseDomain == domain }
-                if (!filtered.isEmpty) {
-                    Section(domain) {
-                        ForEach(filtered.sorted(by: \.fqdn), id: \.fqdn) { subDomain in
-                            NavigationLink(value: subDomain) {
-                                DomainItemView(domain: subDomain)
-                                .tag(subDomain.fqdn)
-                            }
-                        }
+            ForEach(groups, id: \.name) { group in
+                Section(group.name) {
+                    ForEach(group.domains, id: \.fqdn) { domain in
+                        NavigationLink(value: domain) { DomainItemView(domain: domain) }
                     }
                 }
             }
         }
-        .showLoading($api.isLoading)
+        .overlay {
+            if groups.isEmpty && !isRefreshing {
+                if !search.isEmpty || filter != .all {
+                    ContentUnavailableView.search(text: search)
+                } else if loadedAt != nil {
+                    ContentUnavailableView {
+                        Label("No domains yet", systemImage: "network")
+                    } description: {
+                        Text("Add your first domain to manage its DNS records.")
+                    } actions: {
+                        Button("Add domain") { showNewDomainSheet = true }
+                    }
+                } else {
+                    ContentUnavailableView {
+                        Label("Domains unavailable", systemImage: "network")
+                    } description: {
+                        Text("Connect to the internet and try again.")
+                    } actions: {
+                        Button("Retry") { reloadVersion += 1 }
+                    }
+                }
+            }
+        }
+        .overlay { if isRefreshing && domains.isEmpty { ProgressView("Loading domains…") } }
+        .apiErrors(api)
+        .searchable(text: $search, prompt: "Search domains")
+        .onChange(of: search) { _, _ in updateGroups() }
+        .onChange(of: filter) { _, _ in updateGroups() }
         .navigationTitle(Tabs.domain.labelNew)
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(for: Domain.self) { domain in
@@ -60,80 +70,63 @@ struct DomainView: View {
         }
         .toolbar {
             ToolbarItem {
-                Button(action: {
-                    withAnimation {
-                        showNewDomainSheet.toggle()
+                Menu {
+                    Picker("IP status", selection: $filter) {
+                        ForEach(DomainFilter.allCases, id: \.self) { Text($0.rawValue).tag($0) }
                     }
-                }){
-                    Label("Add", image: "network.badge.plus")
-                }
+                } label: { Label("Filter domains", systemImage: "line.3.horizontal.decrease") }
                 .tint(systemColorScheme == .dark ? .white : .black)
             }
-        }
-        .refreshable {
-            GetIp()
-        }
-        .onAppear {
-            if (isDomainChanged || userStorage.IsInitDomain) {
-                isDomainChanged = false
-                userStorage.IsInitDomain = false
-                GetIp()
+            ToolbarItem {
+                Button { showNewDomainSheet = true } label: { Label("Add domain", image: "network.badge.plus") }
+                    .tint(systemColorScheme == .dark ? .white : .black)
             }
         }
-        .sheet(isPresented: $showNewDomainSheet.animation()){
-            DomainNewView(isChanged: $isDomainChanged).onDisappear {
-                if (isDomainChanged) {
-                    isDomainChanged = false
-                    GetIp()
-                }
+        .refreshable { await reload() }
+        .task(id: reloadVersion) {
+            if loadedAt == nil || isDomainChanged || loadedAt!.timeIntervalSinceNow < -30 {
+                await reload()
             }
         }
-        .alert(item: $alertType) { type in
-            switch type {
-            case .apiError:
-                return Alert(title: Text("Something went wrong."), message: Text("Something went wrong with the API. Please try again later. \n\n\(apiErrorMessage)"), dismissButton: .cancel(Text("OK")))
-            default:
-                return Alert(title: Text(""))
-            }
+        .onChange(of: isDomainChanged) { _, changed in
+            if changed { loadedAt = nil; reloadVersion += 1 }
         }
+        .sheet(isPresented: $showNewDomainSheet) { DomainNewView(isChanged: $isDomainChanged) }
     }
-    
-    private func GetDomains() {
-        Task {
-            if var res = await api.GetDomains() {
-                if (res.status.contains("200")) {
-                    res.subdomains = res.subdomains.map { domain in
-                        var d = domain
-                        d.ipv4 = v4.ip ?? "0.0.0.0"
-                        d.ipv6 = v6.ip ?? "::"
-                        return d
-                    }
-                    domainResult = res
-                } else {
-                    apiErrorMessage = "\(res.status)\n\(res.info)"
-                    alertType = .apiError
-                }
-            }
-        }
+
+    private func reload() async {
+        let requestID = UUID()
+        loadID = requestID
+        defer { if loadID == requestID { loadID = nil } }
+        // These requests are independent: the slowest determines latency, not their sum.
+        async let domainRequest = api.GetDomains()
+        async let ipv4Request = api.GetMyIp()
+        async let ipv6Request = api.GetMyIp(false)
+        let (result, ipv4, ipv6) = await (domainRequest, ipv4Request, ipv6Request)
+        guard !Task.isCancelled, loadID == requestID, let result else { return }
+        domains = result.subdomains.map {
+            var domain = $0
+            domain.ipv4 = ipv4?.ip ?? "0.0.0.0"
+            domain.ipv6 = ipv6?.ip ?? "::"
+            return domain
+        }.sorted(by: \.fqdn)
+        loadedAt = .now
+        isDomainChanged = false
+        updateGroups()
     }
-    
-    private func GetIp(_ onlyV4: Bool = true) {
-        Task {
-            if let res = await api.GetMyIp(onlyV4) {
-                if (onlyV4) {
-                    v4 = res
-                    GetIp(false)
-                } else {
-                    v6 = res
-                    GetDomains()
-                }
-            } else {
-                GetDomains()
-            }
+
+    private func updateGroups() {
+        let visible = domains.filter { domain in
+            let matches = search.isEmpty || domain.fqdn.localizedCaseInsensitiveContains(search)
+            let differs = (domain.ipv4 != "0.0.0.0" && !domain.isSameTypeAAddress)
+                || (domain.ipv6 != "::" && !domain.isSameTypeAAAAAddress)
+            return matches && (filter == .all || (filter == .different ? differs : !differs))
+        }
+        let grouped = Dictionary(grouping: visible, by: \.baseDomain)
+        groups = "".v64domains().compactMap { name in
+            grouped[name].map { (name: name, domains: $0) }
         }
     }
 }
 
-#Preview {
-    DomainView(popToRootTab: .constant(.domain))
-}
+#Preview { NavigationStack { DomainView(popToRootTab: .constant(.domain)) } }

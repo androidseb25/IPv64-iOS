@@ -43,7 +43,7 @@ enum AlertType: Int, Identifiable {
     }
 }
 
-enum Unit: Int, Identifiable {
+nonisolated enum Unit: Int, Identifiable {
     case minute, hour, day, unknown
     
     var id: Int {
@@ -69,7 +69,7 @@ enum Unit: Int, Identifiable {
     }
 }
 
-enum Status: Int, Identifiable {
+nonisolated enum Status: Int, Identifiable {
     
     case active, pause, warning, alarm, unknown
     

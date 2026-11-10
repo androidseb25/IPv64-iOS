@@ -47,7 +47,7 @@ struct UserView: View {
                     NavigationLink(destination: LoginView(isFromAddUser: true), label: {
                         Label("Add", systemImage: "person.badge.plus")
                     })
-                    .tint(.orange)
+                    .tint(systemColorScheme == .dark ? .white : .black)
                 }
             }
         }

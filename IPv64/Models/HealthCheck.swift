@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct HealthCheck: Codable, Equatable, Hashable {
+nonisolated struct HealthCheck: Codable, Equatable, Hashable, Sendable {
     // healthstatus == 1 = Active; 2 = Paused; 3 = Warning; 4 = Alarm;
     var name: String = ""
     var healthstatus: Int = 0
@@ -172,9 +172,9 @@ struct HealthCheck: Codable, Equatable, Hashable {
         name = try container.decode(String.self, forKey: CodingKeys.name)
         healthstatus = try container.decode(Int.self, forKey: CodingKeys.healthstatus)
         healthtoken = try container.decode(String.self, forKey: CodingKeys.healthtoken)
-        add_time = try container.decode(String.self, forKey: CodingKeys.add_time)
-        last_update_time = try container.decode(String.self, forKey: CodingKeys.last_update_time)
-        alarm_time = try container.decode(String.self, forKey: CodingKeys.alarm_time)
+        add_time = try container.decodeIfPresent(String.self, forKey: CodingKeys.add_time)
+        last_update_time = try container.decodeIfPresent(String.self, forKey: CodingKeys.last_update_time)
+        alarm_time = try container.decodeIfPresent(String.self, forKey: CodingKeys.alarm_time)
         alarm_down = try container.decode(Int.self, forKey: CodingKeys.alarm_down)
         alarm_up = try container.decode(Int.self, forKey: CodingKeys.alarm_up)
         integration_id = try container.decode(String.self, forKey: CodingKeys.integration_id)
@@ -188,9 +188,7 @@ struct HealthCheck: Codable, Equatable, Hashable {
         
         // 4
         // Extract healthcheckDomain from coding path
-        if (container.codingPath.first!.stringValue != nil) {
-            keyInd = container.codingPath.first!.stringValue
-        }
+        keyInd = try container.decodeIfPresent(String.self, forKey: .keyInd) ?? container.codingPath.first?.stringValue ?? ""
     }
     
     init(name: String = "", healthstatus: Int = 0, healthtoken: String = "", add_time: String? = "", last_update_time: String? = "", alarm_time: String? = "", alarm_down: Int = 0, alarm_up: Int = 0, integration_id: String = "0", alarm_count: Int = 0, alarm_unit: Int = 0, grace_count: Int = 0, grace_unit: Int = 0, pings_total: Int = 0, type: String = "", events: [HealthEvents] = []) {

@@ -73,7 +73,8 @@ struct DomainDnsNewView: View {
                 }
             }
         }
-        .showLoading($api.isLoading)
+        .showLoading(.constant(api.isLoading))
+        .apiErrors(api)
         .alert(item: $alertType) { type in
             switch type {
             case .apiError:

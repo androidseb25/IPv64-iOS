@@ -70,7 +70,6 @@ class Biometrics: ObservableObject {
         let reason = "Please authenticate to continue with the app."
         
         guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
-            print("No Biometric Sensor Has Been Detected. This device does not support FaceID/TouchID.")
             self.disableFields = false
             tryToAuthenticatePIN()
             return
@@ -79,13 +78,10 @@ class Biometrics: ObservableObject {
         context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason, reply: { (success, error) -> Void in
             DispatchQueue.main.async {
                 if success {
-                    print("FaceID/TouchID. You are a device owner!")
                     self.isAuthenticated = true
                 } else {
-                    print(error!)
                     // Check if there is an error
                     if let errorObj = error as? LAError {
-                        print("Error took place. \(errorObj.localizedDescription)")
                         if errorObj.code == .userFallback {
                             self.tryToAuthenticatePIN()
                         } else {
@@ -103,7 +99,6 @@ class Biometrics: ObservableObject {
         let reason = "Please authenticate to continue with the app."
         
         guard context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) else {
-            print("No Biometric Sensor Has Been Detected. This device does not support FaceID/TouchID.")
             self.disableFields = false
             return
         }
@@ -111,13 +106,10 @@ class Biometrics: ObservableObject {
         context.evaluatePolicy(LAPolicy.deviceOwnerAuthentication, localizedReason: reason, reply: { (success, error) -> Void in
             DispatchQueue.main.async {
                 if success {
-                    print("FaceID/TouchID. You are a device owner!")
                     self.isAuthenticated = true
                 } else {
-                    print(error!)
                     // Check if there is an error
-                    if let errorObj = error as? LAError {
-                        print("Error took place. \(errorObj.localizedDescription)")                        
+                    if error is LAError {
                         self.isAuthenticated = false
                     }
                 }

@@ -45,7 +45,8 @@ struct HealthcheckIntegrationView: View {
                 }
             }
         }
-        .showLoading($api.isLoading)
+        .showLoading(.constant(api.isLoading))
+        .apiErrors(api)
         .onAppear {
             GetIntegrations()
         }
@@ -98,9 +99,10 @@ struct HealthcheckIntegrationView: View {
         Task {
             if var res = await api.GetIntegrations() {
                 if (res.status.contains("200")) {
+                    let selectedIDs = Set(integrationIds.split(separator: ",").compactMap { Int($0.trimmingCharacters(in: .whitespaces)) })
                     res.integrations = res.integrations.map { integration in
                         var i = integration
-                        if (integrationIds.contains("\(integration.integrationId, default: "-1")")) {
+                        if selectedIDs.contains(integration.integrationId) {
                             i.selectedState = true
                         }
                         return i

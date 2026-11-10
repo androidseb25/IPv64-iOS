@@ -24,24 +24,34 @@ struct ContentView: View {
             } else if !biometrics.isAuthenticated && userStorage.EnableLogscreen {
                 BiometricsLockView()
                     .environmentObject(biometrics)
-            } else if !networkMonitor.isConnected {
-                NoConnectionView()
             } else if userStorage.ShowLoginView || userStorage.ApiKey.isEmpty {
                 NavigationStack {
                     LoginView()
                 }
             } else {
-                if #available(iOS 26.0, *) {
-                    TabbarView()
-                        .tint(.orange)
-                } else {
-                    TabbarView18()
-                        .tint(.orange)
-                }
+                TabbarView()
+                    .id(userStorage.sessionID)
+                    .tint(.orange)
+                    .safeAreaInset(edge: .top, spacing: 0) {
+                        if !networkMonitor.isConnected {
+                            Label("Offline · Showing previously loaded data", systemImage: "wifi.slash")
+                                .font(.footnote)
+                                .frame(maxWidth: .infinity)
+                                .padding(8)
+                                .background(.thinMaterial)
+                        }
+                    }
             }
         }
+        .alert("Secure storage unavailable", isPresented: Binding(
+            get: { userStorage.storageError != nil },
+            set: { if !$0 { userStorage.storageError = nil } }
+        )) {
+            Button("OK", role: .cancel) { userStorage.storageError = nil }
+        } message: {
+            Text(userStorage.storageError ?? "")
+        }
         .onChange(of: scenePhase) { _, newPhase in
-            print(newPhase)
             if newPhase == .active {
                 userStorage.InAppSwitcher = false
             } else if newPhase == .inactive {

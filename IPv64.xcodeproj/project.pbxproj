@@ -63,6 +63,9 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Helpers/SharedExtensions.swift,
+				Helpers/SecureStore.swift,
+				Helpers/APITransport.swift,
+				Helpers/WidgetHealthCache.swift,
 				Models/Enum.swift,
 				Models/HealthCheck.swift,
 				Models/HealthCheckResult.swift,

@@ -1,101 +1,47 @@
-//
-//  TabbarView.swift
-//  IPv64
-//
-//  Created by Sebastian Rank on 20.10.25.
-//
-
 import SwiftUI
 
-@available(iOS 26.0, *)
 struct TabbarView: View {
-    
-    @AppStorage("CURRENT_TAB", store: UserStorage.sharedDefault) var selectedTab: Tabs = .domain
-    
-    @State private var availableTabs: [Tabs] = []
-    @State private var popToRootTab: Tabs = .other
-    @State private var isQrSheetPresented = false
-    
+    @AppStorage("CURRENT_TAB", store: UserStorage.sharedDefault) private var selectedTab: Tabs = .domain
+    @State private var paths: [Tabs: NavigationPath] = [:]
+
+    private var selection: Binding<Tabs> {
+        Binding(get: { selectedTab }, set: { tab in
+            if tab == selectedTab { paths[tab] = NavigationPath() }
+            selectedTab = tab
+        })
+    }
+
     var body: some View {
-        TabView(selection: .init(get: {
-            selectedTab
-        }, set: { newTab in
-            Task {
-                withAnimation {
-                    if newTab == selectedTab {
-                        /// Stupid hack to trigger onChange binding in tab views.
-                        popToRootTab = .other
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                            popToRootTab = selectedTab
-                        }
-                    }
-                    
-                    selectedTab = newTab
-                }
-            }
-            UserStorage.shared.IsInitDomain = true
-        })) {
-            ForEach(availableTabs) { tab in
-                Tab(tab.labelNew, systemImage: tab.iconName, value: tab) {
-                    NavigationStack {
-                        tab.makeContentView(popToRootTab: $popToRootTab)
-                    }
-                }
-            }
-            Tab(Tabs.account.labelNew, systemImage: Tabs.account.iconName, value: Tabs.account, role: .search) {
-                NavigationStack {
-                    AccountView(popToRootTab: $popToRootTab)
-                }
-            }
-        }
-        .tabBarMinimizeBehavior(.onScrollDown)
-        .onAppear {
-            availableTabs = Tabs.tabList()
+        if #available(iOS 26.0, *) {
+            tabs.tabBarMinimizeBehavior(.onScrollDown)
+        } else {
+            tabs
         }
     }
-}
 
-struct TabbarView18: View {
-    
-    @AppStorage("CURRENT_TAB", store: UserStorage.sharedDefault) var selectedTab: Tabs = .domain
-    
-    @State private var availableTabs: [Tabs] = []
-    @State private var popToRootTab: Tabs = .other
-    
-    var body: some View {
-        TabView(selection: .init(get: {
-            selectedTab
-        }, set: { newTab in
-            Task {
-                if newTab == selectedTab {
-                    /// Stupid hack to trigger onChange binding in tab views.
-                    popToRootTab = .other
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                        popToRootTab = selectedTab
-                    }
-                }
-                
-                selectedTab = newTab
-                UserStorage.shared.IsInitDomain = true
+    private var tabs: some View {
+        TabView(selection: selection) {
+            ForEach(Tabs.tabList()) { tab in
+                Tab(tab.labelNew, systemImage: tab.iconName, value: tab) { root(tab) }
             }
-            
-        })) {
-            ForEach(availableTabs) { tab in
-                Tab(tab.labelNew, systemImage: tab.iconName, value: tab) {
-                    tab.makeContentView(popToRootTab: $popToRootTab)
+            if #available(iOS 26.0, *) {
+                Tab(Tabs.account.labelNew, systemImage: Tabs.account.iconName, value: Tabs.account) {
+                    root(.account)
                 }
             }
         }
         .onAppear {
-            availableTabs = Tabs.tabList()
+            if #unavailable(iOS 26.0), selectedTab == .account { selectedTab = .settings }
+        }
+    }
+
+    private func root(_ tab: Tabs) -> some View {
+        NavigationStack(path: Binding(get: { paths[tab] ?? NavigationPath() }, set: { paths[tab] = $0 })) {
+            tab.makeContentView(popToRootTab: .constant(.other))
         }
     }
 }
 
-#Preview {
-    if #available(iOS 26.0, *) {
-        TabbarView()
-    } else {
-        TabbarView18()
-    }
-}
+typealias TabbarView18 = TabbarView
+
+#Preview { TabbarView() }

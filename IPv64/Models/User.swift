@@ -35,33 +35,8 @@ struct User: Codable {
         return user
     }
     
-    var list: [User] {
-        let data = UserStorage.shared.UserAccounts
-        var userList = [User]()
-        do {
-            if (!data.isEmpty) {
-                userList = try JSONDecoder().decode([User].self, from: data)
-                var isNilUUID = false
-                userList = userList.map { u in
-                    if (u.uuid == nil) {
-                        var user = u
-                        user.uuid = UUID().uuidString
-                        isNilUUID = true
-                        return user
-                    }
-                    return u
-                }
-                if (isNilUUID) {
-                    User.empty.saveList(userList)
-                }
-            }
-        } catch {
-            print("Error decoding data: \(error)")
-        }
-        
-        return userList
-    }
-    
+    var list: [User] { UserStorage.shared.users }
+
     func save() {
         var userList = self.list
         userList.append(self)
@@ -100,12 +75,18 @@ struct User: Codable {
     
     func delete() {
         var userList = self.list
-        userList.removeAll(where: { $0.ApiKey == self.current!.ApiKey })
+        let removedKey = UserStorage.shared.ApiKey
+        userList.removeAll(where: { $0.ApiKey == removedKey })
         
         do {
             let data = try JSONEncoder().encode(userList)
             UserStorage.shared.UserAccounts = data
+            guard UserStorage.shared.UserAccounts == data else { return }
             UserStorage.shared.ApiKey = userList.first?.ApiKey ?? ""
+            if UserStorage.shared.ApiKeyWidget == removedKey {
+                UserStorage.shared.ApiKeyWidget = userList.first?.ApiKey ?? ""
+                Task { _ = try? await ClearHealthCheckCacheIntent().perform() }
+            }
         } catch {
             print("Error encoding data: \(error)")
         }

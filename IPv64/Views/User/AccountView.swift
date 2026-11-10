@@ -88,7 +88,8 @@ struct AccountView: View {
                 }
             }
         }
-        .showLoading($api.isLoading)
+        .showLoading(.constant(api.isLoading))
+        .apiErrors(api)
         .navigationTitle(Tabs.account.labelNew)
         .navigationBarTitleDisplayMode(.inline)
         .task {

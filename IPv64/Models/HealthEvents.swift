@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct HealthEvents: Codable, Equatable, Hashable {
+nonisolated struct HealthEvents: Codable, Equatable, Hashable, Sendable {
     var event_time: String?
     var status: Int?
     var text: String?

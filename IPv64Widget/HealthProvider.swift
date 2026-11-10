@@ -8,104 +8,63 @@
 import Foundation
 import WidgetKit
 import AppIntents
-import SwiftyBeaver
+import OSLog
 
 struct HealthEntry<I: WidgetConfigurationIntent>: TimelineEntry {
     let date: Date
     let configuration: I
     let items: [HealthCheckEntity]
+    var updatedAt: Date? = nil
+    var isStale: Bool = false
 }
 
 struct HealthProvider<I: WidgetConfigurationIntent>: AppIntentTimelineProvider {
-    
-    var api = ApiServiceWidget()
-    let logger = iLogger.shared
-    
     typealias Entry = HealthEntry<I>
-    
-    /// Wie extrahieren wir die Auswahl aus dem Intent? (von außen injiziert)
+
     let extract: (I) -> [HealthCheckEntity]
     let refreshMinutes: Int = 15
-    
+
     func placeholder(in context: Context) -> Entry {
-        iLogger.log.info("\(String(describing: I.self)) placeholdered")
-        
-        var entryCount = 2
-        
-        if (I.self == type(of: MediumHealthchecksIntent.self)) {
-            entryCount = 4
-        } else if (I.self == type(of: LargeHealthchecksIntent.self)) {
-            entryCount = 10
-        }
-        
-        
-        return .init(date: .now, configuration: I(), items: sample(for: I.self, count: entryCount))
+        let count = I.self == LargeHealthchecksIntent.self ? 10
+            : I.self == MediumHealthchecksIntent.self ? 4 : 2
+        return .init(date: .now, configuration: I(), items: Array(HealthCheckEntity.sampleList.prefix(count)))
     }
-    
+
     func snapshot(for configuration: I, in context: Context) async -> Entry {
-        iLogger.log.info("\(String(describing: I.self)) snapshoted")
-        return .init(date: .now, configuration: configuration, items: extract(configuration))
+        let selected = extract(configuration)
+        Logger(subsystem: "net.ipv64.widget", category: "configuration").notice("Snapshot type=\(String(describing: I.self), privacy: .public) selected=\(selected.count)")
+        return .init(date: .now, configuration: configuration, items: selected)
     }
-    
+
     func timeline(for configuration: I, in context: Context) async -> Timeline<Entry> {
-        iLogger.log.info("\(String(describing: I.self)) timeline updated")
-        
-        // 1) Ausgewählte IDs in Slot-Reihenfolge
-        let selected = extract(configuration)                  // [HealthCheckEntity] aus den Slots
-        let selectedIDs = selected.map(\.id)                   // Reihenfolge beibehalten
-        let idSet = Set(selectedIDs)                           // für schnelles Lookup
-        
-        // 2) Alle Daten (cached/TTL) holen und auf IDs filtern
-        guard let res = await fetchOrCached() else {
-            iLogger.log.info("Timeline: Guardian returned nil")
-            let entry = Entry(date: .now, configuration: configuration, items: selected) // Fallback
+        let selected = extract(configuration)
+        Logger(subsystem: "net.ipv64.widget", category: "configuration").notice("Timeline type=\(String(describing: I.self), privacy: .public) selected=\(selected.count)")
+        // An empty configuration is an intentional empty widget. Returning a
+        // fresh entry immediately prevents WidgetKit from keeping the prior
+        // selection while a cache or network request is running.
+        guard !selected.isEmpty else {
+            return Timeline(entries: [Entry(date: .now, configuration: configuration, items: [])], policy: .never)
+        }
+
+        guard let snapshot = await HealthCheckCache.shared.fetchOrCached() else {
+            // Configuration entities can outlive their account; do not show their old status as current.
+            let unavailable = selected.map { HealthCheckEntity(id: $0.id, name: $0.name, events: []) }
+            let entry = Entry(date: .now, configuration: configuration, items: unavailable, isStale: true)
             return Timeline(entries: [entry], policy: .after(nextRefresh()))
         }
-        
-        // 3) Map für schnellen Zugriff und stabile Slot-Reihenfolge
-        let all = mapAll(res)                                  // [HealthCheckEntity] (voll)
-        iLogger.log.info("Timeline: \(all.count) entries")
-        let byId = Dictionary(uniqueKeysWithValues: all.map { ($0.id, $0) })
-        
-        iLogger.log.info("Timeline: \(byId.keys) dict")
-        
-        // 4) Nur die gewählten in Slot-Reihenfolge – mit Fallback auf den Slot-Wert
-        let items = selectedIDs.compactMap { byId[$0] ?? selected.first(where: { $0.id == $0.id }) }
-        
-        iLogger.log.info("Timeline: selected \(items.count) count")
-        
-        let entry = Entry(date: .now, configuration: configuration, items: items)
+
+        let byID = Dictionary(snapshot.checks.map {
+            ($0.healthtoken, HealthCheckEntity(id: $0.healthtoken, name: $0.name, events: $0.events))
+        }, uniquingKeysWith: { first, _ in first })
+        // Preserve every slot, including its own fallback when that check is unavailable.
+        let items = selected.map { byID[$0.id] ?? HealthCheckEntity(id: $0.id, name: $0.name, events: []) }
+        let hasMissingCheck = selected.contains { byID[$0.id] == nil }
+        let entry = Entry(date: .now, configuration: configuration, items: items,
+                          updatedAt: snapshot.updatedAt, isStale: snapshot.isStale || hasMissingCheck)
         return Timeline(entries: [entry], policy: .after(nextRefresh()))
     }
-    
-    private func nextRefresh(_ minutes: Int = 15) -> Date {
-        Calendar.current.date(byAdding: .minute, value: minutes, to: .now) ?? .now.addingTimeInterval(900)
-    }
-    
-    private func sample<T>(for _: T.Type, count: Int) -> [HealthCheckEntity] {
-        Array(HealthCheckEntity.sampleList.prefix(count))
-    }
-    
-    private func mapAll(_ res: HealthCheckResult) -> [HealthCheckEntity] {
-        res.domain.sortedWidget(by: \.name).map { HealthCheckEntity(id: $0.healthtoken, name: $0.name, events: $0.events) }
-    }
-    
-    // Gemeinsamer Fetch mit Cache-Nutzung
-    private func fetchOrCached() async -> HealthCheckResult? {
-//        if let c = await HealthCheckCache.shared.getCached() { return c }
-        if let fresh = await api.GetHealthchecks() {
-            if (fresh.status.contains("200")) {
-                Task { @MainActor in
-                    iLogger.log.info("Timeline: set new data: \(fresh.domain.count)")
-                }
-                await HealthCheckCache.shared.set(fresh)
-                return fresh
-            } else {
-                Task { @MainActor in
-                    iLogger.log.info("Error while fetching data from API \(fresh.status) \(fresh.info)")
-                }
-            }
-        }
-        return nil
+
+    private func nextRefresh() -> Date {
+        .now.addingTimeInterval(TimeInterval(refreshMinutes * 60))
     }
 }

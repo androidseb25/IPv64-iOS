@@ -7,10 +7,8 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct LoginView: View {
-    
+    @Environment(\.colorScheme) private var systemColorScheme
     @Environment(\.presentationMode) var presentationMode
     
     @StateObject private var userStorage = UserStorage.shared
@@ -22,6 +20,8 @@ struct LoginView: View {
     @State private var showDeniedAlert = false
     @State private var isAuthorized = false
     
+    @StateObject private var api = ApiService()
+    @State private var loginTask: Task<Void, Never>?
     @State private var apiKey = ""
     
     @State private var user = User.empty
@@ -35,6 +35,8 @@ struct LoginView: View {
                 content
             }
         }
+        .apiErrors(api)
+        .onDisappear { loginTask?.cancel() }
         .navigationTitle("Login")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -43,32 +45,16 @@ struct LoginView: View {
                     scannBtn
                 } else {
                     scannBtn
-                        .tint(.orange)
+                        .tint(systemColorScheme == .dark ? .white : .black)
                 }
             }
         }
         .sheet(isPresented: $showQrSheet.animation()) {
             QRScannerView() { key in
                 
-                let isContains = user.list.contains(where: { $0.ApiKey == key })
-                
-                if (isContains) {
-                    return
-                }
-                
-                user.ApiKey = key
-                user.Username = user.list.count > 0 ? "Default User \(user.list.count)" : "Default User"
-                user.Information = ""
-                user.save()
-                
                 apiKey = key
-                userStorage.ApiKey = key
-                
-                if (isFromAddUser) {
-                    presentationMode.wrappedValue.dismiss()
-                } else {
-                    userStorage.ShowLoginView = false
-                }
+                loginTask?.cancel()
+                loginTask = Task { await login(key) }
             }.onDisappear {
                 withAnimation {
                     showQrSheet = false
@@ -145,27 +131,8 @@ struct LoginView: View {
     
     private var letsgoBtn: some View {
         return Button (action: {
-            withAnimation {
-                
-                let isContains = user.list.contains(where: { $0.ApiKey == apiKey })
-                
-                if (isContains) {
-                    return
-                }
-                
-                user.ApiKey = apiKey
-                user.Username = user.list.count > 0 ? "Default User \(user.list.count)" : "Default User"
-                user.Information = ""
-                user.save()
-                
-                userStorage.ApiKey = apiKey
-                
-                if (isFromAddUser) {
-                    presentationMode.wrappedValue.dismiss()
-                } else {
-                    userStorage.ShowLoginView = false
-                }
-            }
+            loginTask?.cancel()
+            loginTask = Task { await login(apiKey) }
         }) {
             Text("Login")
                 .font(.system(.callout, design: .rounded))
@@ -175,6 +142,28 @@ struct LoginView: View {
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .padding(16)
         }
+        .disabled(api.isLoading || apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        .overlay { if api.isLoading { ProgressView() } }
+    }
+
+    private func login(_ rawKey: String) async {
+        let key = rawKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !key.isEmpty, !api.isLoading else { return }
+        guard let account = await api.GetAccountStatus(token: key), !Task.isCancelled else { return }
+        guard APITransport.isSuccessStatus(account.status), account.account_status == 1 else {
+            api.errorMessage = "This API key does not belong to an active account."
+            return
+        }
+        if !user.list.contains(where: { $0.ApiKey == key }) {
+            user = User(Username: account.email, ApiKey: key, Information: "")
+            user.save()
+            guard user.list.contains(where: { $0.ApiKey == key }) else { return }
+        }
+        userStorage.ApiKey = key
+        guard userStorage.ApiKey == key else { return }
+        if userStorage.ApiKeyWidget.isEmpty { userStorage.ApiKeyWidget = key }
+        if isFromAddUser { presentationMode.wrappedValue.dismiss() }
+        else { userStorage.ShowLoginView = false }
     }
     
     private var scannBtn: some View {

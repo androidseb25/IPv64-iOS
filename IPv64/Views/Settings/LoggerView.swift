@@ -82,6 +82,7 @@ struct LoggerView: View {
                     Button(action: { dismiss() }) {
                         Text("Close")
                     }
+                    .tint(systemColorScheme == .dark ? .white : .black)
                 }
             }
         })

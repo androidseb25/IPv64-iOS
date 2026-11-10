@@ -11,6 +11,9 @@ import TipKit
 @main
 struct IPv64App: App {
     init() {
+        #if DEBUG
+        DebugFixtures.configure()
+        #endif
         
         /// Load and configure the state of all the tips of the app
         try? Tips.configure()

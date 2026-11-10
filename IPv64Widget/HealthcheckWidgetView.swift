@@ -15,19 +15,32 @@ struct HealthcheckWidgetView: View {
     @Environment(\.widgetFamily) var widgetFamily
     
     let items: [HealthCheckEntity]
+    var updatedAt: Date? = nil
+    var isStale = false
     
     var body: some View {
-        if (items.count > 0) {
-            if widgetFamily == .systemSmall {
-                smallWidget
+        VStack(spacing: 4) {
+            if items.isEmpty {
+                Text("Choose healthchecks in Edit Widget")
             } else {
-                mediumLargeWidget
+                if widgetFamily == .systemSmall { smallWidget }
+                else { mediumLargeWidget }
+                HStack(spacing: 3) {
+                    if isStale { Image(systemName: "exclamationmark.arrow.trianglehead.2.clockwise.rotate.90") }
+                    if let updatedAt {
+                        Text("Updated")
+                        Text(updatedAt, style: .time)
+                    } else { Text("Waiting for update") }
+                }
+                .font(.caption2)
+                .foregroundStyle(isStale ? .orange : .secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
             }
-        } else {
-            Text("No Configuration found")
         }
+        .containerBackground(for: .widget) { Color(.systemBackground) }
     }
-    
+
     private var mediumLargeWidget: some View {
         HStack(alignment: .top) {
             let startFirst = 0
@@ -104,7 +117,6 @@ struct HealthcheckWidgetView: View {
             HealthcheckEventView(showSmall: true, events: hc.events)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .id(UUID())
     }
     
     fileprivate func GetColumn(start: Int, end: Int) -> ArraySlice<HealthCheckEntity> {

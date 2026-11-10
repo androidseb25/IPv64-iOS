@@ -19,14 +19,12 @@ struct SettingsView: View {
     @State private var alertType: AlertType?
     
     var body: some View {
-        NavigationStack {
             if #available(iOS 26.0, *) {
                 listView
                     .setColorGradient(.orange)
             } else {
                 listView
             }
-        }
     }
     
     private var listView: some View {

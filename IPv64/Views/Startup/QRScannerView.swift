@@ -299,7 +299,5 @@ final class QRScanner: NSObject, ObservableObject, AVCaptureMetadataOutputObject
 }
 
 #Preview {
-    QRScannerView() { key in
-        print(key)
-    }
+    QRScannerView() { _ in }
 }

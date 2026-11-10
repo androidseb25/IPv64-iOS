@@ -35,13 +35,13 @@ struct LogView: View {
                 }
             }
         }
-        .showLoading($api.isLoading)
+        .showLoading(.constant(api.isLoading))
+        .apiErrors(api)
         .navigationTitle(Tabs.log.labelNew)
         .navigationBarTitleDisplayMode(.inline)
         .task {
             if let res = await api.GetLogs() {
                 logs = res
-                print(logs)
             }
         }
     }

@@ -81,7 +81,8 @@ struct HealthcheckEditView: View {
                 }
             }
         }
-        .showLoading($api.isLoading)
+        .showLoading(.constant(api.isLoading))
+        .apiErrors(api)
         .onAppear {
             hcName = hc.name
             alarmCount = Double(hc.alarm_count)

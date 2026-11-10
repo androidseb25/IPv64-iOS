@@ -33,7 +33,7 @@ struct UserEditView: View {
                         }
                     })).disabled(UserStorage.shared.ApiKeyWidget == self.user.ApiKey)
                     Button("Force Refresh") {
-                        WidgetCenter.shared.reloadAllTimelines()
+                        Task { _ = try? await ClearHealthCheckCacheIntent().perform() }
                     }
                 }
             }

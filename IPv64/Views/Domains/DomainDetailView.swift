@@ -91,7 +91,8 @@ struct DomainDetailView: View {
                 }
             }
         }
-        .showLoading($api.isLoading)
+        .showLoading(.constant(api.isLoading))
+        .apiErrors(api)
         .navigationTitle(domain.fqdn)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
