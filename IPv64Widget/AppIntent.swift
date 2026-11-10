@@ -18,15 +18,15 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
 }
 
 struct SmallHealthchecksIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "Small Widget"
-    static var description = IntentDescription("Choose up to 2 Healthcheacks for the small widget.")
+    static let title: LocalizedStringResource = "Small Widget"
+    static let description = IntentDescription("Choose up to 2 Healthcheacks for the small widget.")
     @Parameter(title: "HC 1") var hc1: HealthCheckEntity?
     @Parameter(title: "HC 2") var hc2: HealthCheckEntity?
 }
 
 struct MediumHealthchecksIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "Medium Widget"
-    static var description = IntentDescription("Choose up to 4 Healthcheacks for the medium widget.")
+    static let title: LocalizedStringResource = "Medium Widget"
+    static let description = IntentDescription("Choose up to 4 Healthcheacks for the medium widget.")
     @Parameter(title: "HC 1") var hc1: HealthCheckEntity?
     @Parameter(title: "HC 2") var hc2: HealthCheckEntity?
     @Parameter(title: "HC 3") var hc3: HealthCheckEntity?
@@ -34,8 +34,8 @@ struct MediumHealthchecksIntent: WidgetConfigurationIntent {
 }
 
 struct LargeHealthchecksIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "Large Widget"
-    static var description = IntentDescription("Choose up to 10 Healthcheacks for the large widget.")
+    static let title: LocalizedStringResource = "Large Widget"
+    static let description = IntentDescription("Choose up to 10 Healthcheacks for the large widget.")
     @Parameter(title: "HC 1") var hc1: HealthCheckEntity?
     @Parameter(title: "HC 2") var hc2: HealthCheckEntity?
     @Parameter(title: "HC 3") var hc3: HealthCheckEntity?

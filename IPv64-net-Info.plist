@@ -2,8 +2,23 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<!-- Direct node access over http (local names, IP literals). ipv64.net and secntfy.app stay HTTPS only. -->
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>IPv64.net connects directly to your Node64 nodes in your local network.</string>
+	<!-- SecNtfy app access key of the iOS app (NTFY-APP-…). Must be provided by the owner; the Android key must not be reused. Empty = push setup is skipped. -->
+	<key>SECNTFY_APP_KEY</key>
+	<string></string>
 	<key>SecureKeychainAccessGroup</key>
 	<string>$(AppIdentifierPrefix)group.ipv64.net</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UIDesignRequiresCompatibility</key>
 	<false/>
 </dict>

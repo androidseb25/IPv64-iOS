@@ -15,8 +15,8 @@ struct HealthCheckEntity: AppEntity, Identifiable, Hashable {
     static let noneID = "__ipv64_none__"
     static let none = HealthCheckEntity(id: noneID, name: "Keine Auswahl", events: [])
 
-    static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "Healthcheck")
-    static var defaultQuery = HealthCheckQuery()
+    static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Healthcheck")
+    static let defaultQuery = HealthCheckQuery()
     
     var id: String
     var name: String
@@ -270,7 +270,7 @@ public actor HealthCheckCache {
 }
 
 struct ClearHealthCheckCacheIntent: AppIntent {
-    static var title: LocalizedStringResource = "Clear Widget Cache"
+    static let title: LocalizedStringResource = "Clear Widget Cache"
     
     func perform() async throws -> some IntentResult {
         await HealthCheckCache.shared.clear()
