@@ -91,8 +91,8 @@ struct ListRow<Trailing: View>: View {
                     .accessibilityHidden(true)
             }
         }
-        .frame(minHeight: 56)
         .padding(.vertical, 8)
+        .frame(minHeight: 56)
         .contentShape(Rectangle())
         .opacity(isEnabled ? 1 : 0.38)
     }

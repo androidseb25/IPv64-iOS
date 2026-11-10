@@ -32,19 +32,33 @@ nonisolated final class NodeTransport: IPv64Transport {
 
     @concurrent
     func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
-        var request = request
         if let url = request.url, url.scheme?.lowercased() == "http",
            let host = url.host(percentEncoded: false), !LocalNodeURL.isIpHost(host) {
             let addresses = try Self.resolve(host)
-            guard let first = addresses.first, addresses.allSatisfy(LocalNodeURL.isLocalAddress) else {
+            guard !addresses.isEmpty, addresses.allSatisfy(LocalNodeURL.isLocalAddress) else {
                 throw NodeTransportError(host: host)
             }
-            var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-            components?.host = Self.literal(first)
-            guard let pinned = components?.url else { throw NodeTransportError(host: host) }
-            request.url = pinned
-            request.setValue(url.port.map { "\(host):\($0)" } ?? host, forHTTPHeaderField: "Host")
+            // Like OkHttp: try every resolved address until one accepts the connection.
+            var lastError: any Error = NodeTransportError(host: host)
+            for address in addresses {
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+                components?.host = Self.literal(address)
+                guard let pinned = components?.url else { continue }
+                var pinnedRequest = request
+                pinnedRequest.url = pinned
+                pinnedRequest.setValue(url.port.map { "\(host):\($0)" } ?? host, forHTTPHeaderField: "Host")
+                do {
+                    return try await perform(pinnedRequest)
+                } catch let error as URLError where error.code == .cannotConnectToHost || error.code == .timedOut {
+                    lastError = error
+                }
+            }
+            throw lastError
         }
+        return try await perform(request)
+    }
+
+    private func perform(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         let (data, response) = try await session.data(for: request)
         guard let http = response as? HTTPURLResponse else { throw IPv64Error.invalidResponse }
         return (data, http)
@@ -56,7 +70,7 @@ nonisolated final class NodeTransport: IPv64Transport {
         hints.ai_family = AF_UNSPEC
         hints.ai_socktype = SOCK_STREAM
         var result: UnsafeMutablePointer<addrinfo>?
-        guard getaddrinfo(host, nil, &hints, &result) == 0, let head = result else { throw NodeTransportError(host: host) }
+        guard getaddrinfo(host, nil, &hints, &result) == 0, let head = result else { throw URLError(.cannotFindHost) }
         defer { freeaddrinfo(head) }
         var addresses: [IPAddressBytes] = []
         for info in sequence(first: head, next: { $0.pointee.ai_next }) {
