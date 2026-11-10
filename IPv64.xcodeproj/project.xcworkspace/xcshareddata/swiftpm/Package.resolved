@@ -1,5 +1,5 @@
 {
-  "originHash" : "2e6460eb47751fc713866c4a8446f344b2552df9a8fc9453fc15d9da45b05a32",
+  "originHash" : "d971f7a8d5672d3eab430a734697ea3e9c9aa59e9a2e2132f3c9b5bf4b950db0",
   "pins" : [
     {
       "identity" : "cryptoswift",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "f2a627b84c1ff96f21ac2fcb623ab36142dd5512",
         "version" : "1.10.0"
+      }
+    },
+    {
+      "identity" : "ipv64-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/androidseb25/IPv64-SPM",
+      "state" : {
+        "revision" : "cb87351d91d43b888ad5690233e9720e299ebca6",
+        "version" : "1.1.0"
       }
     },
     {

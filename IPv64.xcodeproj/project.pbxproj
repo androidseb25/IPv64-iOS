@@ -249,7 +249,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
-				B1A0000000000000000000C1 /* XCLocalSwiftPackageReference "../IPv64-SPM" */,
+				B1A0000000000000000000C1 /* XCRemoteSwiftPackageReference "IPv64-SPM" */,
 				B1A0000000000000000000C2 /* XCRemoteSwiftPackageReference "SecNtfy-SPM" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -659,14 +659,15 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		B1A0000000000000000000C1 /* XCLocalSwiftPackageReference "../IPv64-SPM" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../IPv64-SPM";
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
+		B1A0000000000000000000C1 /* XCRemoteSwiftPackageReference "IPv64-SPM" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/androidseb25/IPv64-SPM";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
 		B1A0000000000000000000C2 /* XCRemoteSwiftPackageReference "SecNtfy-SPM" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SecNtfy/SecNtfy-SPM";
@@ -688,6 +689,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		B1A0000000000000000000B1 /* IPv64 */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = B1A0000000000000000000C1 /* XCRemoteSwiftPackageReference "IPv64-SPM" */;
 			productName = IPv64;
 		};
 		B1A0000000000000000000B2 /* SecNtfy */ = {
@@ -697,6 +699,7 @@
 		};
 		B1A0000000000000000000B3 /* IPv64 */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = B1A0000000000000000000C1 /* XCRemoteSwiftPackageReference "IPv64-SPM" */;
 			productName = IPv64;
 		};
 		9A68F35B2EBE08C80033CC42 /* SwiftyBeaver */ = {
