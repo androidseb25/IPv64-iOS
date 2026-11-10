@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct IPv64App: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var session: Session
     @State private var nodes: ConnectedNodes
     @State private var registrar: PushRegistrar
@@ -27,6 +28,7 @@ struct IPv64App: App {
                 .environment(session)
                 .environment(nodes)
                 .environment(registrar)
+                .task { appDelegate.registrar = registrar }
         }
     }
 }
