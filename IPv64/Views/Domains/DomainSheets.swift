@@ -191,8 +191,7 @@ struct RotatedTokenSheet: View {
             Section("Update URL") {
                 Text(verbatim: url).font(.callout.monospaced())
                 Button("Copy update URL", systemImage: "doc.on.doc") {
-                    UIPasteboard.general.setItems([["public.utf8-plain-text": url]],
-                                                  options: [.localOnly: true, .expirationDate: Date().addingTimeInterval(120)])
+                    Clipboard.copy(url, sensitive: true)
                 }
             }
         }

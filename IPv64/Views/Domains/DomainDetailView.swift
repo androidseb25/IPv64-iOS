@@ -21,7 +21,6 @@ struct DomainDetailView: View {
     @State private var push: DetailPush?
     @State private var confirm: DetailConfirm?
     @State private var typedName = ""
-    @State private var copied = 0
     /// Records removed from the list right away while their delete request runs (no spinner, like Mail).
     @State private var deletedRecordIds: Set<Int> = []
 
@@ -100,7 +99,6 @@ struct DomainDetailView: View {
         }
         .alert(confirmTitle, isPresented: Binding(get: { confirm != nil }, set: { if !$0 { confirm = nil } }),
                presenting: confirm, actions: confirmActions, message: { Text(confirmMessage($0)) })
-        .sensoryFeedback(.success, trigger: copied)
         .errorAlert($error)
     }
 
@@ -302,9 +300,7 @@ struct DomainDetailView: View {
 
     private func copyUpdateURL() {
         guard let updateURL else { return }
-        UIPasteboard.general.setItems([["public.utf8-plain-text": updateURL]],
-                                      options: [.localOnly: true, .expirationDate: Date().addingTimeInterval(120)])
-        copied += 1
+        Clipboard.copy(updateURL, sensitive: true)
     }
 
     private func setToCurrentIP() async throws {

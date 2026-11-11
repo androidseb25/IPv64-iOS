@@ -30,8 +30,7 @@ struct LoggerViewDetail: View {
         .toolbar(content: {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {
-                    UIPasteboard.general.string = log
-                    UINotificationFeedbackGenerator().notificationOccurred(.success)
+                    Clipboard.copy(log)
                 }) {
                     Label("Copy log", systemImage: "doc.on.doc")
                 }

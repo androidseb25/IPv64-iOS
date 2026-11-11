@@ -52,8 +52,7 @@ struct AccountView: View {
                 }
                 .swipeActions {
                     Button {
-                        UIPasteboard.general.string = account.update_hash
-                        UINotificationFeedbackGenerator().notificationOccurred(.success)
+                        Clipboard.copy(account.update_hash, sensitive: true)
                     } label: {
                         Label("Copy", systemImage: "document.on.document")
                     }
@@ -79,8 +78,7 @@ struct AccountView: View {
                 }
                 .swipeActions {
                     Button {
-                        UIPasteboard.general.string = userStorage.ApiKey
-                        UINotificationFeedbackGenerator().notificationOccurred(.success)
+                        Clipboard.copy(userStorage.ApiKey, sensitive: true)
                     } label: {
                         Label("Copy", systemImage: "document.on.document")
                     }

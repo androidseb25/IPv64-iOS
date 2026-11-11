@@ -30,8 +30,7 @@ struct MyIpView: View {
                 Text(v4.ip ?? "0.0.0.0")
                     .swipeActions {
                         Button {
-                            UIPasteboard.general.string = v4.ip ?? "0.0.0.0"
-                            UINotificationFeedbackGenerator().notificationOccurred(.success)
+                            Clipboard.copy(v4.ip ?? "0.0.0.0")
                         } label: {
                             Label("Copy", systemImage: "document.on.document")
                         }
@@ -42,8 +41,7 @@ struct MyIpView: View {
                 Text(v6.ip ?? "::")
                     .swipeActions {
                         Button {
-                            UIPasteboard.general.string = v6.ip ?? "::"
-                            UINotificationFeedbackGenerator().notificationOccurred(.success)
+                            Clipboard.copy(v6.ip ?? "::")
                         } label: {
                             Label("Copy", systemImage: "document.on.document")
                         }

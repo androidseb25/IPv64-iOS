@@ -49,8 +49,7 @@ struct HealthcheckDetailView: View {
                     .badge("swipe")
                     .swipeActions {
                         Button {
-                            UIPasteboard.general.string = HealthcheckUrl
-                            UINotificationFeedbackGenerator().notificationOccurred(.success)
+                            Clipboard.copy(HealthcheckUrl)
                         } label: {
                             Label("Copy", systemImage: "document.on.document")
                         }
