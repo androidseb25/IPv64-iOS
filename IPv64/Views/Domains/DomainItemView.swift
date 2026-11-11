@@ -1,47 +1,64 @@
-//
-//  DomainItemView.swift
-//  IPv64.net
-//
-//  Created by Sebastian Rank on 24.10.25.
-//
-
 import SwiftUI
+import IPv64
 
+/// Domain row: status dot, name, updates and wildcard, plus a tag for the IP check.
 struct DomainItemView: View {
-    
-    let domain: Domain
-    
+    let row: DomainRow
+    let status: DynDNSLogic.IpStatus
+
     var body: some View {
         HStack(alignment: .top) {
             Image(systemName: "circle.fill")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 10, height: 10)
-                .foregroundStyle(domain.tintColor)
+                .foregroundStyle(status.color)
                 .padding(.trailing, 5)
                 .padding(.top, 8)
-            
             VStack(alignment: .leading) {
-                Text(domain.fqdn)
-                    .multilineTextAlignment(.leading)
+                Text(row.name)
                     .lineLimit(1)
                     .font(.title3)
                     .fontWeight(.bold)
                     .padding(.bottom, 2)
-                Text("Updates: \(domain.updates ?? 0)")
-                    .multilineTextAlignment(.leading)
-                Text("Wildcard: \(domain.isWildcardString)")
-                    .multilineTextAlignment(.leading)
+                Text("Updates: \(row.updates)")
+                Text("Wildcard: \(row.wildcard ? "yes" : "no")")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            Text(status.label)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(status.color)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(status.color.opacity(0.15), in: Capsule())
+                .padding(.top, 6)
+        }
+    }
+}
+
+extension DynDNSLogic.IpStatus {
+    var label: LocalizedStringKey {
+        switch self {
+        case .checking: "Checking"
+        case .noIp: "No IP"
+        case .unknown: "IP unknown"
+        case .differs: "IP differs"
+        case .matches: "IP matches"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .differs: .red
+        case .matches: .green
+        default: .gray
         }
     }
 }
 
 #Preview {
-    var domain: Domain = Domain(updates: Optional(0), wildcard: Optional(1), domainUpdateHash: Optional("212316516"), records: [RecordInfos(recordId: Optional(120762), content: Optional("5.59.522.240"), ttl: Optional(60), type: Optional("A"), praefix: Optional(""), lastUpdate: Optional("2024-04-16 07:48:17"), recordKey: Optional("5411651265145691465"), deactivated: Optional(0), failoverPolicy: Optional("0")), RecordInfos(recordId: Optional(399283), content: Optional("10 451561"), ttl: Optional(60), type: Optional("MX"), praefix: Optional("vijomc"), lastUpdate: Optional("2025-09-05 16:40:06"), recordKey: Optional("545sd631as65d416wsa"), deactivated: Optional(0), failoverPolicy: Optional("0"))], ipv6prefix: Optional(""), dualstack: Optional(""), deactivated: Optional(0), fqdn: "test.iot64.de", ipv4: "0.0.0.0", ipv6: "::1")
-    
     List {
-        DomainItemView(domain: domain)
+        DomainItemView(row: DomainRow(name: "test.iot64.de", kind: .dyndns, wildcard: true, updates: 12), status: .matches)
+        DomainItemView(row: DomainRow(name: "nas.home64.de", kind: .dyndns, wildcard: false, updates: 0), status: .checking)
     }
 }

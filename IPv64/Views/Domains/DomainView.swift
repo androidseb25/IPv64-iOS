@@ -1,22 +1,32 @@
 import SwiftUI
+import IPv64
 
+/// Domain list (API v2): one section per zone, kind filter, IP status tag checked in the background.
 struct DomainView: View {
-    @Environment(\.colorScheme) private var systemColorScheme
+    @Environment(Session.self) private var session
     @Binding var popToRootTab: Tabs
-    @StateObject private var api = ApiService()
-    @State private var domains: [Domain] = []
-    @State private var groups: [(name: String, domains: [Domain])] = []
+    @State private var rows: [DomainRow]?
+    @State private var details: [String: DomainDetail] = [:]
+    @State private var myV4 = DynDNSLogic.noIPv4
+    @State private var myV6 = DynDNSLogic.noIPv6
     @State private var search = ""
-    @State private var filter = DomainFilter.all
+    @State private var filter = DomainKindFilter.all
     @State private var showNewDomainSheet = false
     @State private var isDomainChanged = false
     @State private var reloadVersion = 0
-    @State private var loadedAt: Date?
-    @State private var loadID: UUID?
-    private var isRefreshing: Bool { loadID != nil }
+    @State private var error: ErrorText?
+    @State private var gate = DetailRequestGate()
 
-    private enum DomainFilter: String, CaseIterable {
-        case all = "All", matching = "IP matches", different = "IP differs"
+    private var visible: [DomainRow] {
+        (rows ?? []).filter {
+            filter.matches(kind: $0.kind, name: $0.name)
+                && (search.isEmpty || $0.name.localizedCaseInsensitiveContains(search))
+        }
+    }
+
+    private var groups: [(zone: String, rows: [DomainRow])] {
+        let grouped = Dictionary(grouping: visible) { DynDNSLogic.baseDomain($0.name) }
+        return DynDNSLogic.zones.compactMap { zone in grouped[zone].map { (zone, $0) } }
     }
 
     var body: some View {
@@ -27,104 +37,190 @@ struct DomainView: View {
 
     private var listView: some View {
         List {
-            ForEach(groups, id: \.name) { group in
-                Section(group.name) {
-                    ForEach(group.domains, id: \.fqdn) { domain in
-                        NavigationLink(value: domain) { DomainItemView(domain: domain) }
+            ForEach(groups, id: \.zone) { group in
+                Section(group.zone) {
+                    ForEach(group.rows) { row in
+                        NavigationLink(value: DomainRoute(name: row.name)) {
+                            DomainItemView(row: row, status: status(of: row))
+                        }
+                        .task { await ensureDetail(row.name) }
                     }
                 }
             }
         }
-        .overlay {
-            if groups.isEmpty && !isRefreshing {
-                if !search.isEmpty || filter != .all {
-                    ContentUnavailableView.search(text: search)
-                } else if loadedAt != nil {
-                    ContentUnavailableView {
-                        Label("No domains yet", systemImage: "network")
-                    } description: {
-                        Text("Add your first domain to manage its DNS records.")
-                    } actions: {
-                        Button("Add domain") { showNewDomainSheet = true }
-                    }
-                } else {
-                    ContentUnavailableView {
-                        Label("Domains unavailable", systemImage: "network")
-                    } description: {
-                        Text("Connect to the internet and try again.")
-                    } actions: {
-                        Button("Retry") { reloadVersion += 1 }
-                    }
-                }
-            }
-        }
-        .overlay { if isRefreshing && domains.isEmpty { ProgressView("Loading domains…") } }
-        .apiErrors(api)
+        .overlay { emptyState }
         .searchable(text: $search, prompt: "Search domains")
-        .onChange(of: search) { _, _ in updateGroups() }
-        .onChange(of: filter) { _, _ in updateGroups() }
         .navigationTitle(Tabs.domain.labelNew)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(for: Domain.self) { domain in
-            DomainDetailView(domain: domain, isChanged: $isDomainChanged)
+        .navigationDestination(for: DomainRoute.self) { route in
+            LegacyDomainDetail(name: route.name, isChanged: $isDomainChanged)
         }
-        .toolbar {
-            ToolbarItem {
-                Menu {
-                    Picker("IP status", selection: $filter) {
-                        ForEach(DomainFilter.allCases, id: \.self) { Text($0.rawValue).tag($0) }
-                    }
-                } label: { Label("Filter domains", systemImage: "line.3.horizontal.decrease") }
-                .tint(systemColorScheme == .dark ? .white : .black)
-            }
-            ToolbarItem {
-                Button { showNewDomainSheet = true } label: { Label("Add domain", image: "network.badge.plus") }
-                    .tint(systemColorScheme == .dark ? .white : .black)
-            }
-        }
+        .toolbar { toolbar }
         .refreshable { await reload() }
-        .task(id: reloadVersion) {
-            if loadedAt == nil || isDomainChanged || loadedAt!.timeIntervalSinceNow < -30 {
-                await reload()
-            }
-        }
+        .task(id: reloadVersion) { await reload() }
         .onChange(of: isDomainChanged) { _, changed in
-            if changed { loadedAt = nil; reloadVersion += 1 }
+            guard changed else { return }
+            isDomainChanged = false
+            details = [:]
+            reloadVersion += 1
         }
         .sheet(isPresented: $showNewDomainSheet) { DomainNewView(isChanged: $isDomainChanged) }
+        .errorAlert($error)
+    }
+
+    @ToolbarContentBuilder
+    private var toolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            Menu {
+                Picker("Kind", selection: $filter) {
+                    ForEach(DomainKindFilter.allCases) { Text($0.title).tag($0) }
+                }
+            } label: {
+                Label("Filter domains", systemImage: filter == .all
+                      ? "line.3.horizontal.decrease" : "line.3.horizontal.decrease.circle.fill")
+            }
+        }
+        if #available(iOS 26.0, *) {
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button { showNewDomainSheet = true } label: { Label("Add domain", image: "network.badge.plus") }
+        }
+    }
+
+    @ViewBuilder private var emptyState: some View {
+        if rows == nil {
+            ProgressView("Loading domains…")
+        } else if visible.isEmpty {
+            if rows?.isEmpty == true {
+                ContentUnavailableView {
+                    Label("No domains yet", systemImage: "network")
+                } description: {
+                    Text("Add your first domain to manage its DNS records.")
+                } actions: {
+                    Button("Add domain") { showNewDomainSheet = true }
+                }
+            } else {
+                ContentUnavailableView.search(text: search)
+            }
+        }
+    }
+
+    private func status(of row: DomainRow) -> DynDNSLogic.IpStatus {
+        DynDNSLogic.status(details[row.name], myV4: myV4, myV6: myV6)
     }
 
     private func reload() async {
-        let requestID = UUID()
-        loadID = requestID
-        defer { if loadID == requestID { loadID = nil } }
-        // These requests are independent: the slowest determines latency, not their sum.
-        async let domainRequest = api.GetDomains()
-        async let ipv4Request = api.GetMyIp()
-        async let ipv6Request = api.GetMyIp(false)
-        let (result, ipv4, ipv6) = await (domainRequest, ipv4Request, ipv6Request)
-        guard !Task.isCancelled, loadID == requestID, let result else { return }
-        domains = result.subdomains.map {
-            var domain = $0
-            domain.ipv4 = ipv4?.ip ?? "0.0.0.0"
-            domain.ipv6 = ipv6?.ip ?? "::"
-            return domain
-        }.sorted(by: \.fqdn)
-        loadedAt = .now
-        isDomainChanged = false
-        updateGroups()
+        let api = session.api
+        async let v4 = session.myIP(.v4)
+        async let v6 = session.myIP(.v6)
+        do {
+            rows = try await ipv64Retrying { try await api.domains.list() }
+                .compactMap { domain in
+                    domain.name?.nonBlank.map {
+                        DomainRow(name: $0, kind: domain.kind, wildcard: domain.wildcard == true,
+                                  updates: domain.updateCount ?? 0)
+                    }
+                }
+                .sorted { $0.name < $1.name }
+        } catch is CancellationError {
+        } catch {
+            if rows == nil { rows = [] }
+            self.error = ErrorText(error)
+        }
+        myV4 = await v4 ?? DynDNSLogic.noIPv4
+        myV6 = await v6 ?? DynDNSLogic.noIPv6
     }
 
-    private func updateGroups() {
-        let visible = domains.filter { domain in
-            let matches = search.isEmpty || domain.fqdn.localizedCaseInsensitiveContains(search)
-            let differs = (domain.ipv4 != "0.0.0.0" && !domain.isSameTypeAAddress)
-                || (domain.ipv6 != "::" && !domain.isSameTypeAAAAAddress)
-            return matches && (filter == .all || (filter == .different ? differs : !differs))
+    /// Records come only with the detail: loaded per row in the background, one request per second.
+    private func ensureDetail(_ name: String) async {
+        guard details[name] == nil else { return }
+        let api = session.api
+        let detail = await gate.run { () -> DomainDetail? in
+            if Task.isCancelled { return nil }
+            return try? await ipv64Retrying { try await api.domains.get(name) }
         }
-        let grouped = Dictionary(grouping: visible, by: \.baseDomain)
-        groups = "".v64domains().compactMap { name in
-            grouped[name].map { (name: name, domains: $0) }
+        if let detail { details[name] = detail }
+    }
+}
+
+struct DomainRow: Identifiable, Hashable {
+    let name: String
+    let kind: DomainKind?
+    let wildcard: Bool
+    let updates: Int
+    var id: String { name }
+}
+
+struct DomainRoute: Hashable {
+    let name: String
+}
+
+/// Serialises the per-row detail requests: one at a time, at most one per second.
+@MainActor
+final class DetailRequestGate {
+    private var busy = false
+    private var waiters: [CheckedContinuation<Void, Never>] = []
+    private var last = Date.distantPast
+
+    func run<T>(_ work: () async -> T) async -> T {
+        if busy { await withCheckedContinuation { waiters.append($0) } }
+        busy = true
+        defer {
+            busy = false
+            if !waiters.isEmpty { waiters.removeFirst().resume() }
+        }
+        let wait = last.addingTimeInterval(1).timeIntervalSinceNow
+        if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
+        let result = await work()
+        last = Date()
+        return result
+    }
+}
+
+/// Opens the existing detail screen, which still works on the legacy model.
+// shortcut: maps the API v2 detail to the legacy `Domain`; drop when the domain detail is ported to API v2.
+private struct LegacyDomainDetail: View {
+    @Environment(Session.self) private var session
+    let name: String
+    @Binding var isChanged: Bool
+    @State private var domain: Domain?
+    @State private var error: ErrorText?
+
+    var body: some View {
+        Group {
+            if let domain {
+                DomainDetailView(domain: domain, isChanged: $isChanged)
+            } else {
+                ProgressView()
+            }
+        }
+        .task { await load() }
+        .errorAlert($error)
+    }
+
+    private func load() async {
+        let api = session.api
+        async let v4 = session.myIP(.v4)
+        async let v6 = session.myIP(.v6)
+        do {
+            let detail = try await ipv64Retrying { try await api.domains.get(name) }
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            domain = Domain(
+                updates: detail.updateCount,
+                wildcard: detail.wildcard == true ? 1 : 0,
+                domainUpdateHash: detail.updateToken,
+                records: (detail.records ?? []).map { record in
+                    RecordInfos(recordId: record.id, content: record.content, ttl: record.ttl,
+                                type: record.type?.rawValue, praefix: record.prefix ?? "",
+                                lastUpdate: record.updatedAt.map(formatter.string(from:)), recordKey: record.token,
+                                deactivated: record.state == .inactive ? 1 : 0, failoverPolicy: "0")
+                },
+                ipv6prefix: detail.ipv6Prefix, dualstack: "", deactivated: detail.active == false ? 1 : 0,
+                fqdn: name, ipv4: await v4 ?? DynDNSLogic.noIPv4, ipv6: await v6 ?? DynDNSLogic.noIPv6)
+        } catch {
+            self.error = ErrorText(error)
         }
     }
 }
