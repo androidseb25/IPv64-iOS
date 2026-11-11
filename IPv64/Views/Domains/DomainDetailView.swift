@@ -21,6 +21,8 @@ struct DomainDetailView: View {
     @State private var confirm: DetailConfirm?
     @State private var typedName = ""
     @State private var copied = 0
+    /// Records removed from the list right away while their delete request runs (no spinner, like Mail).
+    @State private var deletedRecordIds: Set<Int> = []
 
     enum DetailSheet: Identifiable {
         case newRecord, dynDns, settings, rotated(String)
@@ -161,7 +163,7 @@ struct DomainDetailView: View {
     }
 
     @ViewBuilder private func records(_ detail: DomainDetail) -> some View {
-        let groups = DynDNSLogic.groupedRecords(detail.records ?? [])
+        let groups = DynDNSLogic.groupedRecords((detail.records ?? []).filter { !deletedRecordIds.contains($0.id) })
         if groups.isEmpty {
             Section { Text("No DNS records.").foregroundStyle(.secondary) }
         }
@@ -243,7 +245,7 @@ struct DomainDetailView: View {
             TextField(name, text: $typedName).textInputAutocapitalization(.never).autocorrectionDisabled()
             Button("Delete", role: .destructive) { run(deleteDomain) }.disabled(typedName != name)
         case .deleteRecord(let record):
-            Button("Delete", role: .destructive) { run { try await deleteRecord(record) } }
+            Button("Delete", role: .destructive) { Task { await deleteRecord(record) } }
         }
         Button("Cancel", role: .cancel) {}
     }
@@ -332,9 +334,16 @@ struct DomainDetailView: View {
         }
     }
 
-    private func deleteRecord(_ record: Record) async throws {
-        try await session.api.records.delete(String(record.id))
-        changed()
+    /// The row disappears at once; on failure it comes back with the error.
+    private func deleteRecord(_ record: Record) async {
+        _ = withAnimation { deletedRecordIds.insert(record.id) }
+        do {
+            try await ipv64Retrying { try await session.api.records.delete(String(record.id)) }
+            changed()
+        } catch {
+            _ = withAnimation { deletedRecordIds.remove(record.id) }
+            self.error = ErrorText(error)
+        }
     }
 }
 
