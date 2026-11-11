@@ -15,9 +15,7 @@ struct PushSetupView: View {
     @State private var detectedOnOpen = false
     @State private var initialLoadDone = false
     @State private var isRegistering = false
-    @State private var registrationFailed = false
-    /// Bumped by "Try again"; part of the task id so a retry restarts the registration task.
-    @State private var registerAttempt = 0
+    @State private var deviceName = PushRegistrar.defaultDeviceName
     @State private var testText: String?
     @State private var isSendingTest = false
     @State private var error: ErrorText?
@@ -31,15 +29,8 @@ struct PushSetupView: View {
         return String(localized: "Registered as “\(name)”.")
     }
 
-    /// Registration starts by itself once notifications are allowed (no button, always a new channel).
-    /// Only inputs that do not change while it runs: a changing task id would cancel the running request.
-    private struct RegisterTrigger: Equatable {
-        let ready: Bool
-        let attempt: Int
-    }
-
-    private var registerTrigger: RegisterTrigger {
-        RegisterTrigger(ready: permission.isAllowed && initialLoadDone && appSupported != false, attempt: registerAttempt)
+    private var canRegister: Bool {
+        permission.isAllowed && initialLoadDone && !isRegistering && deviceName.nonBlank != nil
     }
 
     var body: some View {
@@ -56,10 +47,11 @@ struct PushSetupView: View {
                 Label("Get a push notification on this device when a healthcheck goes down or recovers.", systemImage: "bell.badge")
             }
             AllowStep(permission: $permission)
-            RegisterStep(deviceName: PushRegistrar.defaultDeviceName,
-                         permissionAllowed: permission.isAllowed, registeredText: registeredText,
-                         appSupported: appSupported, isRegistering: isRegistering,
-                         failed: registrationFailed, onRetry: retry)
+            RegisterStep(deviceName: $deviceName, permissionAllowed: permission.isAllowed,
+                         registeredText: registeredText, appSupported: appSupported,
+                         isRegistering: isRegistering, canRegister: canRegister) {
+                Task { await register() }
+            }
             TestStep(registered: deviceChannel != nil, notificationsAllowed: permission.isAllowed, resultText: testText,
                      isSending: isSendingTest, onTest: sendTest, onDone: finish)
         }
@@ -73,9 +65,6 @@ struct PushSetupView: View {
         .interactiveDismissDisabled()
         .trackingNotificationPermission($permission)
         .task { await initialLoad() }
-        .task(id: registerTrigger) {
-            if registerTrigger.ready, deviceChannel == nil, !registrationFailed { await register() }
-        }
         .errorAlert($error)
         .errorAlert($message)
     }
@@ -105,7 +94,8 @@ struct PushSetupView: View {
 
     /// Always a new channel for this device, notifying on down and up and used as default.
     private func register() async {
-        let settings = DeviceChannelSettings(name: PushRegistrar.defaultDeviceName, isDefault: true, notifyDown: true,
+        guard let name = deviceName.nonBlank?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
+        let settings = DeviceChannelSettings(name: name, isDefault: true, notifyDown: true,
                                              notifyUp: true, lang: ChannelLogic.systemLanguage)
         isRegistering = true
         defer { isRegistering = false }
@@ -119,17 +109,10 @@ struct PushSetupView: View {
             // Sheet closed while registering: nothing to report.
         } catch let error as URLError where error.code == .cancelled {
         } catch let failure as PushRegistrationError {
-            registrationFailed = true
             message = ErrorText(title: failure.title, message: failure.message)
         } catch {
-            registrationFailed = true
             self.error = ErrorText(error)
         }
-    }
-
-    private func retry() {
-        registrationFailed = false
-        registerAttempt += 1
     }
 
     private func sendTest() {
