@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/androidseb25/IPv64-SPM",
       "state" : {
-        "revision" : "cb87351d91d43b888ad5690233e9720e299ebca6",
-        "version" : "1.1.0"
+        "revision" : "b6438e5df4f9f5dd6eef748fee262abe5c0e26a9",
+        "version" : "2.1.0"
       }
     },
     {

@@ -824,7 +824,7 @@
 			repositoryURL = "https://github.com/androidseb25/IPv64-SPM";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.0;
+				minimumVersion = 2.1.0;
 			};
 		};
 		B1A0000000000000000000C2 /* XCRemoteSwiftPackageReference "SecNtfy-SPM" */ = {
