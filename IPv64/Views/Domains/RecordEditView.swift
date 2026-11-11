@@ -27,6 +27,14 @@ struct RecordEditView: View {
     private var replaces: Bool { typeChanged || prefixChanged || (contentChanged && !isIpType) }
 
     var body: some View {
+        if #available(iOS 26.0, *) {
+            content.setColorGradient(.orange)
+        } else {
+            content
+        }
+    }
+
+    private var content: some View {
         Group {
             if recordId.isEmpty {
                 ContentUnavailableView("No record selected.", systemImage: "list.bullet")
