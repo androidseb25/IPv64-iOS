@@ -52,7 +52,12 @@ struct DomainView: View {
             isDomainChanged = false
             reloadVersion += 1
         }
-        .sheet(isPresented: $showNewDomainSheet) { DomainNewView(isChanged: $isDomainChanged) }
+        .sheet(isPresented: $showNewDomainSheet) {
+            DomainNewSheet {
+                showNewDomainSheet = false
+                isDomainChanged = true
+            }
+        }
         .errorAlert($error)
     }
 
