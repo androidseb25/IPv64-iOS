@@ -15,6 +15,7 @@ struct DomainDetailView: View {
     @State private var myV6 = DynDNSLogic.noIPv6
     @State private var reloadToken = 0
     @State private var busy = false
+    @State private var isLoading = false
     @State private var error: ErrorText?
     @State private var sheet: DetailSheet?
     @State private var push: DetailPush?
@@ -76,9 +77,9 @@ struct DomainDetailView: View {
         }
         .overlay {
             if detail == nil && error == nil { ProgressView() }
-            if busy { ProgressView().padding(24).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16)) }
         }
-        .disabled(busy)
+        // While loading or running an action everything is locked; the spinner sits in the toolbar.
+        .disabled(busy || isLoading)
         .navigationTitle(name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbar }
@@ -186,22 +187,30 @@ struct DomainDetailView: View {
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             Button { sheet = .newRecord } label: { Label("New DNS record", systemImage: "plus") }
-                .disabled(detail == nil)
+                .disabled(detail == nil || busy || isLoading)
         }
         if #available(iOS 26.0, *) {
             ToolbarSpacer(.fixed, placement: .topBarTrailing)
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Menu {
-                Button("Rotate update token", systemImage: "key") { confirm = .rotate }
-                Divider()
-                Button("Reset domain", systemImage: "arrow.counterclockwise", role: .destructive) { askTyped(.reset) }
-                Button("Delete domain", systemImage: "trash", role: .destructive) { askTyped(.delete) }
-            } label: {
-                Label("More actions", systemImage: "ellipsis")
+            if busy || isLoading {
+                ProgressView()
+            } else {
+                moreMenu
             }
-            .disabled(detail == nil)
         }
+    }
+
+    private var moreMenu: some View {
+        Menu {
+            Button("Rotate update token", systemImage: "key") { confirm = .rotate }
+            Divider()
+            Button("Reset domain", systemImage: "arrow.counterclockwise", role: .destructive) { askTyped(.reset) }
+            Button("Delete domain", systemImage: "trash", role: .destructive) { askTyped(.delete) }
+        } label: {
+            Label("More actions", systemImage: "ellipsis")
+        }
+        .disabled(detail == nil)
     }
 
     // MARK: Confirmations
@@ -258,6 +267,8 @@ struct DomainDetailView: View {
     // MARK: Loading and actions
 
     private func load() async {
+        isLoading = true
+        defer { isLoading = false }
         let api = session.api
         async let v4 = session.myIP(.v4)
         async let v6 = session.myIP(.v6)
