@@ -1,262 +1,378 @@
-//
-//  DomainDetailView.swift
-//  IPv64.net
-//
-//  Created by Sebastian Rank on 25.10.25.
-//
-
 import SwiftUI
+import IPv64
 
+/// Domain detail (API v2): notice on IP mismatch, general info, actions, records grouped by type.
 struct DomainDetailView: View {
-    
-    @Environment(\.colorScheme) var systemColorScheme
-    @Environment(\.dismiss) var dismiss
-    
-    @State var domain: Domain
-    @Binding var isChanged: Bool
-    
-    @StateObject private var api = ApiService()
-    
-    @State private var alertType: AlertType?
-    @State private var apiErrorMessage: String = ""
-    @State private var selectedRecord: RecordInfos?
-    @State private var showNewDnsSheet: Bool = false
-    @State private var isDnsAdded: Bool = false
-    
+    @Environment(Session.self) private var session
+    @Environment(\.dismiss) private var dismiss
+
+    let name: String
+    /// Tells the list that this domain changed (it then re-checks only this domain).
+    let onChanged: () -> Void
+
+    @State private var detail: DomainDetail?
+    @State private var myV4 = DynDNSLogic.noIPv4
+    @State private var myV6 = DynDNSLogic.noIPv6
+    @State private var reloadToken = 0
+    @State private var busy = false
+    @State private var error: ErrorText?
+    @State private var sheet: DetailSheet?
+    @State private var push: DetailPush?
+    @State private var confirm: DetailConfirm?
+    @State private var typedName = ""
+    @State private var copied = 0
+
+    enum DetailSheet: Identifiable {
+        case newRecord, dynDns, rotated(String)
+        var id: String {
+            switch self {
+            case .newRecord: "record"
+            case .dynDns: "dyndns"
+            case .rotated: "rotated"
+            }
+        }
+    }
+
+    enum DetailPush: Hashable {
+        case settings
+        case record(String)
+    }
+
+    enum DetailConfirm: Identifiable {
+        case setIP, rotate, reset, delete, deleteRecord(Record)
+        var id: String {
+            switch self {
+            case .setIP: "ip"
+            case .rotate: "rotate"
+            case .reset: "reset"
+            case .delete: "delete"
+            case .deleteRecord(let record): "record-\(record.id)"
+            }
+        }
+    }
+
+    private var mismatchV4: Bool { DynDNSLogic.mismatchV4(detail, myV4: myV4) }
+    private var mismatchV6: Bool { DynDNSLogic.mismatchV6(detail, myV6: myV6) }
+    private var updateURL: String? { DynDNSLogic.updateURL(token: detail?.updateToken) }
+
     var body: some View {
         if #available(iOS 26.0, *) {
-            listView
-                .setColorGradient(showNewDnsSheet ? .clear : .orange)
+            content.setColorGradient(sheet != nil ? .clear : .orange)
         } else {
-            listView
+            content
         }
     }
-    
-    private var listView: some View {
+
+    private var content: some View {
         List {
-            if ((!domain.isSameTypeAAddress && domain.ipv4 != "0.0.0.0") || (!domain.isSameTypeAAAAAddress && domain.ipv6 != "::")) {
-                Section("Notice") {
-                    VStack {
-                        Text("Your A or AAAA record doesn't match your current IP! This could be due to an active cellular connection or the IP address being assigned a server address.")
-                    }
-                    Button(action: {
-                        withAnimation {
-                            alertType = .updateAlert
-                        }
-                    }) {
-                        if (!domain.isSameTypeAAddress && domain.ipv4 != "0.0.0.0") {
-                            Text("Set A-Record to current IP?")
-                        } else {
-                            Text("Set AAAA-Record to current IP?")
-                        }
-                    }
-                    .tint(.orange)
-                }
-            }
-            Section("General") {
-                LabeledContent("Wildcard:", value: domain.isWildcardString)
-                LabeledContent("Updates:", value: "\(domain.updates ?? 0)")
-                Text("Domain Update URL")
-                    .badge("swipe")
-                    .swipeActions {
-                        Button {
-                            UIPasteboard.general.string = DomainUpdateUrl
-                            UINotificationFeedbackGenerator().notificationOccurred(.success)
-                        } label: {
-                            Label("Copy", systemImage: "document.on.document")
-                        }
-                        .tint(.blue)
-                    }
-                    .foregroundStyle(.blue)
-            }
-            ForEach(domain.records, id: \.recordId) { record in
-                Section(record.type ?? "") {
-                    LabeledContent("Präfix:", value: record.praefix ?? "")
-                    LabeledContent("TTL:", value: "\(record.ttl ?? 0)")
-                    LabeledContent("Typ:", value: record.type ?? "")
-                    LabeledContent("Value:", value: record.content ?? "")
-                    LabeledContent("last update:", value: record.LastUpdate)
-                    Button(action: {
-                        withAnimation {
-                            selectedRecord = record
-                            alertType = .deleteDNSAlert
-                        }
-                    }) {
-                        HStack {
-                            Image(systemName: "trash")
-                            Text("Delete DNS record?")
-                        }
-                        .foregroundStyle(.red)
-                    }
-                }
+            if let detail {
+                notice
+                general(detail)
+                actions
+                records(detail)
             }
         }
-        .showLoading(.constant(api.isLoading))
-        .apiErrors(api)
-        .navigationTitle(domain.fqdn)
+        .overlay {
+            if detail == nil && error == nil { ProgressView() }
+            if busy { ProgressView().padding(24).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16)) }
+        }
+        .disabled(busy)
+        .navigationTitle(name)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            if #available(iOS 26.0, *) {
-                ToolbarItem {
-                    Button(action: {
-                        withAnimation {
-                            showNewDnsSheet.toggle()
-                        }
-                    }){
-                        Label("New DNS", systemImage: "plus")
-                    }
-                    .tint(systemColorScheme == .dark ? .white : .black)
-                }
-                ToolbarSpacer()
-                ToolbarItem {
-                    Button(action: {
-                        withAnimation {
-                            alertType = .deleteDomainAlert
-                        }
-                    }){
-                        Label("Delete", systemImage: "trash")
-                    }
-                    .tint(.red)
-                }
-            } else {
-                ToolbarItem {
-                    Button(action: {
-                        withAnimation {
-                            showNewDnsSheet.toggle()
-                        }
-                    }){
-                        Label("New DNS", systemImage: "plus")
-                    }
-                    .tint(systemColorScheme == .dark ? .white : .black)
-                }
-                ToolbarItem {
-                    Button(action: {
-                        withAnimation {
-                            alertType = .deleteDomainAlert
-                        }
-                    }){
-                        Label("Delete", systemImage: "trash")
-                    }
-                    .tint(.red)
-                }
+        .toolbar { toolbar }
+        .refreshable { await load() }
+        .task(id: reloadToken) { await load() }
+        .sheet(item: $sheet) { sheet in
+            switch sheet {
+            case .newRecord: RecordNewSheet(domain: name) { changed() }
+            case .dynDns: DomainDynDnsSheet(domain: name) { changed() }
+            case .rotated(let url): RotatedTokenSheet(url: url)
             }
         }
-        .sheet(isPresented: $showNewDnsSheet.animation()){
-            DomainDnsNewView(isChanged: $isDnsAdded, fqdn: domain.fqdn).onDisappear {
-                if (isDnsAdded) {
-                    isDnsAdded = false
-                    isChanged = true
-                    dismiss()
-                }
+        .navigationDestination(item: $push) { target in
+            switch target {
+            case .settings: DomainSettingsView(name: name) { changed() }
+            case .record(let id): RecordEditView(recordId: id) { changed() }
             }
         }
-        .alert(item: $alertType) { type in
-            switch type {
-            case .deleteDNSAlert:
-                return Alert(
-                    title: Text("Are you sure you want to delete this record?"),
-                    message: Text("You can't undo this action. This will permanently delete the DNS record from your domain."),
-                    primaryButton: .destructive(Text("Yes")) {
-                        withAnimation {
-                            DeleteDNSRecord()
-                        }
-                    },
-                    secondaryButton: .cancel() { selectedRecord = nil }
-                )
-            case .deleteDomainAlert:
-                return Alert(
-                    title: Text("Are you sure you want to delete this domain?"),
-                    message: Text("You can't undo this action. This will permanently delete your domain."),
-                    primaryButton: .destructive(Text("Yes")) {
-                        withAnimation {
-                            DeleteDomain()
-                        }
-                    },
-                    secondaryButton: .cancel() { selectedRecord = nil }
-                )
-            case .updateAlert:
-                return Alert(
-                    title: Text("Are you sure you want to update the DNS record?"),
-                    message: Text("You can't undo this action. This will permanently change the A or AAAA DNS record from your domain."),
-                    primaryButton: .destructive(Text("Yes")) {
-                        withAnimation {
-                            UpdateDNSRecord()
-                        }
-                    },
-                    secondaryButton: .cancel()
-                )
-            case .apiError:
-                return Alert(title: Text("Something went wrong."), message: Text("Something went wrong with the API. Please try again later. \n\n\(apiErrorMessage)"), dismissButton: .cancel(Text("OK")))
-            case .apiSuccessDelete:
-                return Alert(title: Text("Successfully deleted!"), message: Text("Your record has been successfully deleted."), dismissButton: .cancel(Text("OK")) {
-                    isChanged = true
-                    dismiss()
-                })
-            case .apiSuccessUpdate:
-                return Alert(title: Text("Successfully updated!"), message: Text("Your record has been successfully updated."), dismissButton: .cancel(Text("OK")) {
-                    isChanged = true
-                    dismiss()
-                })
-            default:
-                return Alert(title: Text(""))
+        .alert(confirmTitle, isPresented: Binding(get: { confirm != nil }, set: { if !$0 { confirm = nil } }),
+               presenting: confirm, actions: confirmActions, message: { Text(confirmMessage($0)) })
+        .sensoryFeedback(.success, trigger: copied)
+        .errorAlert($error)
+    }
+
+    // MARK: Sections
+
+    /// Same as before: shown when an A or AAAA record differs from this device's IP.
+    @ViewBuilder private var notice: some View {
+        if mismatchV4 || mismatchV6 {
+            Section("Notice") {
+                Text("Your A or AAAA record doesn't match your current IP! This could be due to an active cellular connection or the IP address being assigned a server address.")
+                Button(mismatchV4 && mismatchV6 ? "Set A and AAAA records to current IP?"
+                       : mismatchV4 ? "Set A-Record to current IP?" : "Set AAAA-Record to current IP?") {
+                    confirm = .setIP
+                }
+                .tint(.orange)
             }
         }
     }
-    
-    private var DomainUpdateUrl: String {
-        return "https://ipv64.net/nic/update?key=" + (domain.domainUpdateHash ?? "")
+
+    private func general(_ detail: DomainDetail) -> some View {
+        Section("General") {
+            LabeledContent("Status") {
+                if detail.active == false {
+                    Text("Inactive").foregroundStyle(.secondary)
+                } else {
+                    let status = DynDNSLogic.status(detail, myV4: myV4, myV6: myV6)
+                    Text(status.label).foregroundStyle(status.color)
+                }
+            }
+            LabeledContent("Type", value: DynDNSLogic.kindLabel(detail.kind))
+            LabeledContent("Wildcard", value: detail.wildcard == true ? "yes" : "no")
+            LabeledContent("Updates", value: "\(detail.updateCount ?? 0)")
+            LabeledContent("Ignored on DynDNS updates", value: DynDNSLogic.ignoreLabel(detail.ignore))
+            LabeledContent("Fixed IPv6 prefix", value: detail.ipv6Prefix?.nonBlank ?? String(localized: "Off"))
+            if let created = detail.createdAt {
+                LabeledContent("Created", value: DynDNSLogic.germanTime(created))
+            }
+        }
     }
-    
-    private func UpdateDNSRecord() {
+
+    private var actions: some View {
+        Section {
+            Button {
+                copyUpdateURL()
+            } label: {
+                Label("Copy update URL", systemImage: "doc.on.doc")
+            }
+            .disabled(updateURL == nil)
+            Button {
+                sheet = .dynDns
+            } label: {
+                Label("DynDNS update", systemImage: "arrow.triangle.2.circlepath")
+            }
+            NavigationLink(value: DetailPush.settings) {
+                Label("Settings", systemImage: "slider.horizontal.3")
+            }
+        }
+        .tint(.primary)
+    }
+
+    @ViewBuilder private func records(_ detail: DomainDetail) -> some View {
+        let groups = DynDNSLogic.groupedRecords(detail.records ?? [])
+        if groups.isEmpty {
+            Section { Text("No DNS records.").foregroundStyle(.secondary) }
+        }
+        ForEach(groups, id: \.type) { group in
+            Section("\(group.type) records (\(group.records.count))") {
+                ForEach(group.records) { record in
+                    DomainRecordRow(record: record) {
+                        push = .record(String(record.id))
+                    } onDelete: {
+                        confirm = .deleteRecord(record)
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: Toolbar
+
+    @ToolbarContentBuilder
+    private var toolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            Button { sheet = .newRecord } label: { Label("New DNS record", systemImage: "plus") }
+                .disabled(detail == nil)
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Menu {
+                Button("Rotate update token", systemImage: "key") { confirm = .rotate }
+                Divider()
+                Button("Reset domain", systemImage: "arrow.counterclockwise", role: .destructive) { askTyped(.reset) }
+                Button("Delete domain", systemImage: "trash", role: .destructive) { askTyped(.delete) }
+            } label: {
+                Label("More actions", systemImage: "ellipsis")
+            }
+            .disabled(detail == nil)
+        }
+    }
+
+    // MARK: Confirmations
+
+    private var confirmTitle: String {
+        switch confirm {
+        case .setIP: String(localized: "Update DNS record?")
+        case .rotate: String(localized: "Rotate update token?")
+        case .reset: String(localized: "Reset domain?")
+        case .delete: String(localized: "Delete domain?")
+        case .deleteRecord: String(localized: "Delete DNS record?")
+        case nil: ""
+        }
+    }
+
+    private func confirmMessage(_ confirm: DetailConfirm) -> String {
+        switch confirm {
+        case .setIP:
+            String(localized: "You can't undo this action. This will permanently change the A or AAAA DNS record from your domain.")
+        case .rotate:
+            String(localized: "A new update token is created and the old one stops working immediately. Routers and scripts using the old update URL stop updating until you enter the new URL.")
+        case .reset:
+            String(localized: "All active DNS records of \(name) are deleted and the zone is set up anew. This cannot be undone. Type the domain name to confirm.")
+        case .delete:
+            String(localized: "Do you really want to delete \(name) with all its DNS records? Type the domain name to confirm.")
+        case .deleteRecord(let record):
+            String(localized: "Do you really want to delete the \(record.type?.rawValue ?? "?") record \"\(DynDNSLogic.prefixLabel(record.prefix))\" (\(record.content ?? "–"))?")
+        }
+    }
+
+    @ViewBuilder private func confirmActions(_ confirm: DetailConfirm) -> some View {
+        switch confirm {
+        case .setIP:
+            Button("Update") { run(setToCurrentIP) }
+        case .rotate:
+            Button("Rotate", role: .destructive) { run(rotate) }
+        case .reset:
+            TextField(name, text: $typedName).textInputAutocapitalization(.never).autocorrectionDisabled()
+            Button("Reset", role: .destructive) { run(reset) }.disabled(typedName != name)
+        case .delete:
+            TextField(name, text: $typedName).textInputAutocapitalization(.never).autocorrectionDisabled()
+            Button("Delete", role: .destructive) { run(deleteDomain) }.disabled(typedName != name)
+        case .deleteRecord(let record):
+            Button("Delete", role: .destructive) { run { try await deleteRecord(record) } }
+        }
+        Button("Cancel", role: .cancel) {}
+    }
+
+    private func askTyped(_ request: DetailConfirm) {
+        typedName = ""
+        confirm = request
+    }
+
+    // MARK: Loading and actions
+
+    private func load() async {
+        let api = session.api
+        async let v4 = session.myIP(.v4)
+        async let v6 = session.myIP(.v6)
+        do {
+            detail = try await ipv64Retrying { try await api.domains.get(name) }
+        } catch is CancellationError {
+        } catch {
+            self.error = ErrorText(error)
+        }
+        myV4 = await v4 ?? DynDNSLogic.noIPv4
+        myV6 = await v6 ?? DynDNSLogic.noIPv6
+    }
+
+    private func changed() {
+        onChanged()
+        reloadToken += 1
+    }
+
+    private func run(_ work: @escaping () async throws -> Void) {
         Task {
-            if let res = await api.UpdateDNSRecord(urlDNSUpdate: DomainUpdateUrl) {
-                withAnimation {
-                    if (res.status.contains("success")) {
-                        alertType = .apiSuccessUpdate
-                    } else {
-                        apiErrorMessage = res.info
-                        alertType = .apiError
-                    }
-                }
+            busy = true
+            defer { busy = false }
+            do {
+                try await work()
+            } catch is CancellationError {
+            } catch {
+                self.error = ErrorText(error)
             }
         }
     }
-    
-    private func DeleteDNSRecord() {
-        Task {
-            if let res = await api.DeleteDNSRecord(recordId: selectedRecord?.recordId ?? 0) {
-                withAnimation {
-                    if (res.status.contains("202")) {
-                        alertType = .apiSuccessDelete
-                    } else {
-                        apiErrorMessage = res.add_domain ?? ""
-                        alertType = .apiError
-                    }
-                }
-            }
+
+    private func copyUpdateURL() {
+        guard let updateURL else { return }
+        UIPasteboard.general.setItems([["public.utf8-plain-text": updateURL]],
+                                      options: [.localOnly: true, .expirationDate: Date().addingTimeInterval(120)])
+        copied += 1
+    }
+
+    private func setToCurrentIP() async throws {
+        let v4 = mismatchV4 ? DynDNSLogic.knownIp(myV4) : nil
+        let v6 = mismatchV6 ? DynDNSLogic.knownIp(myV6) : nil
+        let result = try await session.api.domains.updateDynDNS(name, ipv4: v4, ipv6: v6)
+        let failed = (result.results ?? []).filter { DynDNSLogic.isFailure($0.result) }
+        if !failed.isEmpty {
+            error = ErrorText(title: String(localized: "Update error"), message: failed.map {
+                "\($0.type?.rawValue ?? "") \($0.ip ?? ""): \(DynDNSLogic.outcomeLabel($0.result))"
+            }.joined(separator: "\n"))
+        }
+        changed()
+    }
+
+    private func rotate() async throws {
+        let rotated = try await session.api.domains.rotateToken(name)
+        changed()
+        if let url = DynDNSLogic.updateURL(token: rotated.updateToken) {
+            sheet = .rotated(url)
         }
     }
-    
-    private func DeleteDomain() {
-        Task {
-            if let res = await api.DeleteDomain(domain: domain.fqdn) {
-                withAnimation {
-                    if (res.status.contains("202")) {
-                        alertType = .apiSuccessDelete
-                    } else {
-                        apiErrorMessage = "\(res.status) \(res.info ?? "") \n\(res.add_domain ?? "")"
-                        alertType = .apiError
-                        isChanged = true
-                        dismiss()
-                    }
-                }
-            }
+
+    private func reset() async throws {
+        detail = try await ipv64Retrying { try await session.api.domains.reset(name) }
+        changed()
+    }
+
+    private func deleteDomain() async throws {
+        do {
+            try await session.api.domains.delete(name)
+            onChanged()
+            dismiss()
+        } catch let e as IPv64Error where e.statusCode == 409 {
+            var text = String(localized: "DNS failover is active for this domain. Remove or pause the failover policy first.")
+            if case .api(let problem) = e, let detail = problem.detail.nonBlank { text = detail }
+            error = ErrorText(title: String(localized: "Domain cannot be deleted"), message: text)
         }
+    }
+
+    private func deleteRecord(_ record: Record) async throws {
+        try await session.api.records.delete(String(record.id))
+        changed()
     }
 }
 
-#Preview {
-    NavigationStack {
-        DomainDetailView(domain: Domain(updates: Optional(0), wildcard: Optional(1), domainUpdateHash: Optional("cE2179GCRmespNyALPuqaOnUIQx4MTX5"), records: [RecordInfos(recordId: Optional(442000), content: Optional("885.73.209.239"), ttl: Optional(60), type: Optional("A"), praefix: Optional(""), lastUpdate: Optional("2025-10-25 21:07:21"), recordKey: Optional("1k9mdtpb6vCeGORNVBKrHunD7LF5gqai"), deactivated: Optional(0), failoverPolicy: Optional("0"))], ipv6prefix: Optional(""), dualstack: Optional(""), deactivated: Optional(0), fqdn: "dom2.ipv64.net", ipv4: "88.73.209.239", ipv6: "::"), isChanged: .constant(false))
+/// One DNS record: tap edits, swipe deletes; CDN/failover records are locked.
+struct DomainRecordRow: View {
+    let record: Record
+    let onEdit: () -> Void
+    let onDelete: () -> Void
+
+    private var locked: Bool { DynDNSLogic.isLocked(record.state) }
+
+    var body: some View {
+        let row = HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: DynDNSLogic.prefixLabel(record.prefix)).font(.headline)
+                Text(verbatim: record.content ?? "–").font(.subheadline.monospaced()).lineLimit(3)
+                Text(verbatim: "TTL \(record.ttl.map(String.init) ?? "–") · \(DynDNSLogic.germanTime(record.updatedAt))")
+                    .font(.caption).foregroundStyle(.secondary)
+                if let reason = DynDNSLogic.lockReason(record.state) {
+                    Text(reason).font(.caption).foregroundStyle(.secondary)
+                }
+            }
+            Spacer(minLength: 8)
+            if record.pendingDNS == true {
+                Text("DNS pending").font(.caption).foregroundStyle(.orange)
+            } else if let state = record.state, state != .active, let label = DynDNSLogic.stateLabel(state) {
+                Text(label).font(.caption).foregroundStyle(.secondary)
+            }
+            if locked {
+                Image(systemName: "lock.fill").foregroundStyle(.secondary).accessibilityLabel("Locked")
+            }
+        }
+        .contentShape(Rectangle())
+
+        if locked {
+            row
+        } else {
+            row
+                .onTapGesture(perform: onEdit)
+                .accessibilityAddTraits(.isButton)
+                .swipeActions {
+                    Button("Delete", systemImage: "trash", role: .destructive, action: onDelete)
+                }
+        }
     }
 }

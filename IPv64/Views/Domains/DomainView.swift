@@ -37,7 +37,11 @@ struct DomainView: View {
         .navigationTitle(Tabs.domain.labelNew)
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(for: DomainRoute.self) { route in
-            LegacyDomainDetail(name: route.name, isChanged: $isDomainChanged)
+            DomainDetailView(name: route.name) {
+                // Only the changed domain is checked again; the others keep their result.
+                details[route.name] = nil
+                isDomainChanged = true
+            }
         }
         .toolbar { toolbar }
         .refreshable { await reload() }
@@ -46,7 +50,6 @@ struct DomainView: View {
         .onChange(of: isDomainChanged) { _, changed in
             guard changed else { return }
             isDomainChanged = false
-            details = [:]
             reloadVersion += 1
         }
         .sheet(isPresented: $showNewDomainSheet) { DomainNewView(isChanged: $isDomainChanged) }
@@ -145,53 +148,6 @@ struct DomainRow: Identifiable, Hashable {
 
 struct DomainRoute: Hashable {
     let name: String
-}
-
-/// Opens the existing detail screen, which still works on the legacy model.
-// shortcut: maps the API v2 detail to the legacy `Domain`; drop when the domain detail is ported to API v2.
-private struct LegacyDomainDetail: View {
-    @Environment(Session.self) private var session
-    let name: String
-    @Binding var isChanged: Bool
-    @State private var domain: Domain?
-    @State private var error: ErrorText?
-
-    var body: some View {
-        Group {
-            if let domain {
-                DomainDetailView(domain: domain, isChanged: $isChanged)
-            } else {
-                ProgressView()
-            }
-        }
-        .task { await load() }
-        .errorAlert($error)
-    }
-
-    private func load() async {
-        let api = session.api
-        async let v4 = session.myIP(.v4)
-        async let v6 = session.myIP(.v6)
-        do {
-            let detail = try await ipv64Retrying { try await api.domains.get(name) }
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            domain = Domain(
-                updates: detail.updateCount,
-                wildcard: detail.wildcard == true ? 1 : 0,
-                domainUpdateHash: detail.updateToken,
-                records: (detail.records ?? []).map { record in
-                    RecordInfos(recordId: record.id, content: record.content, ttl: record.ttl,
-                                type: record.type?.rawValue, praefix: record.prefix ?? "",
-                                lastUpdate: record.updatedAt.map(formatter.string(from:)), recordKey: record.token,
-                                deactivated: record.state == .inactive ? 1 : 0, failoverPolicy: "0")
-                },
-                ipv6prefix: detail.ipv6Prefix, dualstack: "", deactivated: detail.active == false ? 1 : 0,
-                fqdn: name, ipv4: await v4 ?? DynDNSLogic.noIPv4, ipv6: await v6 ?? DynDNSLogic.noIPv6)
-        } catch {
-            self.error = ErrorText(error)
-        }
-    }
 }
 
 #Preview { NavigationStack { DomainView(popToRootTab: .constant(.domain)) } }
