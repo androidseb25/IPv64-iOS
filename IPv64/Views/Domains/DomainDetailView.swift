@@ -23,18 +23,18 @@ struct DomainDetailView: View {
     @State private var copied = 0
 
     enum DetailSheet: Identifiable {
-        case newRecord, dynDns, rotated(String)
+        case newRecord, dynDns, settings, rotated(String)
         var id: String {
             switch self {
             case .newRecord: "record"
             case .dynDns: "dyndns"
+            case .settings: "settings"
             case .rotated: "rotated"
             }
         }
     }
 
     enum DetailPush: Hashable {
-        case settings
         case record(String)
     }
 
@@ -86,12 +86,12 @@ struct DomainDetailView: View {
             switch sheet {
             case .newRecord: RecordNewSheet(domain: name) { changed() }
             case .dynDns: DomainDynDnsSheet(domain: name) { changed() }
+            case .settings: NavigationStack { DomainSettingsView(name: name) { changed() } }
             case .rotated(let url): RotatedTokenSheet(url: url)
             }
         }
         .navigationDestination(item: $push) { target in
             switch target {
-            case .settings: DomainSettingsView(name: name) { changed() }
             case .record(let id): RecordEditView(recordId: id) { changed() }
             }
         }
@@ -151,7 +151,9 @@ struct DomainDetailView: View {
             } label: {
                 Label("DynDNS update", systemImage: "arrow.triangle.2.circlepath")
             }
-            NavigationLink(value: DetailPush.settings) {
+            Button {
+                sheet = .settings
+            } label: {
                 Label("Settings", systemImage: "slider.horizontal.3")
             }
         }
@@ -183,6 +185,9 @@ struct DomainDetailView: View {
         ToolbarItem(placement: .topBarTrailing) {
             Button { sheet = .newRecord } label: { Label("New DNS record", systemImage: "plus") }
                 .disabled(detail == nil)
+        }
+        if #available(iOS 26.0, *) {
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
         }
         ToolbarItem(placement: .topBarTrailing) {
             Menu {

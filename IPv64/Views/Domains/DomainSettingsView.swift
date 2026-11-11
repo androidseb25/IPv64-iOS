@@ -30,7 +30,11 @@ struct DomainSettingsView: View {
         }
         .navigationTitle("Domain settings")
         .navigationBarTitleDisplayMode(.inline)
+        .interactiveDismissDisabled(busy)
         .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel", systemImage: "xmark") { dismiss() }.disabled(busy)
+            }
             ToolbarItem(placement: .confirmationAction) {
                 if busy {
                     ProgressView()
