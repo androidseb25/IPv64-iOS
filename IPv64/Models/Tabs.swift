@@ -64,7 +64,7 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
     var labelNew: String {
         switch self {
         case .domain:
-            return "Domains"
+            return "DynDNS"
         case .healthcheck:
             return "Healthchecks"
         case .notification:
@@ -115,7 +115,7 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
     var label: some View {
         switch self {
         case .domain:
-            Label("Domain", systemImage: iconName)
+            Label("DynDNS", systemImage: iconName)
         case .healthcheck:
             Label("Healthcheck", systemImage: iconName)
         case .notification:

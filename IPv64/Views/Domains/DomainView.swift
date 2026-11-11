@@ -1,7 +1,7 @@
 import SwiftUI
 import IPv64
 
-/// Domain list (API v2): one section per zone, kind filter, IP status tag checked in the background.
+/// Domain list (API v2), alphabetical, kind filter, IP status checked in the background from top to bottom.
 struct DomainView: View {
     @Environment(Session.self) private var session
     @Binding var popToRootTab: Tabs
@@ -9,24 +9,16 @@ struct DomainView: View {
     @State private var details: [String: DomainDetail] = [:]
     @State private var myV4 = DynDNSLogic.noIPv4
     @State private var myV6 = DynDNSLogic.noIPv6
-    @State private var search = ""
     @State private var filter = DomainKindFilter.all
     @State private var showNewDomainSheet = false
     @State private var isDomainChanged = false
     @State private var reloadVersion = 0
     @State private var error: ErrorText?
-    @State private var gate = DetailRequestGate()
+    /// Bumped after every list load; restarts the background IP check.
+    @State private var loadCount = 0
 
     private var visible: [DomainRow] {
-        (rows ?? []).filter {
-            filter.matches(kind: $0.kind, name: $0.name)
-                && (search.isEmpty || $0.name.localizedCaseInsensitiveContains(search))
-        }
-    }
-
-    private var groups: [(zone: String, rows: [DomainRow])] {
-        let grouped = Dictionary(grouping: visible) { DynDNSLogic.baseDomain($0.name) }
-        return DynDNSLogic.zones.compactMap { zone in grouped[zone].map { (zone, $0) } }
+        (rows ?? []).filter { filter.matches(kind: $0.kind, name: $0.name) }
     }
 
     var body: some View {
@@ -36,20 +28,12 @@ struct DomainView: View {
     }
 
     private var listView: some View {
-        List {
-            ForEach(groups, id: \.zone) { group in
-                Section(group.zone) {
-                    ForEach(group.rows) { row in
-                        NavigationLink(value: DomainRoute(name: row.name)) {
-                            DomainItemView(row: row, status: status(of: row))
-                        }
-                        .task { await ensureDetail(row.name) }
-                    }
-                }
+        List(visible) { row in
+            NavigationLink(value: DomainRoute(name: row.name)) {
+                DomainItemView(row: row, status: status(of: row))
             }
         }
         .overlay { emptyState }
-        .searchable(text: $search, prompt: "Search domains")
         .navigationTitle(Tabs.domain.labelNew)
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(for: DomainRoute.self) { route in
@@ -58,6 +42,7 @@ struct DomainView: View {
         .toolbar { toolbar }
         .refreshable { await reload() }
         .task(id: reloadVersion) { await reload() }
+        .task(id: loadCount) { await checkIPs() }
         .onChange(of: isDomainChanged) { _, changed in
             guard changed else { return }
             isDomainChanged = false
@@ -101,7 +86,7 @@ struct DomainView: View {
                     Button("Add domain") { showNewDomainSheet = true }
                 }
             } else {
-                ContentUnavailableView.search(text: search)
+                ContentUnavailableView("No domains of this kind", systemImage: "network")
             }
         }
     }
@@ -122,7 +107,8 @@ struct DomainView: View {
                                   updates: domain.updateCount ?? 0)
                     }
                 }
-                .sorted { $0.name < $1.name }
+                .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+            loadCount += 1
         } catch is CancellationError {
         } catch {
             if rows == nil { rows = [] }
@@ -132,15 +118,20 @@ struct DomainView: View {
         myV6 = await v6 ?? DynDNSLogic.noIPv6
     }
 
-    /// Records come only with the detail: loaded per row in the background, one request per second.
-    private func ensureDetail(_ name: String) async {
-        guard details[name] == nil else { return }
+    /// Records come only with the detail: fetched one domain after another in list order, at most one per second.
+    private func checkIPs() async {
         let api = session.api
-        let detail = await gate.run { () -> DomainDetail? in
-            if Task.isCancelled { return nil }
-            return try? await ipv64Retrying { try await api.domains.get(name) }
+        for row in rows ?? [] where details[row.name] == nil {
+            let started = Date()
+            guard let detail = try? await ipv64Retrying({ try await api.domains.get(row.name) }) else {
+                if Task.isCancelled { return }
+                continue
+            }
+            details[row.name] = detail
+            let wait = started.addingTimeInterval(1).timeIntervalSinceNow
+            if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
+            if Task.isCancelled { return }
         }
-        if let detail { details[name] = detail }
     }
 }
 
@@ -154,28 +145,6 @@ struct DomainRow: Identifiable, Hashable {
 
 struct DomainRoute: Hashable {
     let name: String
-}
-
-/// Serialises the per-row detail requests: one at a time, at most one per second.
-@MainActor
-final class DetailRequestGate {
-    private var busy = false
-    private var waiters: [CheckedContinuation<Void, Never>] = []
-    private var last = Date.distantPast
-
-    func run<T>(_ work: () async -> T) async -> T {
-        if busy { await withCheckedContinuation { waiters.append($0) } }
-        busy = true
-        defer {
-            busy = false
-            if !waiters.isEmpty { waiters.removeFirst().resume() }
-        }
-        let wait = last.addingTimeInterval(1).timeIntervalSinceNow
-        if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
-        let result = await work()
-        last = Date()
-        return result
-    }
 }
 
 /// Opens the existing detail screen, which still works on the legacy model.

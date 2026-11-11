@@ -1,28 +1,21 @@
 import SwiftUI
 import IPv64
 
-/// Domain row: status dot, name, updates and wildcard, plus a tag for the IP check.
+/// Domain row (Android layout): name, updates and wildcard in one line, tag for the IP check.
 struct DomainItemView: View {
     let row: DomainRow
     let status: DynDNSLogic.IpStatus
 
     var body: some View {
-        HStack(alignment: .top) {
-            Image(systemName: "circle.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 10, height: 10)
-                .foregroundStyle(status.color)
-                .padding(.trailing, 5)
-                .padding(.top, 8)
-            VStack(alignment: .leading) {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(row.name)
+                    .font(.headline)
                     .lineLimit(1)
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .padding(.bottom, 2)
-                Text("Updates: \(row.updates)")
-                Text("Wildcard: \(row.wildcard ? "yes" : "no")")
+                Text("Updates: \(row.updates) · Wildcard: \(row.wildcard ? "yes" : "no")")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             Text(status.label)
@@ -31,7 +24,7 @@ struct DomainItemView: View {
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
                 .background(status.color.opacity(0.15), in: Capsule())
-                .padding(.top, 6)
+                .fixedSize()
         }
     }
 }
