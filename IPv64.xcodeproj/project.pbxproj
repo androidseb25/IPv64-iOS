@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C3D100000000000000000002 /* IPv64NotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C3D100000000000000000001 /* IPv64NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C3D100000000000000000003 /* SecNtfy in Frameworks */ = {isa = PBXBuildFile; productRef = C3D100000000000000000004 /* SecNtfy */; };
 		B1A0000000000000000000A1 /* IPv64 in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B1 /* IPv64 */; };
 		B1A0000000000000000000A2 /* SecNtfy in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B2 /* SecNtfy */; };
 		B1A0000000000000000000A3 /* IPv64 in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B3 /* IPv64 */; };
@@ -20,6 +22,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C3D100000000000000000005 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9A5178CB2EA3995200731FFB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C3D100000000000000000009;
+			remoteInfo = IPv64NotificationService;
+		};
 		9A68F3542EBE088D0033CC42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9A5178CB2EA3995200731FFB /* Project object */;
@@ -37,6 +46,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				9A68F3562EBE088D0033CC42 /* IPv64WidgetExtension.appex in Embed Foundation Extensions */,
+				C3D100000000000000000002 /* IPv64NotificationService.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -44,6 +54,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C3D100000000000000000001 /* IPv64NotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = IPv64NotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A0C48022EBA963700BEDFEA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		9A0C48042EBA963700BEDFEA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		9A2777102EAD457E0025862B /* IPv64-net-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "IPv64-net-Info.plist"; sourceTree = "<group>"; };
@@ -55,6 +66,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C3D100000000000000000007 /* Exceptions for "IPv64NotificationService" folder in "IPv64NotificationService" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				IPv64NotificationService.entitlements,
+			);
+			target = C3D100000000000000000009 /* IPv64NotificationService */;
+		};
 		9A68F3572EBE088D0033CC42 /* Exceptions for "IPv64Widget" folder in "IPv64WidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -90,6 +109,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		C3D100000000000000000008 /* IPv64NotificationService */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C3D100000000000000000007 /* Exceptions for "IPv64NotificationService" folder in "IPv64NotificationService" target */,
+			);
+			path = IPv64NotificationService;
+			sourceTree = "<group>";
+		};
 		9A5178D52EA3995200731FFB /* IPv64 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -110,6 +137,14 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C3D10000000000000000000B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3D100000000000000000003 /* SecNtfy in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9A5178D02EA3995200731FFB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -152,6 +187,7 @@
 				9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */,
 				9A5178D52EA3995200731FFB /* IPv64 */,
 				9A68F34A2EBE088C0033CC42 /* IPv64Widget */,
+				C3D100000000000000000008 /* IPv64NotificationService */,
 				9A0C48012EBA963700BEDFEA /* Frameworks */,
 				9A5178D42EA3995200731FFB /* Products */,
 			);
@@ -162,6 +198,7 @@
 			children = (
 				9A5178D32EA3995200731FFB /* IPv64.net.app */,
 				9A68F3472EBE088C0033CC42 /* IPv64WidgetExtension.appex */,
+				C3D100000000000000000001 /* IPv64NotificationService.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -169,6 +206,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		C3D100000000000000000009 /* IPv64NotificationService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C3D10000000000000000000F /* Build configuration list for PBXNativeTarget "IPv64NotificationService" */;
+			buildPhases = (
+				C3D10000000000000000000A /* Sources */,
+				C3D10000000000000000000B /* Frameworks */,
+				C3D10000000000000000000C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C3D100000000000000000008 /* IPv64NotificationService */,
+			);
+			name = IPv64NotificationService;
+			packageProductDependencies = (
+				C3D100000000000000000004 /* SecNtfy */,
+			);
+			productName = IPv64NotificationService;
+			productReference = C3D100000000000000000001 /* IPv64NotificationService.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		9A5178D22EA3995200731FFB /* IPv64.net */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9A5178DE2EA3995300731FFB /* Build configuration list for PBXNativeTarget "IPv64.net" */;
@@ -182,6 +242,7 @@
 			);
 			dependencies = (
 				9A68F3552EBE088D0033CC42 /* PBXTargetDependency */,
+				C3D100000000000000000006 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				9A5178D52EA3995200731FFB /* IPv64 */,
@@ -236,6 +297,9 @@
 					9A68F3462EBE088C0033CC42 = {
 						CreatedOnToolsVersion = 26.1;
 					};
+					C3D100000000000000000009 = {
+						CreatedOnToolsVersion = 26.1;
+					};
 				};
 			};
 			buildConfigurationList = 9A5178CE2EA3995200731FFB /* Build configuration list for PBXProject "IPv64" */;
@@ -259,11 +323,19 @@
 			targets = (
 				9A5178D22EA3995200731FFB /* IPv64.net */,
 				9A68F3462EBE088C0033CC42 /* IPv64WidgetExtension */,
+				C3D100000000000000000009 /* IPv64NotificationService */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		C3D10000000000000000000C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9A5178D12EA3995200731FFB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -283,6 +355,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		C3D10000000000000000000A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9A5178CF2EA3995200731FFB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -300,6 +379,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C3D100000000000000000006 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C3D100000000000000000009 /* IPv64NotificationService */;
+			targetProxy = C3D100000000000000000005 /* PBXContainerItemProxy */;
+		};
 		9A68F3552EBE088D0033CC42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9A68F3462EBE088C0033CC42 /* IPv64WidgetExtension */;
@@ -308,6 +392,72 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		C3D10000000000000000000D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = IPv64NotificationService/IPv64NotificationService.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 43;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IPv64NotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = IPv64NotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.NotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C3D10000000000000000000E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = IPv64NotificationService/IPv64NotificationService.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 43;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IPv64NotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = IPv64NotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.NotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		9A5178DC2EA3995300731FFB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -630,6 +780,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		C3D10000000000000000000F /* Build configuration list for PBXNativeTarget "IPv64NotificationService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3D10000000000000000000D /* Debug */,
+				C3D10000000000000000000E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9A5178CE2EA3995200731FFB /* Build configuration list for PBXProject "IPv64" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -687,6 +846,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C3D100000000000000000004 /* SecNtfy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B1A0000000000000000000C2 /* XCRemoteSwiftPackageReference "SecNtfy-SPM" */;
+			productName = SecNtfy;
+		};
 		B1A0000000000000000000B1 /* IPv64 */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B1A0000000000000000000C1 /* XCRemoteSwiftPackageReference "IPv64-SPM" */;

@@ -10,7 +10,14 @@ import TipKit
 
 @main
 struct IPv64App: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @State private var session: Session
+    @State private var registrar: PushRegistrar
+
     init() {
+        let session = Session()
+        _session = State(initialValue: session)
+        _registrar = State(initialValue: PushRegistrar(session: session))
         #if DEBUG
         DebugFixtures.configure()
         #endif
@@ -51,6 +58,9 @@ struct IPv64App: App {
         WindowGroup {
             ContentView()
                 .fontDesign(.rounded)
+                .environment(session)
+                .environment(registrar)
+                .task { appDelegate.registrar = registrar }
         }
     }
 }

@@ -6,5 +6,12 @@
 	<string>$(AppIdentifierPrefix)group.ipv64.net</string>
 	<key>UIDesignRequiresCompatibility</key>
 	<false/>
+	<!-- SecNtfy app access key of the iOS app (NTFY-APP-…). Empty = push is not set up. -->
+	<key>SECNTFY_APP_KEY</key>
+	<string></string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

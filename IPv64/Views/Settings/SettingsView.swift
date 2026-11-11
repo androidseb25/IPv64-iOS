@@ -36,6 +36,9 @@ struct SettingsView: View {
                 NavigationLink(value: Tabs.notification.route) {
                     Text("Notification")
                 }
+                NavigationLink(value: "settings.push") {
+                    Text("Push notifications")
+                }
                 NavigationLink(value: Tabs.log.route) {
                     Text("Logs")
                 }
@@ -82,6 +85,8 @@ struct SettingsView: View {
                 Tabs.account.makeContentView(popToRootTab: $popToRootTab)
             case Tabs.notification.route:
                 Tabs.notification.makeContentView(popToRootTab: $popToRootTab)
+            case "settings.push":
+                PushSetupView()
             case Tabs.log.route:
                 Tabs.log.makeContentView(popToRootTab: $popToRootTab)
             case Tabs.myip.route:

@@ -16,7 +16,24 @@ struct ContentView: View {
     @StateObject private var userStorage = UserStorage.shared
     @State private var showWhatsNew = false
     @State private var activeSheet: ActiveSheet? = nil
+    @Environment(Session.self) private var session
+    @Environment(PushRegistrar.self) private var registrar
+    @State private var showPushSetup = false
+    /// Account scope the setup was opened for: at most once per account and app start (Android `MainActivity`).
+    @State private var pushSetupTriggeredFor: String?
     
+    /// After login: sync a changed device token, then open "Push notifications" once per account unless it is
+    /// done or this device already has a channel (Android `MainActivity` + `PushSetupStore.shouldShow`).
+    private func runPushLogic() async {
+        let apiKey = session.apiKey
+        await registrar.ensureAccountId()
+        _ = try? await registrar.syncTokenIfChanged(channels: nil)
+        guard !Task.isCancelled, PushSetupStore.shouldShow(apiKey: apiKey),
+              let account = PushSetupStore.scope(apiKey: apiKey), pushSetupTriggeredFor != account else { return }
+        pushSetupTriggeredFor = account
+        showPushSetup = true
+    }
+
     var body: some View {
         ZStack {
             if (userStorage.ShowWelcomeView) {
@@ -32,6 +49,10 @@ struct ContentView: View {
                 TabbarView()
                     .id(userStorage.sessionID)
                     .tint(.orange)
+                    .task(id: userStorage.ApiKey) { await runPushLogic() }
+                    .fullScreenCover(isPresented: $showPushSetup) {
+                        NavigationStack { PushSetupView() }.tint(.orange)
+                    }
                     .safeAreaInset(edge: .top, spacing: 0) {
                         if !networkMonitor.isConnected {
                             Label("Offline · Showing previously loaded data", systemImage: "wifi.slash")
