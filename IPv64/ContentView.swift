@@ -75,9 +75,11 @@ struct ContentView: View {
         }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {
-                // Opening the app clears the notification badge (counter kept by the Notification Service Extension).
+                // Opening the app clears the badge (counter kept by the Notification Service Extension)
+                // and removes its notifications from Notification Center.
                 UserStorage.sharedDefault?.set(0, forKey: "BADGE_COUNT")
                 UNUserNotificationCenter.current().setBadgeCount(0)
+                UNUserNotificationCenter.current().removeAllDeliveredNotifications()
                 userStorage.InAppSwitcher = false
             } else if newPhase == .inactive {
                 biometrics.isAuthenticated = false
