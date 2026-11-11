@@ -28,13 +28,13 @@ struct RecordEditView: View {
 
     var body: some View {
         if #available(iOS 26.0, *) {
-            content.setColorGradient(.orange)
+            screen.setColorGradient(.orange)
         } else {
-            content
+            screen
         }
     }
 
-    private var content: some View {
+    private var screen: some View {
         Group {
             if recordId.isEmpty {
                 ContentUnavailableView("No record selected.", systemImage: "list.bullet")
