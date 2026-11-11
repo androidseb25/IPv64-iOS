@@ -24,6 +24,7 @@ final class NotificationService: UNNotificationServiceExtension, @unchecked Send
             .decrypted { SecNtfySwifty.OfflineDecryption($0, Self.appGroup) }
         content.title = payload.title
         content.body = payload.body
+        content.badge = NSNumber(value: Self.nextBadgeCount())
         lock.withLock {
             handler = contentHandler
             self.content = content
@@ -37,6 +38,14 @@ final class NotificationService: UNNotificationServiceExtension, @unchecked Send
             return
         }
         Task { [self] in deliver(attachment: await Self.downloadAttachment(url)) }
+    }
+
+    /// Unread counter shared with the app (App Group key `BADGE_COUNT`); the app resets it when it is opened.
+    private static func nextBadgeCount() -> Int {
+        let defaults = UserDefaults(suiteName: appGroup)
+        let count = (defaults?.integer(forKey: "BADGE_COUNT") ?? 0) + 1
+        defaults?.set(count, forKey: "BADGE_COUNT")
+        return count
     }
 
     override func serviceExtensionTimeWillExpire() {
