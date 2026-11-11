@@ -22,7 +22,7 @@ struct SettingsView: View {
     var body: some View {
             if #available(iOS 26.0, *) {
                 listView
-                    .setColorGradient(.orange)
+                    .setColorGradient(showPushSetup ? .clear : .orange)
             } else {
                 listView
             }

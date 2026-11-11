@@ -33,15 +33,8 @@ struct PushSetupView: View {
         permission.isAllowed && initialLoadDone && !isRegistering && deviceName.nonBlank != nil
     }
 
+    // Shown as a sheet: no colour gradient (see CLAUDE.md).
     var body: some View {
-        if #available(iOS 26.0, *) {
-            form.setColorGradient(.orange)
-        } else {
-            form
-        }
-    }
-
-    private var form: some View {
         Form {
             Section {
                 Label("Get a push notification on this device when a healthcheck goes down or recovers.", systemImage: "bell.badge")
