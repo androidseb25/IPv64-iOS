@@ -54,6 +54,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D4E100000000000000000001 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		C3D100000000000000000001 /* IPv64NotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = IPv64NotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A0C48022EBA963700BEDFEA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		9A0C48042EBA963700BEDFEA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -181,6 +182,7 @@
 		9A5178CA2EA3995200731FFB = {
 			isa = PBXGroup;
 			children = (
+				D4E100000000000000000001 /* Config.xcconfig */,
 				9A68F35D2EBE08F70033CC42 /* IPv64WidgetExtension.entitlements */,
 				9A2777102EAD457E0025862B /* IPv64-net-Info.plist */,
 				9A8CA8AD2EA6969D0073978F /* ipv64.icon */,
@@ -583,6 +585,7 @@
 		};
 		9A5178DF2EA3995300731FFB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D4E100000000000000000001 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = ipv64;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -626,6 +629,7 @@
 		};
 		9A5178E02EA3995300731FFB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D4E100000000000000000001 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = ipv64;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

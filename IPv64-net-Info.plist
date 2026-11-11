@@ -2,16 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>SECNTFY_APP_KEY</key>
+	<string>$(SECNTFY_APP_KEY)</string>
 	<key>SecureKeychainAccessGroup</key>
 	<string>$(AppIdentifierPrefix)group.ipv64.net</string>
-	<key>UIDesignRequiresCompatibility</key>
-	<false/>
-	<!-- SecNtfy app access key of the iOS app (NTFY-APP-…). Empty = push is not set up. -->
-	<key>SECNTFY_APP_KEY</key>
-	<string></string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>UIDesignRequiresCompatibility</key>
+	<false/>
 </dict>
 </plist>
