@@ -16,6 +16,8 @@ struct PushSetupView: View {
     @State private var initialLoadDone = false
     @State private var isRegistering = false
     @State private var registrationFailed = false
+    /// Bumped by "Try again"; part of the task id so a retry restarts the registration task.
+    @State private var registerAttempt = 0
     @State private var testText: String?
     @State private var isSendingTest = false
     @State private var error: ErrorText?
@@ -30,9 +32,14 @@ struct PushSetupView: View {
     }
 
     /// Registration starts by itself once notifications are allowed (no button, always a new channel).
-    private var shouldRegister: Bool {
-        permission.isAllowed && initialLoadDone && deviceChannel == nil && appSupported != false
-            && !isRegistering && !registrationFailed
+    /// Only inputs that do not change while it runs: a changing task id would cancel the running request.
+    private struct RegisterTrigger: Equatable {
+        let ready: Bool
+        let attempt: Int
+    }
+
+    private var registerTrigger: RegisterTrigger {
+        RegisterTrigger(ready: permission.isAllowed && initialLoadDone && appSupported != false, attempt: registerAttempt)
     }
 
     var body: some View {
@@ -49,7 +56,8 @@ struct PushSetupView: View {
                 Label("Get a push notification on this device when a healthcheck goes down or recovers.", systemImage: "bell.badge")
             }
             AllowStep(permission: $permission)
-            RegisterStep(permissionAllowed: permission.isAllowed, registeredText: registeredText,
+            RegisterStep(deviceName: PushRegistrar.defaultDeviceName,
+                         permissionAllowed: permission.isAllowed, registeredText: registeredText,
                          appSupported: appSupported, isRegistering: isRegistering,
                          failed: registrationFailed, onRetry: retry)
             TestStep(registered: deviceChannel != nil, notificationsAllowed: permission.isAllowed, resultText: testText,
@@ -65,7 +73,9 @@ struct PushSetupView: View {
         .interactiveDismissDisabled()
         .trackingNotificationPermission($permission)
         .task { await initialLoad() }
-        .task(id: shouldRegister) { if shouldRegister { await register() } }
+        .task(id: registerTrigger) {
+            if registerTrigger.ready, deviceChannel == nil, !registrationFailed { await register() }
+        }
         .errorAlert($error)
         .errorAlert($message)
     }
@@ -105,6 +115,9 @@ struct PushSetupView: View {
                 detectedOnOpen = false
                 testText = nil
             }
+        } catch is CancellationError {
+            // Sheet closed while registering: nothing to report.
+        } catch let error as URLError where error.code == .cancelled {
         } catch let failure as PushRegistrationError {
             registrationFailed = true
             message = ErrorText(title: failure.title, message: failure.message)
@@ -116,6 +129,7 @@ struct PushSetupView: View {
 
     private func retry() {
         registrationFailed = false
+        registerAttempt += 1
     }
 
     private func sendTest() {

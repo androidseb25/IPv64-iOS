@@ -43,6 +43,7 @@ struct AllowStep: View {
 
 /// Step 2 "Register this device": runs by itself once notifications are allowed.
 struct RegisterStep: View {
+    let deviceName: String
     let permissionAllowed: Bool
     let registeredText: String?
     let appSupported: Bool?
@@ -52,6 +53,7 @@ struct RegisterStep: View {
 
     var body: some View {
         Section {
+            LabeledContent("Device name", value: deviceName)
             if let registeredText {
                 Text(verbatim: registeredText)
             } else if appSupported == false {
