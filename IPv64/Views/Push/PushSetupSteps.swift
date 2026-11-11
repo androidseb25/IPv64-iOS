@@ -41,13 +41,14 @@ struct AllowStep: View {
     }
 }
 
-/// Step 2 "Register this device".
+/// Step 2 "Register this device": runs by itself once notifications are allowed.
 struct RegisterStep: View {
-    @Binding var device: DeviceForm
+    let permissionAllowed: Bool
     let registeredText: String?
     let appSupported: Bool?
-    let canAdd: Bool
-    let onAdd: () -> Void
+    let isRegistering: Bool
+    let failed: Bool
+    let onRetry: () -> Void
 
     var body: some View {
         Section {
@@ -55,24 +56,22 @@ struct RegisterStep: View {
                 Text(verbatim: registeredText)
             } else if appSupported == false {
                 Text("Push notifications to the IPv64 app are not supported by the server yet. You can skip this step.")
+            } else if failed {
+                Button("Try again", systemImage: "arrow.clockwise", action: onRetry)
+            } else if isRegistering {
+                HStack {
+                    ProgressView()
+                    Text("Registering this device...")
+                }
+            } else if !permissionAllowed {
+                Text("Allow notifications first.").foregroundStyle(.secondary)
             } else {
-                if !AppConfig.isSecNtfyConfigured {
-                    Text("The push service is not configured on this device yet. Registering may fail; try logging in again if it does.")
-                        .foregroundStyle(Color.orange)
-                }
-                TextField("Device name *", text: $device.name)
-                Toggle("Notify when a check goes down", isOn: $device.notifyDown)
-                Toggle("Notify when a check recovers", isOn: $device.notifyUp)
-                Toggle(isOn: $device.useAsDefault) {
-                    Text("Use as default channel")
-                    Text("Checks without explicit channels notify default channels.")
-                }
-                Button("Add this device", systemImage: "plus.circle", action: onAdd)
-                    .disabled(!canAdd)
+                ProgressView()
             }
         } header: {
             StepHeader(number: 2, title: "Register this device", done: registeredText != nil)
         }
+        .opacity(permissionAllowed || registeredText != nil ? 1 : 0.6)
     }
 }
 
@@ -81,6 +80,7 @@ struct TestStep: View {
     let registered: Bool
     let notificationsAllowed: Bool
     let resultText: String?
+    let isSending: Bool
     let onTest: () -> Void
     let onDone: () -> Void
 
@@ -92,6 +92,7 @@ struct TestStep: View {
                         .foregroundStyle(Color.orange)
                 }
                 Button("Send test notification", systemImage: "paperplane", action: onTest)
+                    .disabled(isSending)
                 if let resultText { Text(verbatim: resultText).font(.footnote) }
                 Button(action: onDone) {
                     Text("Done").frame(maxWidth: .infinity)
@@ -104,44 +105,5 @@ struct TestStep: View {
             StepHeader(number: 3, title: "Send a test", done: false)
         }
         .opacity(registered ? 1 : 0.6)
-    }
-}
-
-/// "Existing app channels" (dismissible): adopt one of them or create a new channel.
-struct ExistingChannelsSheet: View {
-    @Environment(\.dismiss) private var dismiss
-    let channels: [HC2Channel]
-    let onAdopt: (Int) -> Void
-    let onCreateNew: () -> Void
-
-    var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    ForEach(channels) { channel in
-                        Button("Use existing channel “\(ChannelLogic.displayName(channel))”") { adopt(channel.id) }
-                    }
-                } footer: {
-                    Text("This account already has app channels. If one of them is this device (for example after reinstalling the app or using a new API key), use it to avoid duplicate notifications.")
-                }
-            }
-            .navigationTitle("Existing app channels")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) { Button("Create new", action: createNew) }
-            }
-        }
-        .presentationDetents([.medium, .large])
-    }
-
-    private func adopt(_ id: Int) {
-        dismiss()
-        onAdopt(id)
-    }
-
-    private func createNew() {
-        dismiss()
-        onCreateNew()
     }
 }

@@ -50,7 +50,7 @@ struct ContentView: View {
                     .id(userStorage.sessionID)
                     .tint(.orange)
                     .task(id: userStorage.ApiKey) { await runPushLogic() }
-                    .fullScreenCover(isPresented: $showPushSetup) {
+                    .sheet(isPresented: $showPushSetup) {
                         NavigationStack { PushSetupView() }.tint(.orange)
                     }
                     .safeAreaInset(edge: .top, spacing: 0) {

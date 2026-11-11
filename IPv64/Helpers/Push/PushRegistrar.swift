@@ -272,8 +272,9 @@ final class PushRegistrar {
         return result
     }
 
-    /// Android `defaultDeviceName()` (iOS 16+ returns the generic model name without the device-name entitlement).
+    /// Channel name: the model name from the SecNtfy package (e.g. "iPhone 15 Pro Max"), as SecNtfy names the device.
     static var defaultDeviceName: String {
-        UIDevice.current.name.nonBlank?.trimmingCharacters(in: .whitespacesAndNewlines) ?? UIDevice.current.model
+        let model = UIDevice.current.type
+        return model == .unrecognized ? UIDevice.current.name : model.rawValue
     }
 }

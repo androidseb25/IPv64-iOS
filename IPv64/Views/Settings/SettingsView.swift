@@ -17,6 +17,7 @@ struct SettingsView: View {
     @StateObject private var api = ApiService()
     
     @State private var alertType: AlertType?
+    @State private var showPushSetup = false
     
     var body: some View {
             if #available(iOS 26.0, *) {
@@ -36,9 +37,8 @@ struct SettingsView: View {
                 NavigationLink(value: Tabs.notification.route) {
                     Text("Notification")
                 }
-                NavigationLink(value: "settings.push") {
-                    Text("Push notifications")
-                }
+                Button("Push notifications") { showPushSetup = true }
+                    .tint(.primary)
                 NavigationLink(value: Tabs.log.route) {
                     Text("Logs")
                 }
@@ -79,14 +79,15 @@ struct SettingsView: View {
             }
         }
         .navigationTitle(Tabs.settings.labelNew)
+        .sheet(isPresented: $showPushSetup) {
+            NavigationStack { PushSetupView() }.tint(.orange)
+        }
         .navigationBarTitleDisplayMode(.inline).navigationDestination(for: String.self) { route in
             switch route {
             case Tabs.account.route:
                 Tabs.account.makeContentView(popToRootTab: $popToRootTab)
             case Tabs.notification.route:
                 Tabs.notification.makeContentView(popToRootTab: $popToRootTab)
-            case "settings.push":
-                PushSetupView()
             case Tabs.log.route:
                 Tabs.log.makeContentView(popToRootTab: $popToRootTab)
             case Tabs.myip.route:
