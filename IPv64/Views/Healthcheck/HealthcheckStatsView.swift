@@ -81,6 +81,13 @@ struct LatencyChart: View {
                                        range: lines.indices.map { Self.palette[$0 % Self.palette.count] })
             .chartLegend(multi ? .visible : .hidden)
             .chartYScale(domain: 0...max(maxValue, 1))
+            .chartXAxis(.hidden)
+            .chartYAxis {
+                AxisMarks(values: .automatic(desiredCount: 3)) {
+                    AxisGridLine().foregroundStyle(.secondary.opacity(0.2))
+                    AxisValueLabel()
+                }
+            }
             .chartXSelection(value: $rawSelection)
             .frame(height: 140)
             if let first = times.first, let last = times.last {
@@ -113,25 +120,35 @@ struct LatencyChart: View {
     }
 }
 
-/// Rows of the statistics block; goes inside a List section.
+/// Statistics block: large availability, latency chart, key figures; goes inside a List section.
 struct HealthcheckStatsRows: View {
     let stats: HC2Stats
 
+    private var sources: [HC2Stats.Source] { stats.sources ?? [] }
+
+    private func mean(_ values: [Double]) -> Double? {
+        values.isEmpty ? nil : values.reduce(0, +) / Double(values.count)
+    }
+
     var body: some View {
-        LabeledContent("Availability", value: HcFormat.percent(stats.availabilityPercent))
-        LabeledContent("Measurements", value: stats.measurements.map { $0.formatted() } ?? "–")
-        ForEach(Array((stats.sources ?? []).enumerated()), id: \.offset) { _, source in
-            VStack(alignment: .leading, spacing: 2) {
-                Text(verbatim: source.label?.nonBlank ?? source.source ?? "–").bold()
-                Text("Availability \(HcFormat.percent(source.availabilityPercent)) · \(source.measurements ?? 0) measurements")
-                Text("Latency min \(HcFormat.latency(source.latencyMS?.min)) · avg \(HcFormat.latency(source.latencyMS?.avg)) · max \(HcFormat.latency(source.latencyMS?.max))")
-            }
-            .font(.caption).foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity, alignment: .leading)
+        VStack(alignment: .leading, spacing: 2) {
+            Text(verbatim: HcFormat.percent(stats.availabilityPercent))
+                .font(.system(size: 40, weight: .bold, design: .rounded))
+            Text("Availability").font(.caption).foregroundStyle(.secondary)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
         let lines = StatsLine.lines(stats)
         if lines.flatMap(\.points).count >= 2 {
             LatencyChart(lines: lines, dayBucket: stats.bucket == .day)
         }
+        if let total = stats.measurements {
+            LabeledContent("Checks", value: total.formatted())
+            if let availability = stats.availabilityPercent {
+                LabeledContent("Failed checks", value: max(0, Int((Double(total) * (1 - availability / 100)).rounded())).formatted())
+            }
+        }
+        LabeledContent("Average latency", value: HcFormat.latency(mean(sources.compactMap { $0.latencyMS?.avg })))
+        LabeledContent("Maximum latency", value: HcFormat.latency(sources.compactMap { $0.latencyMS?.max }.max()))
     }
 }

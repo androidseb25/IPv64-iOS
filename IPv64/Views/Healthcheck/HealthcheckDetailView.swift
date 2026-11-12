@@ -32,18 +32,17 @@ struct HealthcheckDetailView: View {
     @State private var error: ErrorText?
     @State private var info: ErrorText?
     // Statistics and incidents load only when opened.
-    @State private var statsExpanded = false
     @State private var statsRange = HC2StatsRange.last24Hours
     @State private var statsCache: [HC2StatsRange: HC2Stats] = [:]
     @State private var statsLoading = false
     @State private var statsError: String?
-    @State private var incidentsExpanded = false
+    @State private var eventsExpanded = false
     @State private var incidents: [HC2Incident]?
     @State private var incidentsLoading = false
     @State private var incidentsError: String?
 
-    private struct StatsKey: Equatable { let expanded: Bool, range: HC2StatsRange, generation: Int }
-    private struct IncidentsKey: Equatable { let expanded: Bool, generation: Int }
+    private struct StatsKey: Equatable { let range: HC2StatsRange, generation: Int }
+    private struct IncidentsKey: Equatable { let generation: Int }
 
     private var paused: Bool { pausedOverride ?? detail?.paused ?? false }
     private var state: HC2Check.State? { stateOverride ?? detail?.state }
@@ -60,10 +59,11 @@ struct HealthcheckDetailView: View {
     private var content: some View {
         List {
             if let detail {
-                header(detail)
-                actions(detail)
-                Section("Status") { HealthcheckStatusRows(detail: detail, state: state) }
                 recent
+                if HealthcheckStatusRows.hasContent(detail: detail, state: state) {
+                    Section("Status") { HealthcheckStatusRows(detail: detail, state: state) }
+                }
+                actions(detail)
                 if let sources = detail.sources, !sources.isEmpty {
                     Section("Measuring points") { HealthcheckSourceRows(sources: sources) }
                 }
@@ -71,11 +71,9 @@ struct HealthcheckDetailView: View {
                     Section("Push endpoints") { HealthcheckPushRows(push: push) }
                 }
                 Section("Configuration") { HealthcheckConfigRows(detail: detail, channels: channels) }
-                Section {
-                    DisclosureGroup("Statistics", isExpanded: $statsExpanded) { statsContent }
-                    DisclosureGroup("Incidents", isExpanded: $incidentsExpanded) { incidentsContent }
-                }
-                eventsSection
+                if statsLoading || statsError != nil || statsCache[statsRange] != nil { statsSection }
+                incidentsSection
+                if !events.isEmpty { eventsSection }
             }
         }
         .overlay {
@@ -88,8 +86,8 @@ struct HealthcheckDetailView: View {
         .toolbar { toolbar }
         .refreshable { await load() }
         .task { await load() }
-        .task(id: StatsKey(expanded: statsExpanded, range: statsRange, generation: generation)) { await loadStats() }
-        .task(id: IncidentsKey(expanded: incidentsExpanded, generation: generation)) { await loadIncidents() }
+        .task(id: StatsKey(range: statsRange, generation: generation)) { await loadStats() }
+        .task(id: IncidentsKey(generation: generation)) { await loadIncidents() }
         .alert("Delete healthcheck?", isPresented: $confirmDelete) {
             Button("Delete", role: .destructive) { Task { await delete() } }
             Button("Cancel", role: .cancel) {}
@@ -101,16 +99,6 @@ struct HealthcheckDetailView: View {
     }
 
     // MARK: Sections
-
-    private func header(_ detail: HC2CheckDetail) -> some View {
-        Section {
-            HStack {
-                Text(verbatim: [detail.type?.label, detail.target?.nonBlank].compactMap { $0 }.joined(separator: " · "))
-                Spacer(minLength: 8)
-                HealthcheckStateTag(state: .from(state: state?.state, paused: paused))
-            }
-        }
-    }
 
     private func actions(_ detail: HC2CheckDetail) -> some View {
         Section {
@@ -151,49 +139,72 @@ struct HealthcheckDetailView: View {
         }
     }
 
-    @ViewBuilder private var statsContent: some View {
-        Picker("Range", selection: $statsRange) {
-            Text("24 h").tag(HC2StatsRange.last24Hours)
-            Text("7 d").tag(HC2StatsRange.last7Days)
-            Text("30 d").tag(HC2StatsRange.last30Days)
-            Text("1 y").tag(HC2StatsRange.lastYear)
-        }
-        .pickerStyle(.segmented)
-        if let stats = statsCache[statsRange] {
-            HealthcheckStatsRows(stats: stats)
-        } else if let statsError {
-            Text(verbatim: statsError).foregroundStyle(.red)
-        } else if statsLoading {
-            ProgressView().frame(maxWidth: .infinity)
+    private var statsSection: some View {
+        Section("Statistics") {
+            Picker("Range", selection: $statsRange) {
+                Text("24 h").tag(HC2StatsRange.last24Hours)
+                Text("7 d").tag(HC2StatsRange.last7Days)
+                Text("30 d").tag(HC2StatsRange.last30Days)
+                Text("1 y").tag(HC2StatsRange.lastYear)
+            }
+            .pickerStyle(.segmented)
+            if let stats = statsCache[statsRange] {
+                HealthcheckStatsRows(stats: stats)
+            } else if let statsError {
+                Text(verbatim: statsError).foregroundStyle(.red)
+            } else {
+                ProgressView().frame(maxWidth: .infinity)
+            }
         }
     }
 
-    @ViewBuilder private var incidentsContent: some View {
-        if let incidents {
-            if incidents.isEmpty {
-                Text("No incidents").foregroundStyle(.secondary)
-            } else {
-                ForEach(incidents) { HealthcheckIncidentRow(incident: $0) }
+    private var incidentsSection: some View {
+        Section {
+            NavigationLink {
+                HealthcheckIncidentsView(incidents: incidents ?? [])
+            } label: {
+                LabeledContent("Incidents") {
+                    if incidentsError != nil {
+                        Text("Unavailable")
+                    } else if let incidents {
+                        if incidents.isEmpty { Text("None") } else { Text(incidents.count.formatted()) }
+                    } else {
+                        ProgressView()
+                    }
+                }
             }
-        } else if let incidentsError {
-            Text(verbatim: incidentsError).foregroundStyle(.red)
-        } else if incidentsLoading {
-            Text("Loading...").foregroundStyle(.secondary)
+            .disabled(incidents?.isEmpty ?? true)
         }
     }
 
     private var eventsSection: some View {
-        Section("Events") {
-            if events.isEmpty {
-                Text("No events").foregroundStyle(.secondary)
-            } else {
-                ForEach(events) { HealthcheckEventRow(event: $0) }
+        Section {
+            if eventsExpanded {
+                if events.isEmpty {
+                    Text("No events").foregroundStyle(.secondary)
+                } else {
+                    ForEach(events) { HealthcheckEventRow(event: $0) }
+                }
+                if nextBefore != nil {
+                    Button(loadingMore ? "Loading..." : "Load more") { Task { await loadMore() } }
+                        .disabled(loadingMore)
+                        .frame(maxWidth: .infinity)
+                }
             }
-            if nextBefore != nil {
-                Button(loadingMore ? "Loading..." : "Load more") { Task { await loadMore() } }
-                    .disabled(loadingMore)
-                    .frame(maxWidth: .infinity)
+        } header: {
+            Button {
+                withAnimation { eventsExpanded.toggle() }
+            } label: {
+                HStack {
+                    Text("Events")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .rotationEffect(.degrees(eventsExpanded ? 90 : 0))
+                }
+                .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
+            .accessibilityValue(eventsExpanded ? "Expanded" : "Collapsed")
         }
     }
 
@@ -206,8 +217,6 @@ struct HealthcheckDetailView: View {
                 ProgressView()
             } else {
                 Menu {
-                    Button("Refresh", systemImage: "arrow.clockwise") { Task { await load() } }
-                    Divider()
                     Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = true }
                 } label: {
                     Label("More actions", systemImage: "ellipsis")
@@ -261,7 +270,7 @@ struct HealthcheckDetailView: View {
     }
 
     private func loadStats() async {
-        guard statsExpanded, detail != nil, statsCache[statsRange] == nil else { return }
+        guard detail != nil, statsCache[statsRange] == nil else { return }
         let range = statsRange
         let api = session.api
         statsLoading = true
@@ -276,7 +285,7 @@ struct HealthcheckDetailView: View {
     }
 
     private func loadIncidents() async {
-        guard incidentsExpanded, detail != nil, incidents == nil else { return }
+        guard detail != nil, incidents == nil else { return }
         let api = session.api
         incidentsLoading = true
         incidentsError = nil

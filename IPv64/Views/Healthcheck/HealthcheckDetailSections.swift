@@ -24,6 +24,14 @@ struct HealthcheckStatusRows: View {
     let detail: HC2CheckDetail
     let state: HC2Check.State?
 
+    static func hasContent(detail: HC2CheckDetail, state: HC2Check.State?) -> Bool {
+        let texts = [HcFormat.time(state?.since), HcFormat.time(state?.lastCheckAt), state?.lastStatus?.rawValue,
+                     state?.lastReason, state?.lastMessage, HcFormat.time(state?.downSince), HcFormat.time(state?.lastPushAt)]
+        return texts.contains { $0?.nonBlank != nil } || state?.lastLatencyMS != nil
+            || detail.availabilityPercent?.last24Hours != nil || detail.availabilityPercent?.last30Days != nil
+            || detail.availabilityPercent?.lastYear != nil
+    }
+
     var body: some View {
         HcInfoRow("Since", HcFormat.time(state?.since))
         HcInfoRow("Last check", HcFormat.timeWithRelative(state?.lastCheckAt))
@@ -205,24 +213,56 @@ struct HealthcheckEventRow: View {
     }
 }
 
+/// Pushed list of the incidents of a check.
+struct HealthcheckIncidentsView: View {
+    let incidents: [HC2Incident]
+
+    var body: some View {
+        if #available(iOS 26.0, *) {
+            list.setColorGradient(.orange)
+        } else {
+            list
+        }
+    }
+
+    private var list: some View {
+        List(incidents) { HealthcheckIncidentRow(incident: $0) }
+            .navigationTitle("Incidents")
+            .navigationBarTitleDisplayMode(.inline)
+            .overlay {
+                if incidents.isEmpty { ContentUnavailableView("No incidents", systemImage: "checkmark.circle") }
+            }
+    }
+}
+
 struct HealthcheckIncidentRow: View {
     let incident: HC2Incident
 
-    private var lines: [String] {
-        var lines: [String] = []
-        if let t = HcFormat.time(incident.startedAt) { lines.append(String(localized: "Started \(t)")) }
-        if let t = HcFormat.time(incident.endedAt) { lines.append(String(localized: "Ended \(t)")) }
-        if let s = incident.durationSeconds { lines.append(String(localized: "Duration \(HcFormat.duration(seconds: s))")) }
-        if let text = incident.message?.nonBlank ?? incident.reason?.nonBlank { lines.append(text) }
-        if let sources = incident.sources, !sources.isEmpty { lines.append(sources.joined(separator: ", ")) }
-        return lines
+    private var subtitle: String? {
+        var parts: [String] = []
+        if let s = incident.durationSeconds { parts.append(HcFormat.duration(seconds: s)) }
+        if let text = incident.message?.nonBlank ?? incident.reason?.nonBlank { parts.append(text) }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 
     var body: some View {
         let open = incident.status == .open
-        HcDetailRow(title: open ? String(localized: "Open incident") : String(localized: "Resolved incident"),
-                    subtitle: lines) {
-            HealthcheckTag(text: open ? "Open" : "Resolved", color: open ? .red : .green)
+        HStack(spacing: 12) {
+            Image(systemName: open ? "exclamationmark.triangle.fill" : "checkmark.circle.fill")
+                .foregroundStyle(open ? .red : .green)
+                .font(.title3)
+                .accessibilityLabel(open ? "Open incident" : "Resolved incident")
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: HcFormat.time(incident.startedAt) ?? "–")
+                if let subtitle {
+                    Text(verbatim: subtitle).font(.subheadline).foregroundStyle(.secondary).lineLimit(3)
+                }
+            }
+            Spacer(minLength: 8)
+            if let started = HcFormat.real(incident.startedAt) {
+                Text(started.formatted(.relative(presentation: .named))).font(.caption).foregroundStyle(.secondary)
+            }
         }
+        .accessibilityElement(children: .combine)
     }
 }
