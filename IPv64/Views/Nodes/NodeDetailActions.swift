@@ -79,9 +79,12 @@ extension NodeDetailView {
     /// Every 5 s (first at once) while the screen is visible and the app active.
     func tickLoop() async {
         guard isLocal, scenePhase == .active else { return }
+        // The first request comes from start() (or right here after returning to the app).
+        if live.lastOk != nil { await tick(force: false) }
         while !Task.isCancelled {
-            await tick(force: false)
             try? await Task.sleep(for: .seconds(5))
+            if Task.isCancelled { return }
+            await tick(force: false)
         }
     }
 
@@ -92,13 +95,16 @@ extension NodeDetailView {
         isTicking = true
         defer { isTicking = false }
         do {
+            // Status first: the screen shows the node as connected without waiting for the (slower) logs.
             let status = try await client.node.status()
-            let logs = try await client.node.logs(lines: 100).lines ?? []
             guard access == config else { return }
             if let name = status.node?.name?.nonBlank, name != LocalNodeStore.name(nodeId) { LocalNodeStore.setName(nodeId, name) }
             if let modules = status.modules { LocalNodeStore.saveModules(nodeId, modules: modules) }
             nodes.refresh()
-            live = NodeLive(status: status, logs: logs.reversed().map(NodesLogic.logText), lastOk: .now, failing: false, rejected: nil)
+            live = NodeLive(status: status, logs: live.logs, lastOk: .now, failing: false, rejected: nil)
+            if let logs = try? await client.node.logs(lines: 100).lines, access == config {
+                live.logs = logs.reversed().map(NodesLogic.logText)
+            }
         } catch is CancellationError {
         } catch {
             guard access == config else { return }

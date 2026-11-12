@@ -254,7 +254,6 @@ private struct NodeModuleRow: View {
                     HStack {
                         label
                         Spacer(minLength: 8)
-                        Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
                     }
                     .contentShape(Rectangle())
                 }
@@ -263,6 +262,11 @@ private struct NodeModuleRow: View {
                 Toggle(module.name, isOn: toggle)
                     .labelsHidden()
                     .disabled(disabled || module.name.nonBlank == nil)
+                Button(action: onOpen) {
+                    Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel("Open")
             }
         } else {
             Toggle(isOn: toggle) { label }
