@@ -69,4 +69,40 @@ nonisolated enum ProxyLogic {
     static func serversText(connected: Int, total: Int) -> String {
         total == 0 ? String(localized: "No CDN64 servers") : String(localized: "Servers: \(connected) of \(total) connected")
     }
+
+    // MARK: Host editor
+
+    static func parseNames(_ text: String) -> [String] {
+        text.split(whereSeparator: { $0 == "\n" || $0 == "," })
+            .map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
+    }
+
+    static func parsePort(_ text: String) -> Int? {
+        Int(text.trimmingCharacters(in: .whitespaces)).flatMap { (1...65535).contains($0) ? $0 : nil }
+    }
+
+    // MARK: CDN64 modes
+
+    static func cdnModeTitle(_ mode: Int) -> String {
+        switch mode {
+        case 1: String(localized: "Pass through (default)")
+        case 2: String(localized: "Terminate on the servers")
+        case 3: String(localized: "Without Node64")
+        default: modeShort(mode)
+        }
+    }
+
+    static func cdnModeDescription(_ mode: Int) -> String {
+        switch mode {
+        case 1: String(localized: "The servers only pass the encrypted connection through; it is decrypted in your node. The right choice for almost everything.")
+        case 2: String(localized: "The servers decrypt (own certificate) and filter there: blocklists, limits, HTTP/3. Good for small uploads. Not with TLS passthrough.")
+        case 3: String(localized: "The servers go directly to your target without a tunnel — it must be reachable from the internet. Set up on the website:")
+        default: ""
+        }
+    }
+
+    /// Android `enableCdn64`: error text of the first failed name, else `nil`.
+    static func firstEnableError(_ results: [(name: String?, failed: Bool, error: String?, code: String?)]) -> String? {
+        results.first(where: \.failed).map { [$0.name, $0.error ?? $0.code].compactMap { $0 }.joined(separator: ": ") }
+    }
 }

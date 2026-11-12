@@ -12,6 +12,8 @@ struct CdnView: View {
     @State private var domains: [CDNDomain]?
     @State private var usage: Me.Usage?
     @State private var showAdd = false
+    @State private var enableChoices: [CdnHostChoice]?
+    @State private var preparingEnable = false
     @State private var confirmDelete: CDNDomain?
     @State private var deletedIDs: Set<String> = []
     @State private var error: ErrorText?
@@ -29,7 +31,7 @@ struct CdnView: View {
 
     var body: some View {
         if #available(iOS 26.0, *) {
-            listView.setColorGradient(showAdd ? .clear : .orange)
+            listView.setColorGradient(showAdd || enableChoices != nil ? .clear : .orange)
         } else { listView }
     }
 
@@ -73,6 +75,12 @@ struct CdnView: View {
         .sheet(isPresented: $showAdd) {
             CdnAddSheet(exclude: Set((domains ?? []).compactMap(\.domain))) { Task { await load() } }
         }
+        .sheet(isPresented: Binding(get: { enableChoices != nil }, set: { if !$0 { enableChoices = nil } })) {
+            CdnEnableFlow(choices: enableChoices ?? []) { choice, mode, healthcheck in
+                if let failure = await nodes.enableCdn64(choice, mode: mode, healthcheck: healthcheck) { error = failure }
+                await load(silent: true)
+            }
+        }
         .alert("Remove from CDN?", isPresented: Binding(get: { confirmDelete != nil }, set: { if !$0 { confirmDelete = nil } }),
                presenting: confirmDelete) { domain in
             Button("Remove", role: .destructive) { Task { await delete(domain) } }
@@ -87,8 +95,10 @@ struct CdnView: View {
     private var toolbar: some ToolbarContent {
         if availability != .notInPlan {
             ToolbarItem(placement: .topBarTrailing) {
-                Button { add() } label: { Label("Add domain to CDN", systemImage: "plus") }
-                    .disabled(domains == nil)
+                Button { nodeMode ? prepareEnable() : add() } label: {
+                    Label(nodeMode ? "Enable CDN64 for a proxy host" : "Add domain to CDN", systemImage: "plus")
+                }
+                .disabled(domains == nil || preparingEnable)
             }
         }
     }
@@ -120,6 +130,14 @@ struct CdnView: View {
             } actions: {
                 Button("Add domain") { add() }
             }
+        }
+    }
+
+    private func prepareEnable() {
+        preparingEnable = true
+        Task {
+            enableChoices = await nodes.cdnChoices(for: nodeData)
+            preparingEnable = false
         }
     }
 
