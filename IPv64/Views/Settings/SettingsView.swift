@@ -17,65 +17,67 @@ struct SettingsView: View {
     @StateObject private var api = ApiService()
     
     @State private var alertType: AlertType?
-    @State private var showPushSetup = false
+
+    private static let apiKeysRoute = "settings.apikeys"
+    private static let accountLinksRoute = "settings.accountlinks"
+    private static let notificationSettingsRoute = "settings.notificationsettings"
+    private static let passwordCheckRoute = "settings.passwordcheck"
+    private static let honeypotRoute = "settings.honeypot"
+
+    private func open(_ link: String) {
+        if let url = URL(string: link) { UIApplication.shared.open(url) }
+    }
     
     var body: some View {
             if #available(iOS 26.0, *) {
                 listView
-                    .setColorGradient(showPushSetup ? .clear : .orange)
+                    .setColorGradient(.orange)
             } else {
                 listView
             }
     }
     
     private var listView: some View {
+        // Groups and order as in Android 2.1.0 (More); plain rows as in the 2.0 app.
         List {
-            Section("General") {
-                NavigationLink(value: Tabs.account.route) {
-                    Text("Account")
-                }
-                NavigationLink(value: Tabs.notification.route) {
-                    Text("Notification")
-                }
-                Button("Push notifications") { showPushSetup = true }
-                    .tint(.primary)
-                NavigationLink(value: Tabs.log.route) {
-                    Text("Logs")
-                }
-                NavigationLink(value: Tabs.myip.route) {
-                    Text("My IP")
-                }
+            Section("Account") {
+                NavigationLink(value: Tabs.account.route) { Text("Account") }
+                NavigationLink(value: Self.apiKeysRoute) { Text("API keys") }
+                NavigationLink(value: Self.accountLinksRoute) { Text("Account links") }
             }
-            
+
             Section {
-                NavigationLink(value: NodesView.route) {
-                    Text("Nodes")
-                }
+                NavigationLink(value: NodesView.route) { Text("Nodes") }
+            }
+
+            Section("Notifications") {
+                NavigationLink(value: Tabs.notification.route) { Text("Channels") }
+                NavigationLink(value: Self.notificationSettingsRoute) { Text("Notification settings") }
             }
 
             Section("Security") {
-                Toggle("Lockscreen \(userStorage.EnableLogscreen ? "enabled" : "disabled")", isOn: $userStorage.EnableLogscreen)
+                NavigationLink(value: Tabs.myip.route) { Text("IP lookup & My IP") }
+                NavigationLink(value: Self.passwordCheckRoute) { Text("Password check") }
+                NavigationLink(value: Self.honeypotRoute) { Text("Honeypot") }
             }
-            
-            Section("Other") {
-                NavigationLink(value: Tabs.about.route) {
-                    Text("About")
-                }
+
+            Section("Tools") {
+                NavigationLink(value: Tabs.log.route) { Text("Logs") }
                 #if DEBUG
-                NavigationLink(value: Tabs.syslog.route) {
-                    Text("System Logs")
-                }
+                NavigationLink(value: Tabs.syslog.route) { Text("System Logs") }
                 #endif
-                Button(action: {
-                    if let url = URL(string: "https://www.youtube.com/c/RaspberryPiCloud") {
-                        UIApplication.shared.open(url)
-                    }
-                }) {
-                    Text("YouTube")
-                        .foregroundStyle(systemColorScheme == .dark ? Color.white : Color.black)
-                }
-                
             }
+
+            Section("App") {
+                Toggle("Lockscreen \(userStorage.EnableLogscreen ? "enabled" : "disabled")", isOn: $userStorage.EnableLogscreen)
+                NavigationLink(value: Tabs.about.route) { Text("About") }
+                Button("YouTube") { open("https://www.youtube.com/c/RaspberryPiCloud") }
+                    .tint(.primary)
+                Button("Discord") { open("https://discord.gg/rpicloud") }
+                    .tint(.primary)
+            }
+
+            Section {
             Button(role: .destructive) {
                 withAnimation {
                     alertType = .logout
@@ -83,11 +85,9 @@ struct SettingsView: View {
             } label: {
                 Text("Logout")
             }
+            }
         }
         .navigationTitle(Tabs.settings.labelNew)
-        .sheet(isPresented: $showPushSetup) {
-            NavigationStack { PushSetupView() }.tint(.orange)
-        }
         .navigationBarTitleDisplayMode(.inline).navigationDestination(for: String.self) { route in
             switch route {
             case Tabs.account.route:
@@ -102,6 +102,16 @@ struct SettingsView: View {
                 Tabs.about.makeContentView(popToRootTab: $popToRootTab)
             case NodesView.route:
                 NodesView()
+            case Self.apiKeysRoute:
+                ApiKeysView()
+            case Self.accountLinksRoute:
+                AccountLinksView()
+            case Self.notificationSettingsRoute:
+                NotificationSettingsView()
+            case Self.passwordCheckRoute:
+                PasswordCheckView()
+            case Self.honeypotRoute:
+                HoneypotView()
             case Tabs.syslog.route:
                 Tabs.syslog.makeContentView(popToRootTab: $popToRootTab)
             default:

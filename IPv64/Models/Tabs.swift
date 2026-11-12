@@ -38,7 +38,7 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
         case .healthcheck:
             HealthcheckView(popToRootTab: popToRootTab)
         case .notification:
-            NotificationView(popToRootTab: popToRootTab)
+            ChannelsView()
         case .settings:
             SettingsView(popToRootTab: popToRootTab)
         case .account:
@@ -48,7 +48,7 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
         case .syslog:
             LoggerView(popToRootTab: popToRootTab, showToolbar: false)
         case .myip:
-            MyIpView(popToRootTab: popToRootTab)
+            ThreatLookupView()
         case .about:
             AboutView(popToRootTab: popToRootTab)
         case .cdn:
@@ -69,7 +69,7 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
         case .healthcheck:
             return "Healthchecks"
         case .notification:
-            return "Notification"
+            return "Channels"
         case .settings:
             return "More"
         case .cdn:
@@ -85,7 +85,7 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
         case .syslog:
             return "System Logs"
         case .myip:
-            return "My IP"
+            return "IP lookup & My IP"
         case .about:
             return "About"
         default:
