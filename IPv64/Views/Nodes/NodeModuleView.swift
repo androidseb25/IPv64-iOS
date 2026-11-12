@@ -142,29 +142,6 @@ private struct HoneypotModuleList: View {
     @State private var stats: Result<Node64.Honeypot64Stats, any Error>?
     @State private var events: Result<[Node64.Honeypot64Event], any Error>?
     @State private var loaded = false
-    @State private var range = HoneypotRange.day
-    @State private var rangeLoading = false
-
-    /// Periods of the honeypot statistics (`since`); the timeline is hourly up to 48 h, daily above.
-    enum HoneypotRange: String, CaseIterable, Identifiable {
-        case day = "24h", week = "7d", month = "30d"
-        var id: Self { self }
-        var label: LocalizedStringKey {
-            switch self {
-            case .day: "24 h"
-            case .week: "7 d"
-            case .month: "30 d"
-            }
-        }
-        var title: LocalizedStringKey {
-            switch self {
-            case .day: "Last 24 hours"
-            case .week: "Last 7 days"
-            case .month: "Last 30 days"
-            }
-        }
-        var unit: Calendar.Component { self == .day ? .hour : .day }
-    }
 
     private struct Bar: Identifiable {
         let time: Date
@@ -176,13 +153,6 @@ private struct HoneypotModuleList: View {
         List {
             if loaded {
                 if let status { statusSection(status) }
-                Section {
-                    Picker("Range", selection: $range) {
-                        ForEach(HoneypotRange.allCases) { Text($0.label).tag($0) }
-                    }
-                    .pickerStyle(.segmented)
-                    .disabled(rangeLoading)
-                }
                 if let stats { statsSections(stats) }
                 if let events { eventsSection(events) }
             }
@@ -190,7 +160,6 @@ private struct HoneypotModuleList: View {
         .overlay { if !loaded { ProgressView() } }
         .refreshable { await load() }
         .task { await load() }
-        .onChange(of: range) { Task { await loadStats() } }
     }
 
     @ViewBuilder private func statusSection(_ result: Result<Node64.Honeypot64Status, any Error>) -> some View {
@@ -214,22 +183,17 @@ private struct HoneypotModuleList: View {
     @ViewBuilder private func statsSections(_ result: Result<Node64.Honeypot64Stats, any Error>) -> some View {
         switch result {
         case .failure(let error):
-            ModuleErrorSection(title: range.title, error: error)
+            ModuleErrorSection(title: "Last 24 hours", error: error)
         case .success(let s):
-            Section(range.title) {
+            Section("Last 24 hours") {
                 ModuleBigNumber(value: (s.events ?? 0).formatted(), label: "Events")
                 LabeledContent("Sources", value: (s.sources ?? 0).formatted())
                 LabeledContent("Logins", value: (s.logins ?? 0).formatted())
             }
             let bars = (s.timeline ?? []).compactMap { point in point.time.map { Bar(time: $0, events: point.events ?? 0) } }
             if bars.contains(where: { $0.events > 0 }) {
-                Section("Attacks") {
-                    Chart(bars) { bar in
-                        BarMark(x: .value("Time", bar.time, unit: range.unit), y: .value("Events", bar.events))
-                            .foregroundStyle(Color.orange)
-                    }
-                    .frame(height: 140)
-                    .accessibilityLabel("Bar chart with \(bars.count) values, maximum \(bars.map(\.events).max() ?? 0)")
+                Section("Attacks (last 24 h)") {
+                    HoneypotAttacksChart(bars: bars.map { ($0.time, $0.events) })
                 }
             }
             rankSection("Top attackers", (s.topSources ?? []).map {
@@ -292,24 +256,12 @@ private struct HoneypotModuleList: View {
     private func load() async {
         let honeypot = client.honeypot
         async let status = attempt { try await honeypot.status() }
-        let since = range.rawValue
-        async let stats = attempt { try await honeypot.stats(since: since, top: 10) }
+        async let stats = attempt { try await honeypot.stats(top: 10) }
         async let events = attempt { try await honeypot.events(limit: 20) }
         let results = await (status, stats, events)
         if Task.isCancelled { return }
         (self.status, self.stats, self.events) = results
         loaded = true
-    }
-
-    /// A new period reloads only the statistics.
-    private func loadStats() async {
-        let honeypot = client.honeypot
-        let since = range.rawValue
-        rangeLoading = true
-        defer { rangeLoading = false }
-        let result = await attempt { try await honeypot.stats(since: since, top: 10) }
-        if Task.isCancelled || since != range.rawValue { return }
-        stats = result
     }
 }
 
@@ -384,5 +336,39 @@ private struct ModuleRankRow: View {
             ProgressView(value: fraction).tint(.orange)
         }
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// Hourly attack bars; touching a bar shows its hour and count above the chart (like the healthcheck chart).
+private struct HoneypotAttacksChart: View {
+    let bars: [(time: Date, events: Int)]
+    @State private var rawSelection: Date?
+
+    /// The hour bucket under the finger.
+    private var selected: (time: Date, events: Int)? {
+        guard let raw = rawSelection else { return nil }
+        return bars.min { abs($0.time.timeIntervalSince(raw)) < abs($1.time.timeIntervalSince(raw)) }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Group {
+                if let selected {
+                    Text(verbatim: "\(selected.time.formatted(date: .abbreviated, time: .shortened)) · ")
+                        + Text("\(selected.events) events")
+                } else {
+                    Text("Touch the chart for values")
+                }
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            Chart(bars.indices, id: \.self) { i in
+                BarMark(x: .value("Time", bars[i].time, unit: .hour), y: .value("Events", bars[i].events))
+                    .foregroundStyle(Color.orange.opacity(selected == nil || selected?.time == bars[i].time ? 1 : 0.35))
+            }
+            .chartXSelection(value: $rawSelection)
+            .frame(height: 140)
+            .accessibilityLabel("Bar chart with \(bars.count) values, maximum \(bars.map(\.events).max() ?? 0)")
+        }
     }
 }
