@@ -5,7 +5,7 @@ import IPv64
 /// KPI tiles, chart, upstreams, cache and top lists. Failed or empty sections stay hidden (failures show their text).
 struct NodeDnsMetricsSections: View {
     let data: DnsData
-    let range: DnsRange
+    @Binding var range: DnsRange
     let dns: Node64.DNS64
     let actions: DnsActions
     let onCache: (DnsSec<Node64.DNS64Cache>) -> Void
@@ -36,7 +36,7 @@ struct NodeDnsMetricsSections: View {
             let s = summary.summary
             let total = s?.total ?? 0, blocked = s?.blocked ?? 0, cached = s?.cached ?? 0
             // One list section like the Fitness/Health summaries: values in two columns, no separate cards.
-            Section("Overview") {
+            Section {
                 Grid(alignment: .topLeading, horizontalSpacing: 16, verticalSpacing: 12) {
                     GridRow {
                         DnsKpiTile("Queries", total.formatted(), caption: String(localized: "≈ \((total / range.hours).formatted()) per hour"))
@@ -54,6 +54,18 @@ struct NodeDnsMetricsSections: View {
                     }
                 }
                 .padding(.vertical, 4)
+            } header: {
+                // The period applies to the overview, the chart and the top lists.
+                HStack {
+                    Text("Overview")
+                    Spacer()
+                    Picker("Period", selection: $range) {
+                        ForEach(DnsRange.allCases) { Text($0.label).tag($0) }
+                    }
+                    .pickerStyle(.menu)
+                    .textCase(nil)
+                    .font(.subheadline)
+                }
             }
         }
     }

@@ -12,7 +12,7 @@ struct NodeDnsBlockingSection: View {
     @State private var now = Date()
     /// End of a pause started in this session (kept until resumed).
     @State private var localEnd: Date?
-    @State private var pending: Choice?
+    @State private var choosing = false
 
     private struct Choice: Identifiable {
         let minutes: Int
@@ -21,8 +21,8 @@ struct NodeDnsBlockingSection: View {
     }
 
     private static let choices = [
-        Choice(minutes: 5, label: String(localized: "5 min")), Choice(minutes: 15, label: String(localized: "15 min")),
-        Choice(minutes: 30, label: String(localized: "30 min")), Choice(minutes: 60, label: String(localized: "1 h")),
+        Choice(minutes: 5, label: String(localized: "For 5 minutes")), Choice(minutes: 15, label: String(localized: "For 15 minutes")),
+        Choice(minutes: 30, label: String(localized: "For 30 minutes")), Choice(minutes: 60, label: String(localized: "For 1 hour")),
         Choice(minutes: 0, label: String(localized: "Until resumed")),
     ]
 
@@ -54,31 +54,21 @@ struct NodeDnsBlockingSection: View {
                         Task { await actions.run { onChange(try await dns.resume()) } }
                     }
                 } else {
-                    Menu {
-                        ForEach(Self.choices) { choice in
-                            Button(choice.label) { pending = choice }
+                    // Like pausing a Focus: one action sheet with the durations; picking one is the confirmation.
+                    Button("Pause blocking", systemImage: "pause.fill") { choosing = true }
+                        .confirmationDialog("Pause blocking?", isPresented: $choosing, titleVisibility: .visible) {
+                            ForEach(Self.choices) { choice in
+                                Button(choice.label) { pause(choice) }
+                            }
+                            Button("Cancel", role: .cancel) {}
+                        } message: {
+                            Text("Ads and trackers will not be blocked while paused.")
                         }
-                    } label: {
-                        Label("Pause blocking for", systemImage: "pause.fill")
-                    }
-                    .alert("Pause blocking?", isPresented: Binding(get: { pending != nil }, set: { if !$0 { pending = nil } }),
-                           presenting: pending) { choice in
-                        Button("Pause") { pause(choice) }
-                        Button("Cancel", role: .cancel) {}
-                    } message: { choice in
-                        Text(message(choice))
-                    }
                 }
             }
         }
         .task(id: end) { await countdown() }
         .onChange(of: paused) { if !paused { localEnd = nil } }
-    }
-
-    private func message(_ choice: Choice) -> String {
-        guard choice.minutes > 0 else { return String(localized: "Ads and trackers will not be blocked until you resume it.") }
-        let until = dns64Format(.now.addingTimeInterval(Double(choice.minutes) * 60), .hm)
-        return String(localized: "Ads and trackers will not be blocked for \(choice.label) (until \(until)).")
     }
 
     private func pause(_ choice: Choice) {

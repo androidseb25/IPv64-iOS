@@ -72,15 +72,7 @@ struct NodeDnsView: View {
                             NodeDnsRecordsView(nodeId: id)
                         } label: { Label("Local DNS records", systemImage: "externaldrive.connected.to.line.below") }
                     }
-                    Section {
-                        Picker("Range", selection: $range) {
-                            ForEach(DnsRange.allCases) { Text($0.label).tag($0) }
-                        }
-                        .pickerStyle(.segmented)
-                        .listRowBackground(Color.clear)
-                        .listRowInsets(EdgeInsets())
-                    }
-                    NodeDnsMetricsSections(data: data, range: range, dns: dns, actions: actions,
+                    NodeDnsMetricsSections(data: data, range: $range, dns: dns, actions: actions,
                                            onCache: { self.data?.cache = $0 })
                 }
             } else {
