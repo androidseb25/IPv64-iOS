@@ -51,7 +51,9 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
             MyIpView(popToRootTab: popToRootTab)
         case .about:
             AboutView(popToRootTab: popToRootTab)
-        case .cdn, .proxy64, .dns64:
+        case .cdn:
+            CdnView(popToRootTab: popToRootTab)
+        case .proxy64, .dns64:
             // Screens follow in a later step.
             ContentUnavailableView(labelNew, systemImage: iconName)
                 .navigationTitle(labelNew)
