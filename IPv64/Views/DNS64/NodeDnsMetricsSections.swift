@@ -185,50 +185,76 @@ private struct DnsKpiTile: View {
     }
 }
 
-/// Stacked Allowed/Blocked bars; touching a bar shows its time and counts above the chart.
+/// Stacked Allowed/Blocked bars on a time axis; touching a bar shows its time and counts above the chart.
+/// Each bar spans its bucket (start → next start), so the width is right for any bucket size.
 private struct DnsQueriesChart: View {
     let bars: [Dns64Bar]
     let range: DnsRange
-    @State private var selected: Int?
+    @State private var rawSelection: Date?
+
+    private struct Span: Identifiable {
+        let bar: Dns64Bar
+        let start: Date
+        let end: Date
+        var id: Int { bar.index }
+    }
+
+    /// Bars with a time; the last bucket gets the same length as the one before.
+    private var spans: [Span] {
+        let dated = bars.compactMap { bar in bar.start.map { (bar, $0) } }
+        return dated.indices.map { i in
+            let (bar, start) = dated[i]
+            let step = i + 1 < dated.count ? dated[i + 1].1.timeIntervalSince(start)
+                : (i > 0 ? start.timeIntervalSince(dated[i - 1].1) : 3600)
+            return Span(bar: bar, start: start, end: start.addingTimeInterval(step * 0.85))
+        }
+    }
 
     private var maxValue: Int { max(bars.map { $0.allowed + $0.blocked }.max() ?? 0, 1) }
 
-    private func axisLabel(_ bar: Dns64Bar) -> String {
-        bar.start.map { dns64Format($0, range == .week ? .dayMonth : .hm) } ?? ""
+    private var selected: Span? {
+        guard let raw = rawSelection else { return nil }
+        return spans.first { raw >= $0.start && raw < $0.end }
+            ?? spans.min { abs($0.start.timeIntervalSince(raw)) < abs($1.start.timeIntervalSince(raw)) }
     }
 
     private var header: Text {
-        guard let i = selected, bars.indices.contains(i) else { return Text("Touch the chart for values") }
-        let bar = bars[i]
-        let when = bar.start.map { dns64Format($0, .dayMonthHm) } ?? ""
-        return Text("\(when)  Allowed: \(bar.allowed.formatted())  Blocked: \(bar.blocked.formatted())")
+        guard let span = selected else { return Text("Touch the chart for values") }
+        let when = dns64Format(span.start, .dayMonthHm)
+        return Text("\(when)  Allowed: \(span.bar.allowed.formatted())  Blocked: \(span.bar.blocked.formatted())")
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             header.font(.caption).foregroundStyle(.secondary).lineLimit(1).minimumScaleFactor(0.8)
-            Chart {
-                ForEach(bars) { bar in
-                    BarMark(x: .value("Time", bar.index), y: .value("Queries", bar.allowed), width: .ratio(0.8))
-                        .foregroundStyle(by: .value("Type", "Allowed")).opacity(opacity(bar))
-                    BarMark(x: .value("Time", bar.index), y: .value("Queries", bar.blocked), width: .ratio(0.8))
-                        .foregroundStyle(by: .value("Type", "Blocked")).opacity(opacity(bar))
-                }
+            Chart(spans) { span in
+                RectangleMark(xStart: .value("Start", span.start), xEnd: .value("End", span.end),
+                        yStart: .value("Queries", 0), yEnd: .value("Queries", span.bar.allowed))
+                    .foregroundStyle(Color.green.opacity(opacity(span)))
+                RectangleMark(xStart: .value("Start", span.start), xEnd: .value("End", span.end),
+                        yStart: .value("Queries", span.bar.allowed),
+                        yEnd: .value("Queries", span.bar.allowed + span.bar.blocked))
+                    .foregroundStyle(Color.red.opacity(opacity(span)))
             }
-            .chartForegroundStyleScale(["Allowed": Color.green, "Blocked": Color.red])
-            .chartLegend(.hidden)
-            .chartXScale(domain: -0.5...(Double(bars.count) - 0.5))
             .chartYScale(domain: 0...maxValue)
-            .chartXSelection(value: $selected)
+            .chartXSelection(value: $rawSelection)
             .chartXAxis {
-                AxisMarks(values: dns64AxisIndices(count: bars.count)) { value in
+                AxisMarks(values: .automatic(desiredCount: 4)) { value in
+                    AxisGridLine().foregroundStyle(.secondary.opacity(0.2))
                     AxisValueLabel {
-                        if let i = value.as(Int.self), bars.indices.contains(i) { Text(verbatim: axisLabel(bars[i])) }
+                        if let date = value.as(Date.self) {
+                            Text(verbatim: dns64Format(date, range == .week ? .dayMonth : .hm))
+                        }
                     }
                 }
             }
-            .chartYAxis { AxisMarks(values: [0, maxValue / 2, maxValue]) { AxisGridLine() } }
-            .frame(height: 140)
+            .chartYAxis {
+                AxisMarks(values: .automatic(desiredCount: 3)) {
+                    AxisGridLine().foregroundStyle(.secondary.opacity(0.2))
+                    AxisValueLabel()
+                }
+            }
+            .frame(height: 160)
             .accessibilityLabel("Stacked bar chart with \(bars.count) bars, maximum \(maxValue.formatted())")
             HStack(spacing: 12) {
                 legend("Allowed", .green)
@@ -238,10 +264,10 @@ private struct DnsQueriesChart: View {
             }
             .font(.caption2).foregroundStyle(.secondary)
         }
-        .onChange(of: bars) { selected = nil }
+        .onChange(of: bars) { rawSelection = nil }
     }
 
-    private func opacity(_ bar: Dns64Bar) -> Double { selected == nil || selected == bar.index ? 1 : 0.4 }
+    private func opacity(_ span: Span) -> Double { selected == nil || selected?.id == span.id ? 1 : 0.35 }
 
     private func legend(_ text: LocalizedStringKey, _ color: Color) -> some View {
         HStack(spacing: 4) {

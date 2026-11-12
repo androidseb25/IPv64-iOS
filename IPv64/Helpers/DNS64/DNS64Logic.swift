@@ -64,13 +64,6 @@ nonisolated func dns64Bars(_ buckets: [Node64.DNS64TimelineBucket]) -> [Dns64Bar
     }
 }
 
-/// Axis label indices `[0, (n-1)/3, 2(n-1)/3, n-1]`, distinct.
-nonisolated func dns64AxisIndices(count n: Int) -> [Int] {
-    guard n > 0 else { return [] }
-    var seen = Set<Int>()
-    return [0, (n - 1) / 3, 2 * (n - 1) / 3, n - 1].filter { seen.insert($0).inserted }
-}
-
 // MARK: - Query log
 
 nonisolated enum Dns64LogFilter: String, CaseIterable, Identifiable, Sendable {
