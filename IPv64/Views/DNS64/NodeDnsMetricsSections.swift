@@ -35,23 +35,25 @@ struct NodeDnsMetricsSections: View {
         case .success(let summary):
             let s = summary.summary
             let total = s?.total ?? 0, blocked = s?.blocked ?? 0, cached = s?.cached ?? 0
-            Section {
-                Grid(horizontalSpacing: 12, verticalSpacing: 12) {
+            // One list section like the Fitness/Health summaries: values in two columns, no separate cards.
+            Section("Overview") {
+                Grid(alignment: .topLeading, horizontalSpacing: 16, verticalSpacing: 12) {
                     GridRow {
                         DnsKpiTile("Queries", total.formatted(), caption: String(localized: "≈ \((total / range.hours).formatted()) per hour"))
                         DnsKpiTile("Blocked", blocked.formatted(), caption: String(localized: "\(dns64Percent(blocked, of: total)) % of queries"))
                     }
+                    Divider()
                     GridRow {
                         DnsKpiTile("From cache", cached.formatted(), caption: String(localized: "\(dns64Percent(cached, of: total)) % answered instantly"))
                         DnsKpiTile("Clients", (s?.clients ?? 0).formatted(), caption: nil)
                     }
+                    Divider()
                     GridRow {
                         DnsKpiTile("Ø Upstream", s?.avgUpstreamMs.map { "\(dns64Ms($0)) ms" } ?? "–", caption: nil)
                         DnsKpiTile("Blocklists", (summary.blocklistSize ?? 0).formatted(), caption: String(localized: "domains"))
                     }
                 }
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
+                .padding(.vertical, 4)
             }
         }
     }
@@ -175,12 +177,10 @@ private struct DnsKpiTile: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(label).font(.subheadline).foregroundStyle(.secondary)
-            Text(verbatim: value).font(.system(size: 32, weight: .bold, design: .rounded)).lineLimit(1).minimumScaleFactor(0.5)
-            Text(verbatim: caption ?? " ").font(.caption).foregroundStyle(.secondary).lineLimit(2, reservesSpace: true)
+            Text(verbatim: value).font(.system(.title2, design: .rounded).weight(.bold)).lineLimit(1).minimumScaleFactor(0.6)
+            if let caption { Text(verbatim: caption).font(.caption).foregroundStyle(.secondary).lineLimit(2) }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .padding(12)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12))
+        .frame(maxWidth: .infinity, alignment: .topLeading)
         .accessibilityElement(children: .combine)
     }
 }
