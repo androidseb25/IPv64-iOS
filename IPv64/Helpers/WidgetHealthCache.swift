@@ -1,9 +1,16 @@
 import Foundation
 import CryptoKit
 
+/// What the widget needs of a healthchecks 2.0 check: name plus the state history (newest first, raw `HC2CheckState` values).
+nonisolated struct WidgetCheck: Codable, Hashable, Sendable {
+    let token: String
+    let name: String
+    let states: [String]
+}
+
 nonisolated struct WidgetHealthCachePayload: Codable, Sendable {
     let account: String
-    let checks: [HealthCheck]
+    let checks: [WidgetCheck]
     let updatedAt: Date
 }
 
@@ -15,14 +22,6 @@ nonisolated enum WidgetHealthCacheStore {
     static func accountFingerprint() -> String? {
         guard let key = try? SecureStore.readString("API_KEY_WIDGET"), !key.isEmpty else { return nil }
         return SHA256.hash(data: Data(key.utf8)).map { String(format: "%02x", $0) }.joined()
-    }
-
-    static func write(checks: [HealthCheck]) {
-        guard let account = accountFingerprint(),
-              let data = try? JSONEncoder().encode(WidgetHealthCachePayload(account: account, checks: checks, updatedAt: .now)),
-              let defaults = UserDefaults(suiteName: suiteName) else { return }
-        defaults.set(data, forKey: cacheKey)
-        defaults.set(UUID().uuidString, forKey: revisionKey)
     }
 
     static func invalidate() {

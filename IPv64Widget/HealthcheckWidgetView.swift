@@ -114,7 +114,7 @@ struct HealthcheckWidgetView: View {
             Text(hc.name)
                 .font(.system(.title3, design: .rounded))
                 .lineLimit(1)
-            HealthcheckEventView(showSmall: true, events: hc.events)
+            HealthcheckEventView(showSmall: true, states: hc.states)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

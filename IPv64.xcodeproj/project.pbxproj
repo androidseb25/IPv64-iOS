@@ -85,16 +85,9 @@
 		9A68F3622EBE0A370033CC42 /* Exceptions for "IPv64" folder in "IPv64WidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Helpers/SharedExtensions.swift,
 				Helpers/SecureStore.swift,
-				Helpers/APITransport.swift,
 				Helpers/WidgetHealthCache.swift,
-				Models/Enum.swift,
-				Models/HealthCheck.swift,
-				Models/HealthCheckResult.swift,
-				Models/HealthEvents.swift,
 				Models/iLogger.swift,
-				Views/Healthcheck/HealthcheckEventView.swift,
 			);
 			target = 9A68F3462EBE088C0033CC42 /* IPv64WidgetExtension */;
 		};
