@@ -197,23 +197,6 @@ struct HealthCheckQuery: EntityQuery {
         guard !string.isEmpty else { return all }
         return all.filter { $0.name.localizedCaseInsensitiveContains(string) }
     }
-    
-    // --- Small: intent-spezifische Overloads (ausblenden bereits gewählter) ---
-    func suggestedEntities(for intent: SmallHealthchecksIntent) async throws -> [HealthCheckEntity] {
-        guard let res = await fetchOrCached() else { return [.none] }
-        let selected = Set([intent.hc1?.id, intent.hc2?.id].compactMap { $0 })
-        return mapAll(res).filteringOut(ids: selected)
-    }
-    
-    func entities(matching string: String, for intent: SmallHealthchecksIntent) async throws -> [HealthCheckEntity] {
-        guard let res = await fetchOrCached() else {
-            return HealthCheckEntity.none.name.localizedCaseInsensitiveContains(string) ? [.none] : []
-        }
-        let selected = Set([intent.hc1?.id, intent.hc2?.id].compactMap { $0 })
-        let all = mapAll(res).filteringOut(ids: selected)
-        guard !string.isEmpty else { return all }
-        return all.filter { $0.name.localizedCaseInsensitiveContains(string) }
-    }
 }
 
 extension Array where Element == HealthCheckEntity {
@@ -223,31 +206,14 @@ extension Array where Element == HealthCheckEntity {
 }
 
 extension HealthCheckQuery {
-    // Medium
-    func suggestedEntities(for intent: MediumHealthchecksIntent) async throws -> [HealthCheckEntity] {
-        guard let res = await fetchOrCached() else { return [.none] }
-        let selected = Set([intent.hc1?.id, intent.hc2?.id, intent.hc3?.id, intent.hc4?.id].compactMap { $0 })
-        return mapAll(res).filteringOut(ids: selected)
-    }
-    
-    func entities(matching string: String, for intent: MediumHealthchecksIntent) async throws -> [HealthCheckEntity] {
-        guard let res = await fetchOrCached() else {
-            return HealthCheckEntity.none.name.localizedCaseInsensitiveContains(string) ? [.none] : []
-        }
-        let selected = Set([intent.hc1?.id, intent.hc2?.id, intent.hc3?.id, intent.hc4?.id].compactMap { $0 })
-        let all = mapAll(res).filteringOut(ids: selected)
-        guard !string.isEmpty else { return all }
-        return all.filter { $0.name.localizedCaseInsensitiveContains(string) }
-    }
-    
-    // Large
-    func suggestedEntities(for intent: LargeHealthchecksIntent) async throws -> [HealthCheckEntity] {
+    // One intent for all sizes; hide checks already picked in another slot.
+    func suggestedEntities(for intent: HealthchecksIntent) async throws -> [HealthCheckEntity] {
         guard let res = await fetchOrCached() else { return [.none] }
         let selected = Set([intent.hc1?.id, intent.hc2?.id, intent.hc3?.id, intent.hc4?.id, intent.hc5?.id, intent.hc6?.id, intent.hc7?.id, intent.hc8?.id, intent.hc9?.id, intent.hc10?.id].compactMap { $0 })
         return mapAll(res).filteringOut(ids: selected)
     }
     
-    func entities(matching string: String, for intent: LargeHealthchecksIntent) async throws -> [HealthCheckEntity] {
+    func entities(matching string: String, for intent: HealthchecksIntent) async throws -> [HealthCheckEntity] {
         guard let res = await fetchOrCached() else {
             return HealthCheckEntity.none.name.localizedCaseInsensitiveContains(string) ? [.none] : []
         }

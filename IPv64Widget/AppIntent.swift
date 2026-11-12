@@ -17,25 +17,10 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     var favoriteEmoji: String
 }
 
-struct SmallHealthchecksIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "Small Widget"
-    static var description = IntentDescription("Choose up to 2 Healthcheacks for the small widget.")
-    @Parameter(title: "HC 1") var hc1: HealthCheckEntity?
-    @Parameter(title: "HC 2") var hc2: HealthCheckEntity?
-}
-
-struct MediumHealthchecksIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "Medium Widget"
-    static var description = IntentDescription("Choose up to 4 Healthcheacks for the medium widget.")
-    @Parameter(title: "HC 1") var hc1: HealthCheckEntity?
-    @Parameter(title: "HC 2") var hc2: HealthCheckEntity?
-    @Parameter(title: "HC 3") var hc3: HealthCheckEntity?
-    @Parameter(title: "HC 4") var hc4: HealthCheckEntity?
-}
-
-struct LargeHealthchecksIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "Large Widget"
-    static var description = IntentDescription("Choose up to 10 Healthcheacks for the large widget.")
+/// One intent for every size: small shows the first 2 checks, medium 4, large 10.
+struct HealthchecksIntent: WidgetConfigurationIntent {
+    static var title: LocalizedStringResource = "Healthchecks"
+    static var description = IntentDescription("Choose up to 10 healthchecks: small shows 2, medium 4, large 10.")
     @Parameter(title: "HC 1") var hc1: HealthCheckEntity?
     @Parameter(title: "HC 2") var hc2: HealthCheckEntity?
     @Parameter(title: "HC 3") var hc3: HealthCheckEntity?

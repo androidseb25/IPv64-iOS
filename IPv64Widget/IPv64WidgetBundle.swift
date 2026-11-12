@@ -11,9 +11,7 @@ import SwiftUI
 @main
 struct IPv64WidgetBundle: WidgetBundle {
     var body: some Widget {
-        HealthcheckSmallWidget()
-        HealthcheckMediumWidget()
-        HealthcheckLargeWidget()
+        HealthcheckWidget()
         DNS64Widget()
         DNS64BlockingControl()
     }
