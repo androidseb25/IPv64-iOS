@@ -71,24 +71,29 @@ struct HealthcheckFormView: View {
 
     private var form: some View {
         Form {
-            HealthcheckCheckSection(f: $f, editing: editing)
-            HealthcheckExecutionSection(f: $f, editing: editing, nodes: nodes, account: account, detail: detail)
-            HealthcheckAdvancedSection(f: $f, expanded: $advancedOpen, editing: editing, detail: detail)
+            HealthcheckCheckSection(f: $f, editing: editing, error: error(for: .main))
+            HealthcheckEssentialSection(s: $f.ps, type: f.type, error: error(for: .params))
+            HealthcheckExecutionSection(f: $f, editing: editing, nodes: nodes, account: account, detail: detail,
+                                        error: error(for: .execution))
+            HealthcheckAdvancedSection(f: $f, expanded: $advancedOpen, editing: editing, detail: detail,
+                                       error: error(for: .advanced))
             HealthcheckNotificationsSection(f: $f, expanded: $notificationsOpen, editing: editing, detail: detail,
-                                            channels: channels, channelTypes: channelTypes)
-            if let issue, f != initial {
-                Section {
-                    Text(verbatim: issue.message).foregroundStyle(.red)
-                    if issue.section == .advanced && !advancedOpen {
-                        Button("Show Advanced") { advancedOpen = true }
-                    } else if issue.section == .notifications && !notificationsOpen {
-                        Button("Show Notifications & organisation") { notificationsOpen = true }
-                    }
-                }
-            }
+                                            channels: channels, channelTypes: channelTypes, error: error(for: .notifications))
         }
         .scrollDismissesKeyboard(.interactively)
         .disabled(isSaving)
+        // A problem in a collapsed section opens it as soon as it appears after editing.
+        .onChange(of: shownIssueSection) { _, section in
+            if section == .advanced { advancedOpen = true }
+            if section == .notifications { notificationsOpen = true }
+        }
+    }
+
+    /// Validation messages only show once the user changed something.
+    private var shownIssueSection: HealthcheckFormState.FormSection? { f != initial ? issue?.section : nil }
+
+    private func error(for section: HealthcheckFormState.FormSection) -> String? {
+        shownIssueSection == section ? issue?.message : nil
     }
 
     // MARK: Loading

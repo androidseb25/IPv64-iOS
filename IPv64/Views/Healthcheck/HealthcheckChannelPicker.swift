@@ -11,8 +11,8 @@ struct HealthcheckChannelPicker: View {
 
     private var summary: String {
         if useDefault { return String(localized: "Default channels") }
-        let names = channels.filter { selected.contains($0.id) }.map(HcFormat.channelName)
-        return names.isEmpty ? String(localized: "None") : names.joined(separator: ", ")
+        let count = channels.filter { selected.contains($0.id) }.count
+        return count == 0 ? String(localized: "None") : String(localized: "\(count) channels")
     }
 
     var body: some View {

@@ -82,13 +82,13 @@ nonisolated struct HealthcheckFormState: Equatable, Sendable {
     // MARK: Validation
 
     /// Which collapsed section holds the problem.
-    enum FormSection: Sendable { case main, advanced, notifications }
+    enum FormSection: Sendable { case main, params, execution, advanced, notifications }
 
     /// First failing rule (spec B4 validation 1–12).
     func validate(maxLocations: Int?) -> (message: String, section: FormSection)? {
         if name.nonBlank == nil { return (String(localized: "Please enter a name."), .main) }
         if type != .push && target.nonBlank == nil { return (String(localized: "Please enter a target."), .main) }
-        if let issue = ps.validateIssue(type, target: target) { return (issue.message, issue.inAdvanced ? .advanced : .main) }
+        if let issue = ps.validateIssue(type, target: target) { return (issue.message, issue.inAdvanced ? .advanced : .params) }
         let interval = durationToSeconds(intervalValue, unitIdx: intervalUnit)
         if let interval, interval < 20 { return (String(localized: "Interval must be at least 20 seconds."), .advanced) }
         let retry = durationToSeconds(retryValue, unitIdx: retryUnit)
@@ -106,12 +106,12 @@ nonisolated struct HealthcheckFormState: Equatable, Sendable {
             return (String(localized: "Connect timeout must be greater than 0."), .advanced)
         }
         if usesLocations && type != .push {
-            if locations.isEmpty { return (String(localized: "Select at least one location."), .main) }
+            if locations.isEmpty { return (String(localized: "Select at least one location."), .execution) }
             if let maxLocations, locations.count > maxLocations {
-                return (String(localized: "Your plan allows up to \(maxLocations) locations per check."), .main)
+                return (String(localized: "Your plan allows up to \(maxLocations) locations per check."), .execution)
             }
         }
-        if !online && nodeId == nil { return (String(localized: "Select a node."), .main) }
+        if !online && nodeId == nil { return (String(localized: "Select a node."), .execution) }
         if !useDefaultChannels && channels.isEmpty {
             return (String(localized: "Select at least one channel or use the default channels."), .notifications)
         }
@@ -210,6 +210,24 @@ nonisolated extension String {
 // MARK: - Helpers (ported from Android 2.1.0 HealthcheckLogic)
 
 nonisolated let healthcheckRepeatOptions: [Int?] = [nil, 0, 5, 10, 15, 30, 60, 120, 360, 720, 1440]
+
+nonisolated extension HC2CheckType {
+    var symbol: String {
+        switch self {
+        case .http: "globe"
+        case .keyword: "text.magnifyingglass"
+        case .json: "curlybraces"
+        case .dns: "network"
+        case .icmp: "dot.radiowaves.left.and.right"
+        case .tcp: "arrow.left.arrow.right"
+        case .port: "point.3.connected.trianglepath.dotted"
+        case .cert: "lock.shield"
+        case .push: "arrow.down.to.line"
+        case .whois: "person.text.rectangle"
+        default: "questionmark.circle"
+        }
+    }
+}
 
 /// Order of the type picker when creating a check.
 nonisolated let healthcheckCreateTypes: [HC2CheckType] = [.http, .keyword, .json, .dns, .icmp, .tcp, .port, .cert, .push, .whois]
