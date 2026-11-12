@@ -33,7 +33,9 @@ struct HealthcheckView: View {
 
     private var listView: some View {
         List(visible) { check in
-            HealthcheckItemView(check: check, isBusy: busyTokens.contains(check.token))
+            NavigationLink(value: HealthcheckRoute(token: check.token)) {
+                HealthcheckItemView(check: check, isBusy: busyTokens.contains(check.token))
+            }
                 .swipeActions {
                     Group {
                         Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = check }
@@ -52,6 +54,10 @@ struct HealthcheckView: View {
         .overlay { emptyState }
         .navigationTitle(Tabs.healthcheck.labelNew)
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(for: HealthcheckRoute.self) { route in
+            // The list re-reads once; the detail has already updated itself.
+            HealthcheckDetailView(token: route.token) { Task { await load() } }
+        }
         .toolbar { toolbar }
         .refreshable { await load() }
         .task { await load() }

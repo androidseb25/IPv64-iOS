@@ -26,17 +26,7 @@ nonisolated extension HC2CheckType {
 nonisolated enum Hc2StateUi: Sendable {
     case up, down, degraded, flapping, paused, pending
 
-    static func from(_ check: HC2Check) -> Hc2StateUi {
-        if check.paused == true { return .paused }
-        switch check.state?.state {
-        case .up: return .up
-        case .down: return .down
-        case .degraded: return .degraded
-        case .flapping: return .flapping
-        case .paused: return .paused
-        default: return .pending
-        }
-    }
+    static func from(_ check: HC2Check) -> Hc2StateUi { from(state: check.state?.state, paused: check.paused) }
 
     var label: String {
         switch self {

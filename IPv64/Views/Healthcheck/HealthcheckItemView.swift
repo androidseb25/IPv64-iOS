@@ -45,15 +45,31 @@ struct HealthcheckItemView: View {
             if isBusy {
                 ProgressView()
             } else {
-                Text(state.label)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(state.color)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(state.color.opacity(0.15), in: Capsule())
-                    .fixedSize()
+                HealthcheckStateTag(state: state)
             }
         }
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// Status capsule shared by the list row and the detail header.
+struct HealthcheckStateTag: View {
+    let state: Hc2StateUi
+
+    var body: some View { HealthcheckTag(text: LocalizedStringKey(state.label), color: state.color) }
+}
+
+struct HealthcheckTag: View {
+    let text: LocalizedStringKey
+    let color: Color
+
+    var body: some View {
+        Text(text)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(color)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .background(color.opacity(0.15), in: Capsule())
+            .fixedSize()
     }
 }
