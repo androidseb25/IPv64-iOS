@@ -216,12 +216,9 @@ struct HealthcheckDetailView: View {
             if busy || isLoading {
                 ProgressView()
             } else {
-                Menu {
-                    Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = true }
-                } label: {
-                    Label("More actions", systemImage: "ellipsis")
-                }
-                .disabled(detail == nil)
+                Button("Delete healthcheck", systemImage: "trash", role: .destructive) { confirmDelete = true }
+                    .tint(.red)
+                    .disabled(detail == nil)
             }
         }
     }
