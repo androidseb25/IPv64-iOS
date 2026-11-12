@@ -38,6 +38,8 @@ struct NodeDetailView: View {
     @State var historyLoaded = false
     @State var detailsOpen = false
     @State var tracking: Int?
+    /// Name of the module whose screen is pushed.
+    @State var moduleScreen: String?
 
     enum DetailSheet: String, Identifiable {
         case edit, connection, resolve, unlink
@@ -76,7 +78,7 @@ struct NodeDetailView: View {
         }
     }
 
-    private var content: some View {
+    private var screen: some View {
         List {
             if loaded, let info { sections(info) }
         }
@@ -89,10 +91,10 @@ struct NodeDetailView: View {
         .navigationDestination(for: HealthcheckRoute.self) { route in
             HealthcheckDetailView(token: route.token) { Task { await loadCloud() } }
         }
-        .task {
-            access = nodes.access(for: nodeId)
-            await loadCloud()
+        .navigationDestination(item: $moduleScreen) { module in
+            NodeModuleView(nodeId: nodeId, module: module)
         }
+        .task { await start() }
         .task(id: TickKey(hasAccess: isLocal, active: scenePhase == .active)) { await tickLoop() }
         .task(id: tracking) { await trackCommand() }
         .onChange(of: historyOpen) { if historyOpen && !historyLoaded { Task { await loadCommands() } } }
@@ -112,6 +114,10 @@ struct NodeDetailView: View {
                 NodeUnlinkSheet(nodeId: nodeId, name: displayName) { handleUnlink($0) }
             }
         }
+    }
+
+    private var content: some View {
+        screen
         .alert(confirmCommand.map { "\($0.label)?" } ?? "", isPresented: Binding(
             get: { confirmCommand != nil }, set: { if !$0 { confirmCommand = nil } }), presenting: confirmCommand) { command in
             Button("Send", role: command.name == .resolveConflict ? .destructive : nil) { Task { await send(command) } }
@@ -169,27 +175,33 @@ struct NodeDetailView: View {
         ToolbarItem(placement: .topBarTrailing) {
             if busy || isLoading {
                 ProgressView()
-            } else if directOnly {
-                forgetButton.tint(.red).disabled(!loaded)
-            } else if isLocal {
-                Menu {
-                    forgetButton
-                    unlinkButton
-                } label: {
-                    Label("More", systemImage: "ellipsis")
-                }
-                .disabled(!loaded)
             } else {
-                unlinkButton.tint(.red).disabled(!loaded)
+                moreMenu.disabled(!loaded)
             }
         }
     }
 
-    private var forgetButton: some View {
-        Button("Forget access", systemImage: "network.slash", role: .destructive) { confirmForget = true }
-    }
-
-    private var unlinkButton: some View {
-        Button("Unlink node", systemImage: "minus.circle", role: .destructive) { sheet = .unlink }
+    private var moreMenu: some View {
+        Menu {
+            if !directOnly {
+                Button(isLocal ? "Edit direct connection" : "Set up direct access", systemImage: "network") { sheet = .connection }
+            }
+            if canCommand {
+                Button("Repair", systemImage: "wrench.and.screwdriver") { confirmCommand = NodeCommand(name: .repair) }
+                    .disabled(tracking != nil)
+                if conflicts > 0 {
+                    Button("Resolve conflict", systemImage: "arrow.triangle.merge") { sheet = .resolve }
+                }
+            }
+            Divider()
+            if isLocal {
+                DestructiveMenuButton("Forget access", systemImage: "network.slash") { confirmForget = true }
+            }
+            if !directOnly {
+                DestructiveMenuButton("Unlink node", systemImage: "minus.circle") { sheet = .unlink }
+            }
+        } label: {
+            Label("More actions", systemImage: "ellipsis")
+        }
     }
 }

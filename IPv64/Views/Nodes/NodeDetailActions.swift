@@ -3,6 +3,14 @@ import IPv64
 
 // Loading, live tick, modules, commands, forget and unlink of the node detail.
 extension NodeDetailView {
+    /// The first live request starts at once, next to the cloud request; the 5 s tick follows.
+    func start() async {
+        access = nodes.access(for: nodeId)
+        async let live: Void = tick(force: true)
+        await loadCloud()
+        await live
+    }
+
     func loadCloud() async {
         let api = session.api
         isLoading = true

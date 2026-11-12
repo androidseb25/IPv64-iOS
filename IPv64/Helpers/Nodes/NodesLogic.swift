@@ -232,4 +232,19 @@ nonisolated enum NodesLogic {
         return counts.isEmpty ? String(localized: "The node keeps running standalone.")
             : String(localized: "\(counts). The node keeps running standalone.")
     }
+
+    // MARK: Module screens
+
+    /// ISO-3166 alpha-2 → flag emoji, `nil` if not two letters.
+    static func countryFlag(_ code: String?) -> String? {
+        guard let code = code?.uppercased(), code.count == 2, code.allSatisfy({ $0.isASCII && $0.isLetter }) else { return nil }
+        return String(String.UnicodeScalarView(code.unicodeScalars.compactMap { Unicode.Scalar(127_397 + $0.value) }))
+    }
+
+    /// DNS64 blocked share: below 10 one decimal, else whole percent; "–" without queries.
+    static func blockedPercent(total: Int, blocked: Int) -> String {
+        guard total > 0 else { return "–" }
+        let p = Double(blocked) * 100 / Double(total)
+        return p < 10 ? p.formatted(.number.precision(.fractionLength(1))) + " %" : "\(Int(p)) %"
+    }
 }

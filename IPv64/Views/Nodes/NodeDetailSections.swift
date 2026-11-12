@@ -43,14 +43,6 @@ extension NodeDetailView {
             }
             .accessibilityElement(children: .combine)
             if isLocal { liveLines }
-            Group {
-                if !isLocal {
-                    Button { sheet = .connection } label: { Label("Set up direct access", systemImage: "network") }
-                } else if live.failing || !directOnly {
-                    Button { sheet = .connection } label: { Label("Edit direct connection", systemImage: "network") }
-                }
-            }
-            .tint(.primary)
         }
     }
 
@@ -111,7 +103,9 @@ extension NodeDetailView {
         if isLocal, let modules = live.status?.modules, !modules.isEmpty {
             Section("Modules (\(modules.count))") {
                 ForEach(modules) { module in
-                    NodeModuleRow(module: module, disabled: busy || otherNodeId != nil) { toggleModule(module.name, enable: $0) }
+                    let screen = NodeModuleView.hasScreen(module.name) && module.enabled == true && otherNodeId == nil
+                    NodeModuleRow(module: module, disabled: busy || otherNodeId != nil,
+                                  onOpen: screen ? { moduleScreen = module.name } : nil) { toggleModule(module.name, enable: $0) }
                 }
             }
         } else if !info.modules.isEmpty {
@@ -161,25 +155,13 @@ extension NodeDetailView {
     // MARK: Commands
 
     @ViewBuilder private func commandsSection(_ info: NodeInfo) -> some View {
-        if canCommand || tracking != nil {
+        if tracking != nil {
             Section {
-                if tracking != nil {
-                    HStack(spacing: 8) {
-                        ProgressView()
-                        Text("Waiting for the node to run the command…").foregroundStyle(.secondary)
-                    }
-                }
-                if canCommand {
-                    Button { confirmCommand = NodeCommand(name: .repair) } label: {
-                        Label("Repair", systemImage: "wrench.and.screwdriver")
-                    }
-                    .disabled(tracking != nil)
-                    if conflicts > 0 {
-                        Button { sheet = .resolve } label: { Label("Resolve conflict", systemImage: "arrow.triangle.merge") }
-                    }
+                HStack(spacing: 8) {
+                    ProgressView()
+                    Text("Waiting for the node to run the command…").foregroundStyle(.secondary)
                 }
             }
-            .tint(.primary)
         }
         HcCollapsibleSection(title: "Command history", isExpanded: $historyOpen) {
             if historyLoading && !historyLoaded {
@@ -241,6 +223,8 @@ private struct NodeInfoRow: View {
 private struct NodeModuleRow: View {
     let module: Node64.ModuleStatus
     let disabled: Bool
+    /// `nil` = the module has no screen here.
+    let onOpen: (() -> Void)?
     let onToggle: (Bool) -> Void
 
     private var state: (text: LocalizedStringKey, color: Color) {
@@ -248,19 +232,42 @@ private struct NodeModuleRow: View {
         return module.running == true ? ("Running", .green) : ("Not running", .orange)
     }
 
-    var body: some View {
-        Toggle(isOn: Binding(get: { module.enabled == true }, set: onToggle)) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(module.name.nonBlank ?? "–")
-                HStack(spacing: 4) {
-                    if let version = module.version?.nonBlank { Text(verbatim: "v\(version) ·").foregroundStyle(.secondary) }
-                    Text(state.text).foregroundStyle(state.color)
-                }
-                .font(.subheadline)
-                if let error = module.lastError?.nonBlank { Text(error).font(.footnote).foregroundStyle(.red) }
+    private var label: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(module.name.nonBlank ?? "–")
+            HStack(spacing: 4) {
+                if let version = module.version?.nonBlank { Text(verbatim: "v\(version) ·").foregroundStyle(.secondary) }
+                Text(state.text).foregroundStyle(state.color)
             }
+            .font(.subheadline)
+            if let error = module.lastError?.nonBlank { Text(error).font(.footnote).foregroundStyle(.red) }
         }
-        .disabled(disabled || module.name.nonBlank == nil)
+    }
+
+    private var toggle: Binding<Bool> { Binding(get: { module.enabled == true }, set: onToggle) }
+
+    var body: some View {
+        if let onOpen {
+            // Borderless button and switch side by side: the row opens the module, the switch toggles it.
+            HStack(spacing: 12) {
+                Button(action: onOpen) {
+                    HStack {
+                        label
+                        Spacer(minLength: 8)
+                        Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.borderless)
+                .tint(.primary)
+                Toggle(module.name, isOn: toggle)
+                    .labelsHidden()
+                    .disabled(disabled || module.name.nonBlank == nil)
+            }
+        } else {
+            Toggle(isOn: toggle) { label }
+                .disabled(disabled || module.name.nonBlank == nil)
+        }
     }
 }
 

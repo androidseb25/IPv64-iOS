@@ -203,8 +203,8 @@ struct DomainDetailView: View {
         Menu {
             Button("Rotate update token", systemImage: "key") { confirm = .rotate }
             Divider()
-            Button("Reset domain", systemImage: "arrow.counterclockwise", role: .destructive) { askTyped(.reset) }
-            Button("Delete domain", systemImage: "trash", role: .destructive) { askTyped(.delete) }
+            DestructiveMenuButton("Reset domain", systemImage: "arrow.counterclockwise") { askTyped(.reset) }
+            DestructiveMenuButton("Delete domain", systemImage: "trash") { askTyped(.delete) }
         } label: {
             Label("More actions", systemImage: "ellipsis")
         }
