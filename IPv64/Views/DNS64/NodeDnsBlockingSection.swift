@@ -54,9 +54,9 @@ struct NodeDnsBlockingSection: View {
                         Task { await actions.run { onChange(try await dns.resume()) } }
                     }
                 } else {
-                    // Like pausing a Focus: one action sheet with the durations; picking one is the confirmation.
+                    // One centred alert with the durations; picking one is the confirmation.
                     Button("Pause blocking", systemImage: "pause.fill") { choosing = true }
-                        .confirmationDialog("Pause blocking?", isPresented: $choosing, titleVisibility: .visible) {
+                        .alert("Pause blocking?", isPresented: $choosing) {
                             ForEach(Self.choices) { choice in
                                 Button(choice.label) { pause(choice) }
                             }
