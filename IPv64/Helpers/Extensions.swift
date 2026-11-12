@@ -82,22 +82,6 @@ extension SettingsView {
 
 // MARK: - Parser-Helfer
 
-extension IntegrationResult {
-    static func parse(jsonData: Data) throws -> IntegrationResult {
-        let decoder = JSONDecoder()
-        return try decoder.decode(IntegrationResult.self, from: jsonData)
-    }
-    
-    static func parse(jsonString: String) throws -> IntegrationResult {
-        guard let data = jsonString.data(using: .utf8) else {
-            throw NSError(domain: "IntegrationResult", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid UTF-8"])
-        }
-        return try parse(jsonData: data)
-    }
-}
-
-// MARK: - Parser-Helfer
-
 extension DomainResult {
     static func parse(jsonData: Data) throws -> DomainResult {
         try JSONDecoder().decode(DomainResult.self, from: jsonData)

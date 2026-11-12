@@ -47,7 +47,6 @@ final class ApiService: ObservableObject {
         await request(url: URL(string: "https://\(onlyV4 ? "ipv4" : "ipv6").ipv64.net/update.php?howismyip")!,
                       authenticated: false, reportError: false)
     }
-    func GetIntegrations() async -> IntegrationResult? { await request(query: "?get_integrations") }
     func GetDomains() async -> DomainResult? { await request(query: "?get_domains") }
     func PostDomain(domain: String) async -> AddDomainResult? {
         await request(method: "POST", fields: ["add_domain": domain])
