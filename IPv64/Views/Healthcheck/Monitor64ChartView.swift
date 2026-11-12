@@ -37,6 +37,14 @@ struct Monitor64ChartView: View {
                 }
                 if let selected {
                     RuleMark(x: .value("Selected", selected)).foregroundStyle(.secondary.opacity(0.5))
+                    // A dot on each line at the touched time.
+                    ForEach(lines) { line in
+                        if let p = line.points.min(by: { abs($0.time.timeIntervalSince(selected)) < abs($1.time.timeIntervalSince(selected)) }) {
+                            PointMark(x: .value("Time", p.time), y: .value("Value", p.value))
+                                .foregroundStyle(by: .value("Series", line.name))
+                                .symbolSize(70)
+                        }
+                    }
                 }
             }
             .chartForegroundStyleScale(domain: lines.map(\.name),

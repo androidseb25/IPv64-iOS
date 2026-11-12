@@ -56,13 +56,18 @@ struct NodeDnsBlockingSection: View {
                 } else {
                     // One centred alert with the durations; picking one is the confirmation.
                     Button("Pause blocking", systemImage: "pause.fill") { choosing = true }
-                        .alert("Pause blocking?", isPresented: $choosing) {
-                            ForEach(Self.choices) { choice in
-                                Button(choice.label) { pause(choice) }
-                            }
-                            Button("Cancel", role: .cancel) {}
-                        } message: {
-                            Text("Ads and trackers will not be blocked while paused.")
+                        .background {
+                            // Alert buttons take the presenter's tint: neutral durations, so Cancel stands apart.
+                            Color.clear
+                                .alert("Pause blocking?", isPresented: $choosing) {
+                                    ForEach(Self.choices) { choice in
+                                        Button(choice.label) { pause(choice) }
+                                    }
+                                    Button("Cancel", role: .cancel) {}
+                                } message: {
+                                    Text("Ads and trackers will not be blocked while paused.")
+                                }
+                                .tint(.primary)
                         }
                 }
             }
