@@ -6,13 +6,17 @@
 //
 
 import SwiftUI
+import IPv64
 
 struct LogView: View {
     
     @Binding var popToRootTab: Tabs
     
-    @StateObject private var api = ApiService()
-    @State var logs: Logs = .empty
+    @Environment(Session.self) private var session
+    @State private var logs: [LogEntry] = []
+    @State private var nextBefore: Int?
+    @State private var isLoading = false
+    @State private var error: ErrorText?
     
     var body: some View {
         if #available(iOS 26.0, *) {
@@ -26,30 +30,45 @@ struct LogView: View {
     private var listView: some View {
         List {
             Section {
-                if (logs.logs.isEmpty) {
-                    ContentUnavailableView("No logs found", systemImage: "magnifyingglass")
+                if logs.isEmpty {
+                    if !isLoading {
+                        ContentUnavailableView("No logs found", systemImage: "magnifyingglass")
+                    }
                 } else {
-                    ForEach(logs.logs, id: \.id) { log in
+                    ForEach(logs) { log in
                         LogItemView(log: log)
+                            .onAppear {
+                                if log.id == logs.last?.id { Task { await load(more: true) } }
+                            }
                     }
                 }
             }
         }
-        .showLoading(.constant(api.isLoading))
-        .apiErrors(api)
+        .showLoading(.constant(isLoading && logs.isEmpty))
+        .errorAlert($error)
         .navigationTitle(Tabs.log.labelNew)
         .navigationBarTitleDisplayMode(.inline)
-        .task {
-            if let res = await api.GetLogs() {
-                logs = res
-            }
+        .task { await load(more: false) }
+    }
+    
+    private func load(more: Bool) async {
+        guard !isLoading, !more || nextBefore != nil else { return }
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            let before = more ? nextBefore : nil
+            let page = try await ipv64Retrying { try await session.api.account.logs(before: before) }
+            if Task.isCancelled { return }
+            logs = more ? logs + page.items : page.items
+            nextBefore = page.meta?.nextBefore
+        } catch {
+            if !Task.isCancelled { self.error = ErrorText(error) }
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        var logs: Logs = .empty
-        LogView(popToRootTab: .constant(.domain), logs: logs)
+        LogView(popToRootTab: .constant(.domain))
     }
 }

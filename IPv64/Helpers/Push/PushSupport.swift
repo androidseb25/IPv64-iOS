@@ -3,7 +3,7 @@ import IPv64
 
 /// What the push code needs from the app: the active account's API client and a few helpers (configuration: `AppConfig`).
 
-/// API v2 client of the active account (IPv64-SPM); the rest of the app still uses `ApiService`.
+/// API v2 client of the active account (IPv64-SPM).
 @Observable
 final class Session {
     var apiKey: String { UserStorage.shared.ApiKey.trimmingCharacters(in: .whitespacesAndNewlines) }

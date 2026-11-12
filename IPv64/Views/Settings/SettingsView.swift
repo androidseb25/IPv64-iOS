@@ -14,7 +14,6 @@ struct SettingsView: View {
     @Binding var popToRootTab: Tabs
     
     @StateObject private var userStorage = UserStorage.shared
-    @StateObject private var api = ApiService()
     
     @State private var alertType: AlertType?
 

@@ -7,22 +7,23 @@
 
 import Foundation
 import SwiftUI
+import IPv64
 
 struct LogItemView: View {
-    @State var log: MyLogs
+    let log: LogEntry
     
     var body: some View {
         VStack {
-            Text(log.header)
+            Text(log.title ?? "")
                 .font(.title2)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(log.content)
+            Text(log.message ?? "")
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.bottom, 5)
-            Text(log.LogTime)
+            Text(log.time?.formatted(.dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits).second(.twoDigits).day(.twoDigits).month(.twoDigits).year().locale(Locale(identifier: "de_DE"))) ?? "")
                 .font(.subheadline)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -30,8 +31,4 @@ struct LogItemView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
-}
-
-#Preview {
-    LogItemView(log: MyLogs(time: "0001-01-01 00:00:00", header: "Test", content: "Test"))
 }

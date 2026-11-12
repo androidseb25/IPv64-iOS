@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IPv64
 
 struct LoginView: View {
     @Environment(\.colorScheme) private var systemColorScheme
@@ -20,7 +21,8 @@ struct LoginView: View {
     @State private var showDeniedAlert = false
     @State private var isAuthorized = false
     
-    @StateObject private var api = ApiService()
+    @State private var isLoading = false
+    @State private var error: ErrorText?
     @State private var loginTask: Task<Void, Never>?
     @State private var apiKey = ""
     
@@ -35,7 +37,7 @@ struct LoginView: View {
                 content
             }
         }
-        .apiErrors(api)
+        .errorAlert($error)
         .onDisappear { loginTask?.cancel() }
         .navigationTitle("Login")
         .navigationBarTitleDisplayMode(.inline)
@@ -142,20 +144,31 @@ struct LoginView: View {
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .padding(16)
         }
-        .disabled(api.isLoading || apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-        .overlay { if api.isLoading { ProgressView() } }
+        .disabled(isLoading || apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        .overlay { if isLoading { ProgressView() } }
     }
 
     private func login(_ rawKey: String) async {
         let key = rawKey.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !key.isEmpty, !api.isLoading else { return }
-        guard let account = await api.GetAccountStatus(token: key), !Task.isCancelled else { return }
-        guard APITransport.isSuccessStatus(account.status), account.account_status == 1 else {
-            api.errorMessage = "This API key does not belong to an active account."
+        guard !key.isEmpty, !isLoading else { return }
+        isLoading = true
+        defer { isLoading = false }
+        let me: Me
+        do {
+            me = try await ipv64Retrying { try await IPv64(apiKey: key).account.me() }
+        } catch {
+            guard !Task.isCancelled else { return }
+            // 401/403 = key rejected or account inactive; anything else keeps the server text.
+            if let status = (error as? IPv64Error)?.statusCode, status == 401 || status == 403 {
+                self.error = ErrorText(title: String(localized: "Request failed"), message: String(localized: "This API key does not belong to an active account."))
+            } else {
+                self.error = ErrorText(error)
+            }
             return
         }
+        guard !Task.isCancelled else { return }
         if !user.list.contains(where: { $0.ApiKey == key }) {
-            user = User(Username: account.email, ApiKey: key, Information: "")
+            user = User(Username: me.email ?? me.username ?? "", ApiKey: key, Information: "")
             user.save()
             guard user.list.contains(where: { $0.ApiKey == key }) else { return }
         }

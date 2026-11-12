@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IPv64
 
 struct AccountView: View {
     
@@ -14,8 +15,10 @@ struct AccountView: View {
     @Binding var popToRootTab: Tabs
     
     @StateObject private var userStorage = UserStorage.shared
-    @StateObject private var api = ApiService()
-    @State private var account: AccountInfo = .empty
+    @Environment(Session.self) private var session
+    @State private var me: Me?
+    @State private var isLoading = false
+    @State private var error: ErrorText?
     @State private var user: User = .empty
     @State private var showUserSheet = false
     
@@ -33,43 +36,24 @@ struct AccountView: View {
             accountSelectionView
             
             Section("Account") {
-                labeled("Account Status", badge: account.AccountStatus, color: account.AccountStatusColor)
-                labeled("Account Plan", badge: account.account_class.class_name.isEmpty ? "none" : account.account_class.class_name, color: .yellow)
-                labeled("E-Mail", badge: account.email.isEmpty ? "none" : account.email, color: .gray)
-                labeled("Registered since", badge: account.RegisteredSince, color: .gray)
+                labeled("Account Plan", badge: me?.plan?.name?.nonBlank ?? "none", color: .yellow)
+                labeled("E-Mail", badge: me?.email?.nonBlank ?? "none", color: .gray)
+                labeled("Registered since", badge: registeredSince, color: .gray)
             }
             
             Section("DynDNS") {
-                labeled("Own Domain", badge: account.OwnDomainsUsageText, color: account.OwnDomainsUsageColor)
-                labeled("DynDNS Domains", badge: account.DynDnsDomainUsageText, color: account.DynDnsDomainUsageColor)
-                labeled("DynDNS Update Limit / 24h", badge: account.DynDnsUpdateUsageText, color: account.DynDnsUpdateUsageColor)
-                HStack {
-                    Text("DynDNS Updatehash")
-                    Spacer()
-                    Text("swipe")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                }
-                .swipeActions {
-                    Button {
-                        Clipboard.copy(account.update_hash, sensitive: true)
-                    } label: {
-                        Label("Copy", systemImage: "document.on.document")
-                    }
-                    .tint(.blue)
-                    .labelStyle(.iconOnly)
-                }
+                quota("Own Domain", usage?.ownDomains)
+                quota("DynDNS Domains", usage?.dyndnsDomains)
+                quota("DynDNS Update Limit / 24h", usage?.dyndnsUpdates24h)
             }
             
             Section("Healthcheck") {
-                labeled("Healthchecks", badge: account.HealthcheckUsageText, color: account.HealthcheckUsageColor)
-                labeled("Healthchecks Updates / 24h", badge: account.HealthcheckUpdateUsageText, color: account.HealthcheckUpdateUsageColor)
-                labeled("SMS Limit / 24h", badge: account.SmsUsageText, color: account.SmsUsageColor)
+                quota("Healthchecks", usage?.healthchecks)
+                quota("Healthchecks Updates / 24h", usage?.healthcheckPings24h)
+                quota("SMS Limit / 24h", usage?.sms24h)
             }
             
             Section("API") {
-                labeled("API calls Limit / 24h", badge: account.ApiUsageText, color: account.ApiUsageColor)
-                
                 HStack {
                     Text("API Key")
                     Spacer()
@@ -88,22 +72,14 @@ struct AccountView: View {
                 }
             }
         }
-        .showLoading(.constant(api.isLoading))
-        .apiErrors(api)
+        .showLoading(.constant(isLoading))
+        .errorAlert($error)
         .navigationTitle(Tabs.account.labelNew)
         .navigationBarTitleDisplayMode(.inline)
-        .task {
-            if let res = await api.GetAccountStatus() {
-                account = res
-            }
-        }
+        .task { await load() }
         .sheet(isPresented: $showUserSheet.animation()) {
             UserView().onDisappear {
-                Task {
-                    if let res = await api.GetAccountStatus() {
-                        account = res
-                    }
-                }
+                Task { await load() }
             }
         }
     }
@@ -134,6 +110,38 @@ struct AccountView: View {
             .padding(.horizontal, 8)
             .foregroundStyle(systemColorScheme == .dark ? .white : .black)
         }
+    }
+    
+    private var usage: Me.Usage? { me?.usage }
+    
+    private var registeredSince: String {
+        me?.registeredAt?.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year().locale(Locale(identifier: "de_DE"))) ?? "01.01.0001"
+    }
+    
+    private func load() async {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            let result = try await ipv64Retrying { try await session.api.account.me() }
+            if !Task.isCancelled { me = result }
+        } catch {
+            if !Task.isCancelled { self.error = ErrorText(error) }
+        }
+    }
+    
+    /// "used / limit", ∞ without limit; green below 70 %, yellow below 90 %, otherwise red.
+    private func quota(_ title: String, _ q: Me.Quota?) -> some View {
+        let used = Int(q?.used ?? 0)
+        let text: String
+        var color = Color.green
+        if let limit = q?.limit, limit > 0 {
+            text = "\(used.formatted()) / \(limit.formatted())"
+            let ratio = Double(used) / Double(limit)
+            color = ratio < 0.7 ? .green : ratio < 0.9 ? .yellow : .red
+        } else {
+            text = "\(used.formatted()) / ∞"
+        }
+        return labeled(title, badge: text, color: color)
     }
     
     @ViewBuilder
