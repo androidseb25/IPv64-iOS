@@ -14,5 +14,7 @@ struct IPv64WidgetBundle: WidgetBundle {
         HealthcheckSmallWidget()
         HealthcheckMediumWidget()
         HealthcheckLargeWidget()
+        DNS64Widget()
+        DNS64BlockingControl()
     }
 }

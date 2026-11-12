@@ -1,22 +1,7 @@
 import SwiftUI
 import IPv64
 
-/// What the push code needs from the app: SecNtfy configuration, the active account's API client and a few helpers.
-
-nonisolated enum AppConfig {
-    static let appGroup = "group.ipv64.net"
-    static let secNtfyURL = "https://api.secntfy.app"
-    /// Name in a node's audit log for changes made from this app (`Node64.Configuration.agentActor`).
-    static let nodeAgentActor = "IPv64 iOS"
-
-    /// iOS SecNtfy app key: Info.plist `SECNTFY_APP_KEY` (file IPv64-net-Info.plist).
-    static var secNtfyAppKey: String {
-        (Bundle.main.object(forInfoDictionaryKey: "SECNTFY_APP_KEY") as? String)?
-            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-    }
-
-    static var isSecNtfyConfigured: Bool { !secNtfyAppKey.isEmpty }
-}
+/// What the push code needs from the app: the active account's API client and a few helpers (configuration: `AppConfig`).
 
 /// API v2 client of the active account (IPv64-SPM); the rest of the app still uses `ApiService`.
 @Observable

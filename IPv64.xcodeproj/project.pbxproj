@@ -85,6 +85,10 @@
 		9A68F3622EBE0A370033CC42 /* Exceptions for "IPv64" folder in "IPv64WidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Helpers/AppConfig.swift,
+				Helpers/Nodes/LocalNodeStore.swift,
+				Helpers/Nodes/LocalNodeURL.swift,
+				Helpers/Nodes/NodeTransport.swift,
 				Helpers/SecureStore.swift,
 				Helpers/WidgetHealthCache.swift,
 				Models/iLogger.swift,

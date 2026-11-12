@@ -1,4 +1,5 @@
 import SwiftUI
+import WidgetKit
 import IPv64
 
 /// Blocking card: state, countdown, pause durations, resume. An unreachable node shows only the error.
@@ -73,7 +74,11 @@ struct NodeDnsBlockingSection: View {
             }
         }
         .task(id: end) { await countdown() }
-        .onChange(of: paused) { if !paused { localEnd = nil } }
+        .onChange(of: paused) {
+            if !paused { localEnd = nil }
+            WidgetCenter.shared.reloadTimelines(ofKind: AppConfig.dns64WidgetKind)
+            ControlCenter.shared.reloadControls(ofKind: AppConfig.dns64ControlKind)
+        }
     }
 
     private func pause(_ choice: Choice) {
