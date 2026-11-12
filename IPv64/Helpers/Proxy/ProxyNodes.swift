@@ -10,6 +10,16 @@ struct ProxyNodeData: Identifiable {
     /// Set when the node does not answer.
     var error: ErrorText?
 
+    /// Hosts of a reachable node that are not in CDN64 yet.
+    var cdnChoices: [CdnHostChoice] {
+        guard error == nil else { return [] }
+        let used = cdn
+        return hosts.filter { used[$0.id] == nil }.map {
+            CdnHostChoice(nodeId: id, nodeName: name, hostId: $0.id,
+                          label: ($0.names ?? []).joined(separator: ", ").nonBlank ?? "#\($0.id)")
+        }
+    }
+
     /// CDN64 names by host id.
     var cdn: [Int: Node64.CDNOnlineName] {
         Dictionary((online?.names ?? []).compactMap { n in n.hostID.map { ($0, n) } }, uniquingKeysWith: { a, _ in a })
@@ -65,20 +75,6 @@ extension ConnectedNodes {
 
     func loadProxyNode(_ id: String, withHosts: Bool) async -> ProxyNodeData {
         await ProxyNodeData.load(id: id, name: name(of: id), client: client(for: id), withHosts: withHosts)
-    }
-
-    /// Hosts of the given nodes that are not in CDN64 yet; nodes whose host list fails are skipped.
-    func cdnChoices(for nodes: [ProxyNodeData]) async -> [CdnHostChoice] {
-        var choices: [CdnHostChoice] = []
-        for node in nodes where node.error == nil {
-            guard let client = client(for: node.id), let hosts = try? await client.proxy64.hosts.list() else { continue }
-            let used = Set(node.online?.names?.compactMap(\.hostID) ?? [])
-            choices += hosts.filter { !used.contains($0.id) }.map {
-                CdnHostChoice(nodeId: node.id, nodeName: node.name, hostId: $0.id,
-                              label: ($0.names ?? []).joined(separator: ", ").nonBlank ?? "#\($0.id)")
-            }
-        }
-        return choices
     }
 
     /// Enables CDN64 for a host; returns an error to show (also a partly failed name), `nil` on success.

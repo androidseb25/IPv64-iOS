@@ -20,6 +20,8 @@ struct ProxyHostEditView: View {
     @State private var loaded: Node64.ProxyHost?
     @State private var didLoad = false
     @State private var form = ProxyHostForm()
+    /// State after loading (new host: empty form); Save is offered only when `form` differs.
+    @State private var initial = ProxyHostForm()
     @State private var accessLists: [Int: String] = [:]
     @State private var certificates: [Int: String] = [:]
     @State private var cdnName: Node64.CDNOnlineName?
@@ -36,6 +38,7 @@ struct ProxyHostEditView: View {
     private var hostId: Int? { route.hostId }
     private var create: Bool { hostId == nil }
     private var ready: Bool { create || loaded != nil }
+    private var changed: Bool { didLoad && ready && form != initial }
 
     var body: some View {
         if #available(iOS 26.0, *) {
@@ -101,18 +104,18 @@ struct ProxyHostEditView: View {
                     .tint(.red)
                     .disabled(busy || loaded == nil)
             }
-            if #available(iOS 26.0, *) {
+            if #available(iOS 26.0, *), changed || busy {
                 ToolbarSpacer(.fixed, placement: .topBarTrailing)
             }
         }
-        ToolbarItem(placement: .topBarTrailing) {
-            if busy {
-                ProgressView()
-            } else {
-                // Enabled once the host is loaded (never save before: it would overwrite the names);
-                // invalid input is reported inline and in an alert on tap.
-                Button("Save", systemImage: "checkmark") { Task { await save() } }
-                    .disabled(!ready || !didLoad)
+        // Only offered once something changed; invalid input is reported inline and in an alert on tap.
+        if changed || busy {
+            ToolbarItem(placement: .confirmationAction) {
+                if busy {
+                    ProgressView()
+                } else {
+                    Button("Save", systemImage: "checkmark") { Task { await save() } }
+                }
             }
         }
     }
@@ -140,6 +143,7 @@ struct ProxyHostEditView: View {
                 let host = try await node.proxy64.hosts.get(hostId)
                 loaded = host
                 form = ProxyHostForm(host: host)
+                initial = form
             }
             // Choices are optional: a failure only leaves them out.
             if let lists = try? await node.proxy64.accessLists.list() {

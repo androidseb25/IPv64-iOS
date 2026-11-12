@@ -105,4 +105,22 @@ nonisolated enum ProxyLogic {
     static func firstEnableError(_ results: [(name: String?, failed: Bool, error: String?, code: String?)]) -> String? {
         results.first(where: \.failed).map { [$0.name, $0.error ?? $0.code].compactMap { $0 }.joined(separator: ": ") }
     }
+
+    static var noNodeError: ErrorText {
+        ErrorText(title: String(localized: "No node reachable"),
+                  message: String(localized: "No node with Proxy64 is reachable. Check the connection under More → Nodes."))
+    }
+
+    // MARK: Numbers
+
+    static func megabytes(_ mb: Double) -> String {
+        if mb >= 1024 * 1024 { return String(format: "%.1f TB", locale: .current, mb / (1024 * 1024)) }
+        if mb >= 1024 { return String(format: "%.2f GB", locale: .current, mb / 1024) }
+        return String(format: "%.1f MB", locale: .current, mb)
+    }
+
+    static func fraction(used: Double?, limit: Int?) -> Double? {
+        guard let limit, limit > 0 else { return nil }
+        return min(max((used ?? 0) / Double(limit), 0), 1)
+    }
 }

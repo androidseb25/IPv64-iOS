@@ -7,7 +7,6 @@ struct ProxyView: View {
     @Environment(ConnectedNodes.self) private var nodes
     @Binding var popToRootTab: Tabs
     @State private var groups: [ProxyNodeData]?
-    @State private var cloudNames: [String]?
     @State private var usage: Me.Usage?
     @State private var sheet: ProxySheet?
     @State private var newHost: ProxyHostRoute?
@@ -69,8 +68,11 @@ struct ProxyView: View {
         .task(id: nodes.proxyIds) { await load() }
         .sheet(item: $sheet) { sheet in
             switch sheet {
-            case .addDomain:
-                CdnAddSheet(exclude: Set(cloudNames ?? [])) { Task { await load() } }
+            case .enableFlow(let choices):
+                CdnEnableFlow(choices: choices) { choice, mode, healthcheck in
+                    if let failure = await nodes.enableCdn64(choice, mode: mode, healthcheck: healthcheck) { error = failure }
+                    await reload(node: choice.nodeId)
+                }
             case .pickNode:
                 DynDNSSheet(title: "Select node") {
                     Section {
@@ -94,23 +96,35 @@ struct ProxyView: View {
         .errorAlert($error)
     }
 
+    private var cdnNameCount: Int { (groups ?? []).reduce(0) { $0 + ($1.online?.names?.count ?? 0) } }
+
     private var cdnSection: some View {
         Section("CDN64") {
             NavigationLink {
-                CdnView(popToRootTab: $popToRootTab, nodeMode: true)
+                CdnView(popToRootTab: $popToRootTab)
             } label: {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("CDN64")
-                    Text(cloudNames.map { String(localized: "\($0.count) domains") } ?? String(localized: "Cloud CDN from ipv64.net"))
+                    Text("\(cdnNameCount) names")
                         .font(.subheadline).foregroundStyle(.secondary)
                 }
             }
-            Button { sheet = .addDomain } label: { Label("Add domain to CDN64", systemImage: "plus.circle") }
+            Button { addCdn() } label: { Label("Add domain to CDN64", systemImage: "plus.circle") }
         }
     }
 
     private func editor(_ route: ProxyHostRoute) -> some View {
         ProxyHostEditView(route: route) { Task { await reload(node: route.nodeId) } }
+    }
+
+    /// Node API only: hosts of the reachable nodes that are not in CDN64 yet.
+    private func addCdn() {
+        let reachable = (groups ?? []).filter { $0.error == nil }
+        if reachable.isEmpty {
+            error = ProxyLogic.noNodeError
+        } else {
+            sheet = .enableFlow(reachable.flatMap(\.cdnChoices))
+        }
     }
 
     private func addHost() {
@@ -130,21 +144,20 @@ struct ProxyView: View {
     private func load() async {
         let api = session.api
         async let me = try? ipv64Retrying { try await api.account.me() }
-        async let cloud = try? ipv64Retrying { try await api.cdn.list() }
         let loaded = await nodes.loadProxyNodes(withHosts: true)
         usage = await me?.usage
-        cloudNames = await cloud?.compactMap(\.domain)
         if !Task.isCancelled { groups = loaded }
     }
 }
 
 private enum ProxySheet: Identifiable {
-    case addDomain, pickNode
+    case pickNode
     case enableCdn(CdnHostChoice)
+    case enableFlow([CdnHostChoice])
 
     var id: String {
         switch self {
-        case .addDomain: "add"
+        case .enableFlow: "flow"
         case .pickNode: "node"
         case .enableCdn(let choice): "cdn/" + choice.id
         }

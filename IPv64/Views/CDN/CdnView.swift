@@ -1,190 +1,81 @@
 import SwiftUI
 import IPv64
 
-/// CDN64 tab (API v2, the account's CDN domains): usage section, compact rows, add and delete.
-/// `nodeMode` (pushed from Proxy64): the CDN64 names of every proxy node first, the cloud list as "Old CDN".
+/// CDN64: the CDN64 names of every connected proxy node. Tab root without a proxy node explains how to get one;
+/// pushed from Proxy64 otherwise. "+" enables CDN64 for a proxy host.
 struct CdnView: View {
-    @Environment(Session.self) private var session
     @Environment(ConnectedNodes.self) private var nodes
     @Binding var popToRootTab: Tabs
-    var nodeMode = false
-    @State private var nodeData: [ProxyNodeData] = []
-    @State private var domains: [CDNDomain]?
-    @State private var usage: Me.Usage?
-    @State private var showAdd = false
+    @State private var nodeData: [ProxyNodeData]?
     @State private var enableChoices: [CdnHostChoice]?
-    @State private var preparingEnable = false
-    @State private var confirmDelete: CDNDomain?
-    @State private var deletedIDs: Set<String> = []
     @State private var error: ErrorText?
-
-    private var availability: CdnLogic.Availability {
-        CdnLogic.availability(used: usage?.cdnDomains?.used, limit: usage?.cdnDomains?.limit)
-    }
-
-    private var visible: [CDNDomain] {
-        (domains ?? []).filter { !deletedIDs.contains($0.id) }
-            .sorted { $0.displayName.localizedStandardCompare($1.displayName) == .orderedAscending }
-    }
-
-    private var isBusy: Bool { visible.contains { $0.isBusy } }
 
     var body: some View {
         if #available(iOS 26.0, *) {
-            listView.setColorGradient(showAdd || enableChoices != nil ? .clear : .orange)
-        } else { listView }
+            content.setColorGradient(enableChoices != nil ? .clear : .orange)
+        } else { content }
     }
 
-    private var listView: some View {
-        List {
-            if nodeMode {
-                ForEach(nodeData) { CdnNodeSection(node: $0) }
-            }
-            if availability != .notInPlan {
-                if !nodeMode { CdnUsageSection(usage: usage) }
-                if case .limitReached(let used, let limit) = availability {
-                    Section {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Plan limit reached (\(used) of \(limit) domains)")
-                            Text("Remove a domain from the CDN or upgrade your plan to add more.")
-                                .font(.subheadline).foregroundStyle(.secondary)
-                        }
+    private var content: some View {
+        Group {
+            if nodes.proxyIds.isEmpty {
+                ContentUnavailableView {
+                    Label("CDN64 needs a node", systemImage: "cloud")
+                } description: {
+                    Text("CDN64 runs on a Node64 with the Proxy64 module. Connect one under More → Nodes.")
+                }
+            } else {
+                List {
+                    ForEach(nodeData ?? []) { data in
+                        CdnNodeSection(node: data) { id in Task { await reload(node: id) } }
                     }
                 }
-                if nodeMode {
-                    if !visible.isEmpty { Section("Old CDN") { domainRows } }
-                } else {
-                    domainRows
+                .overlay { if nodeData == nil { ProgressView("Loading CDN64…") } }
+                .refreshable { await load() }
+                .task(id: nodes.proxyIds) { await load() }
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button { enable() } label: { Label("Enable CDN64 for a proxy host", systemImage: "plus") }
+                            .disabled(nodeData == nil)
+                    }
                 }
+                .sheet(isPresented: Binding(get: { enableChoices != nil }, set: { if !$0 { enableChoices = nil } })) {
+                    CdnEnableFlow(choices: enableChoices ?? []) { choice, mode, healthcheck in
+                        if let failure = await nodes.enableCdn64(choice, mode: mode, healthcheck: healthcheck) { error = failure }
+                        await reload(node: choice.nodeId)
+                    }
+                }
+                .errorAlert($error)
             }
         }
-        .overlay { emptyState }
         .navigationTitle(Tabs.cdn.labelNew)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar { toolbar }
-        .refreshable { await load() }
-        .task { await load() }
-        // Polls while the CDN bot works (AGENTS.md rule 8); ends with the view or when nothing is pending.
-        .task(id: isBusy) {
-            while isBusy && !Task.isCancelled {
-                try? await Task.sleep(for: .seconds(4))
-                if Task.isCancelled { return }
-                await load(silent: true)
-            }
-        }
-        .sheet(isPresented: $showAdd) {
-            CdnAddSheet(exclude: Set((domains ?? []).compactMap(\.domain))) { Task { await load() } }
-        }
-        .sheet(isPresented: Binding(get: { enableChoices != nil }, set: { if !$0 { enableChoices = nil } })) {
-            CdnEnableFlow(choices: enableChoices ?? []) { choice, mode, healthcheck in
-                if let failure = await nodes.enableCdn64(choice, mode: mode, healthcheck: healthcheck) { error = failure }
-                await load(silent: true)
-            }
-        }
-        .alert("Remove from CDN?", isPresented: Binding(get: { confirmDelete != nil }, set: { if !$0 { confirmDelete = nil } }),
-               presenting: confirmDelete) { domain in
-            Button("Remove", role: .destructive) { Task { await delete(domain) } }
-            Button("Cancel", role: .cancel) {}
-        } message: { domain in
-            Text("Do you really want to remove \"\(domain.displayName)\" from the CDN? Turn the CDN off for all its records first.")
-        }
-        .errorAlert($error)
     }
 
-    @ToolbarContentBuilder
-    private var toolbar: some ToolbarContent {
-        if availability != .notInPlan {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button { nodeMode ? prepareEnable() : add() } label: {
-                    Label(nodeMode ? "Enable CDN64 for a proxy host" : "Add domain to CDN", systemImage: "plus")
-                }
-                .disabled(domains == nil || preparingEnable)
-            }
-        }
-    }
-
-    @ViewBuilder private var domainRows: some View {
-        ForEach(visible) { domain in
-            CdnItemView(domain: domain)
-                .swipeActions {
-                    Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = domain }
-                        .labelStyle(.iconOnly)
-                        .tint(.red)
-                }
-        }
-    }
-
-    @ViewBuilder private var emptyState: some View {
-        if domains == nil {
-            ProgressView("Loading CDN…")
-        } else if nodeMode {
-            // The node sections carry the content.
-        } else if availability == .notInPlan {
-            ContentUnavailableView("CDN not available", systemImage: "cloud",
-                                   description: Text("Your plan does not include the CDN."))
-        } else if visible.isEmpty {
-            ContentUnavailableView {
-                Label("No domains in the CDN yet", systemImage: "cloud")
-            } description: {
-                Text("Add a domain to serve it through the CDN.")
-            } actions: {
-                Button("Add domain") { add() }
-            }
-        }
-    }
-
-    private func prepareEnable() {
-        preparingEnable = true
-        Task {
-            enableChoices = await nodes.cdnChoices(for: nodeData)
-            preparingEnable = false
-        }
-    }
-
-    private func add() {
-        if case .limitReached(_, let limit) = availability {
-            error = ErrorText(title: String(localized: "Plan limit reached"),
-                              message: String(localized: "Your plan allows \(limit) CDN domains. Remove one or upgrade your plan."))
+    private func enable() {
+        let choices = (nodeData ?? []).flatMap(\.cdnChoices)
+        if (nodeData ?? []).allSatisfy({ $0.error != nil }) {
+            error = ProxyLogic.noNodeError
         } else {
-            showAdd = true
+            enableChoices = choices
         }
     }
 
-    private func load(silent: Bool = false) async {
-        let api = session.api
-        do {
-            async let me = ipv64Retrying { try await api.account.me() }
-            async let online = nodeMode ? nodes.loadProxyNodes(withHosts: false) : []
-            // The old cloud CDN is optional next to the nodes (the plan may exclude it).
-            let list = nodeMode ? ((try? await ipv64Retrying { try await api.cdn.list() }) ?? [])
-                : try await ipv64Retrying { try await api.cdn.list() }
-            nodeData = await online
-            domains = list
-            usage = try? await me.usage
-            deletedIDs.formIntersection(list.map(\.id))
-        } catch is CancellationError {
-        } catch {
-            if domains == nil { domains = [] }
-            if !silent { self.error = ErrorText(error) }
-        }
+    private func load() async {
+        let loaded = await nodes.loadProxyNodes(withHosts: true)
+        if !Task.isCancelled { nodeData = loaded }
     }
 
-    private func delete(_ domain: CDNDomain) async {
-        let api = session.api
-        _ = withAnimation { deletedIDs.insert(domain.id) }
-        do {
-            _ = try await ipv64Retrying { try await api.cdn.delete(domain.id) }
-            await load()
-        } catch {
-            _ = withAnimation { deletedIDs.remove(domain.id) }
-            self.error = ErrorText(error)
-        }
+    private func reload(node id: String) async {
+        let fresh = await nodes.loadProxyNode(id, withHosts: true)
+        if let index = nodeData?.firstIndex(where: { $0.id == id }) { nodeData?[index] = fresh } else { await load() }
     }
 }
 
-/// CDN64 names of one proxy node: server count, sync error and the names with their mode.
+/// CDN64 names of one proxy node: server count, sync error and the names with their mode; a name opens its host.
 private struct CdnNodeSection: View {
     let node: ProxyNodeData
+    let onChanged: (String) -> Void
 
     var body: some View {
         Section(node.name) {
@@ -201,28 +92,33 @@ private struct CdnNodeSection: View {
                     if let sync = status.syncError?.nonBlank { Text(verbatim: sync).font(.subheadline).foregroundStyle(.secondary) }
                 }
                 ForEach(Array((status.names ?? []).enumerated()), id: \.offset) { _, name in
-                    HStack(spacing: 12) {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(verbatim: name.name?.nonBlank ?? "–").font(.headline).lineLimit(1)
-                            if let check = name.check?.nonBlank {
-                                Text("Check: \(check)").font(.subheadline).foregroundStyle(.secondary).lineLimit(1)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        ProxyTag(tag: ProxyLogic.Tag(text: ProxyLogic.modeShort(name.mode), tone: .gray))
+                    if let hostID = name.hostID {
+                        NavigationLink {
+                            ProxyHostEditView(route: ProxyHostRoute(nodeId: node.id, hostId: hostID)) { onChanged(node.id) }
+                        } label: { nameRow(name) }
+                    } else {
+                        nameRow(name)
                     }
                 }
                 if (status.names ?? []).isEmpty {
                     Text("No names in CDN64 yet.").foregroundStyle(.secondary)
                 }
+            } else {
+                Text("CDN64 status not available.").foregroundStyle(.secondary)
             }
         }
     }
-}
 
-extension CDNDomain {
-    var isBusy: Bool { CdnLogic.isBusy(pending: pending, proxy: proxy?.state, portmapper: portmapper?.state) }
-    var displayName: String { CdnLogic.displayName(domain: domain, id: id) }
+    private func nameRow(_ name: Node64.CDNOnlineName) -> some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: name.name?.nonBlank ?? "–").font(.headline).lineLimit(1)
+                if let check = name.check?.nonBlank {
+                    Text("Check: \(check)").font(.subheadline).foregroundStyle(.secondary).lineLimit(1)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            ProxyTag(tag: ProxyLogic.Tag(text: ProxyLogic.modeShort(name.mode), tone: .gray))
+        }
+    }
 }
-
-#Preview { NavigationStack { CdnView(popToRootTab: .constant(.cdn)) } }

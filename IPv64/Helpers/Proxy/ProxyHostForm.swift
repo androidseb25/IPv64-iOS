@@ -25,6 +25,7 @@ struct ProxyHostForm: Equatable {
     var redirectScheme: Node64.ProxyHostRedirectScheme = .auto
     var redirectCode = 301
     var preservePath = true
+    var statusPageID = ""
 
     static let redirectCodes = [300, 301, 302, 303, 307, 308]
 
@@ -53,12 +54,18 @@ struct ProxyHostForm: Equatable {
         redirectScheme = h.redirectScheme ?? .auto
         redirectCode = h.redirectCode ?? 301
         preservePath = h.preservePath != false
+        statusPageID = (h.statusPageID ?? 0) > 0 ? String(h.statusPageID ?? 0) : ""
     }
 
     var isProxy: Bool { kind == .proxy }
     var isRedirect: Bool { kind == .redirect }
-    /// Other kinds (404, passthrough, status) only edit names.
+    var isPassthrough: Bool { kind == .passthrough }
+    var isStatus: Bool { kind == .status }
+    /// Host and port of the target: proxy and TLS passthrough.
+    var hasTarget: Bool { isProxy || isPassthrough }
+    /// Options and advanced settings: proxy and redirect. Kinds `dead` and `stream` have no target and only edit names.
     var editable: Bool { isProxy || isRedirect }
+    var pageID: Int? { Int(statusPageID.trimmingCharacters(in: .whitespaces)).flatMap { $0 > 0 ? $0 : nil } }
     var firstName: String { ProxyLogic.parseNames(names).first ?? "" }
 
     /// Validation message per section.
@@ -73,7 +80,8 @@ struct ProxyHostForm: Equatable {
     var errors: Errors {
         var e = Errors()
         if ProxyLogic.parseNames(names).isEmpty { e.names = String(localized: "Enter at least one domain name.") }
-        if isProxy {
+        if isStatus, pageID == nil { e.target = String(localized: "Enter the status page ID (greater than 0).") }
+        if hasTarget {
             if host.trimmingCharacters(in: .whitespaces).isEmpty {
                 e.target = String(localized: "Enter the target host.")
             } else if ProxyLogic.parsePort(port) == nil {
@@ -89,6 +97,13 @@ struct ProxyHostForm: Equatable {
     /// `nil` fields are not sent; `enabled`/`kind` only on create.
     func input(create: Bool) -> Node64.ProxyHostInput {
         let nameList = ProxyLogic.parseNames(names)
+        if isPassthrough {
+            return Node64.ProxyHostInput(kind: create ? kind : nil, names: nameList, enabled: create ? enabled : nil,
+                                         targetHost: host.trimmingCharacters(in: .whitespaces), targetPort: ProxyLogic.parsePort(port))
+        }
+        if isStatus {
+            return Node64.ProxyHostInput(kind: create ? kind : nil, names: nameList, enabled: create ? enabled : nil, statusPageID: pageID)
+        }
         guard editable else { return Node64.ProxyHostInput(names: nameList) }
         return Node64.ProxyHostInput(
             kind: create ? kind : nil, names: nameList, enabled: create ? enabled : nil,

@@ -19,6 +19,8 @@ struct ProxyHostFormSections: View {
                 Picker("Type", selection: $form.kind) {
                     Text("Proxy").tag(Node64.ProxyHostKind.proxy)
                     Text("Redirect").tag(Node64.ProxyHostKind.redirect)
+                    Text("TLS passthrough").tag(Node64.ProxyHostKind.passthrough)
+                    Text("Status page").tag(Node64.ProxyHostKind.status)
                 }
             }
             TextField("Domain names", text: $form.names, axis: .vertical)
@@ -31,11 +33,24 @@ struct ProxyHostFormSections: View {
             HcFooter(hint: "One per line", error: errors?.names)
         }
 
-        if form.isProxy {
+        if form.isStatus {
             Section {
-                Picker("Scheme", selection: $form.scheme) {
-                    Text("http").tag(Node64.ProxyHostScheme.http)
-                    Text("https").tag(Node64.ProxyHostScheme.https)
+                LabeledContent("Status page ID") {
+                    TextField("1", text: $form.statusPageID).multilineTextAlignment(.trailing).keyboardType(.numberPad)
+                }
+            } header: {
+                Text("Status page")
+            } footer: {
+                HcFooter(error: errors?.target)
+            }
+        }
+        if form.hasTarget {
+            Section {
+                if form.isProxy {
+                    Picker("Scheme", selection: $form.scheme) {
+                        Text("http").tag(Node64.ProxyHostScheme.http)
+                        Text("https").tag(Node64.ProxyHostScheme.https)
+                    }
                 }
                 LabeledContent("Target host") {
                     TextField("192.168.1.10", text: $form.host)
