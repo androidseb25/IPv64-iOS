@@ -311,7 +311,7 @@ private struct ModuleErrorSection: View {
 }
 
 /// Ranking row: label, count, bar relative to the largest value.
-private struct ModuleRankRow: View {
+struct ModuleRankRow: View {
     let label: String
     var subtitle: String?
     let value: Int
