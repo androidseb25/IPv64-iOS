@@ -80,22 +80,6 @@ extension SettingsView {
     }
 }
 
-// MARK: - Parser-Helfer
-
-extension DomainResult {
-    static func parse(jsonData: Data) throws -> DomainResult {
-        try JSONDecoder().decode(DomainResult.self, from: jsonData)
-    }
-    
-    static func parse(jsonString: String) throws -> DomainResult {
-        guard let data = jsonString.data(using: .utf8) else {
-            throw NSError(domain: "DomainResult", code: -1,
-                          userInfo: [NSLocalizedDescriptionKey: "Invalid UTF-8"])
-        }
-        return try parse(jsonData: data)
-    }
-}
-
 extension Sequence {
     func sorted(by keyPath: KeyPath<Element, String>) -> [Element] {
         sorted { ($0[keyPath: keyPath]).lowercased() < ($1[keyPath: keyPath]).lowercased() }

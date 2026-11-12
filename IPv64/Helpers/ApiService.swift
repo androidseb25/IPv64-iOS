@@ -43,46 +43,4 @@ final class ApiService: ObservableObject {
         await request(query: "?get_account_info", token: token)
     }
     func GetLogs() async -> Logs? { await request(query: "?get_logs") }
-    func GetMyIp(_ onlyV4: Bool = true) async -> MyIP? {
-        await request(url: URL(string: "https://\(onlyV4 ? "ipv4" : "ipv6").ipv64.net/update.php?howismyip")!,
-                      authenticated: false, reportError: false)
-    }
-    func GetDomains() async -> DomainResult? { await request(query: "?get_domains") }
-    func PostDomain(domain: String) async -> AddDomainResult? {
-        await request(method: "POST", fields: ["add_domain": domain])
-    }
-    func DeleteDNSRecord(recordId: Int) async -> AddDomainResult? {
-        await request(method: "DELETE", fields: ["del_record": String(recordId)])
-    }
-    func UpdateDNSRecord(urlDNSUpdate: String) async -> IPUpdateResult? {
-        guard let url = URL(string: urlDNSUpdate), url.scheme == "https", url.host == "ipv64.net" else {
-            errorMessage = "The update URL is invalid."
-            return nil
-        }
-        return await request(url: url, authenticated: false)
-    }
-    func DeleteDomain(domain: String) async -> AddDomainResult? {
-        await request(method: "DELETE", fields: ["del_domain": domain])
-    }
-    func PostDNSRecord(domain: String, praefix: String, typ: String, content: String) async -> AddDomainResult? {
-        await request(method: "POST", fields: ["add_record": domain, "praefix": praefix, "type": typ, "content": content])
-    }
-    func GetHealthchecks() async -> HealthCheckResult? { await request(query: "?get_healthchecks&events") }
-    func PostStartPauseHealthcheck(startPause: String, hcToken: String) async -> AddDomainResult? {
-        await request(method: "POST", fields: [startPause: hcToken])
-    }
-    func PostHealthcheck(add_healthcheck: String, alarm_count: Int, alarm_unit: Int) async -> AddDomainResult? {
-        await request(method: "POST", fields: ["add_healthcheck": add_healthcheck,
-                                               "alarm_count": String(alarm_count), "alarm_unit": String(alarm_unit)])
-    }
-    func DeleteHealthcheck(hcToken: String) async -> AddDomainResult? {
-        await request(method: "DELETE", fields: ["del_healthcheck": hcToken])
-    }
-    func PostEditHealthcheck(healthcheck: HealthCheck) async -> AddDomainResult? {
-        await request(method: "POST", fields: ["edit_healthcheck": healthcheck.healthtoken,
-            "healthcheck_name": healthcheck.name, "alarm_count": String(healthcheck.alarm_count),
-            "alarm_unit": String(healthcheck.alarm_unit), "integration": healthcheck.integration_id,
-            "grace_count": String(healthcheck.grace_count), "grace_unit": String(healthcheck.grace_unit),
-            "alarm_down": String(healthcheck.alarm_down), "alarm_up": String(healthcheck.alarm_up)])
-    }
 }

@@ -17,9 +17,14 @@ struct WhatsNewView: View {
     var isFromSetting = false
     
     var whatsNewList: [WhatsNew] = [
-        WhatsNew(imageName: "appstore", title: "AppStore release".localized, subtitle: "It's now the time to give you all access to this app!".localized, assetIcon: true),
-        WhatsNew(imageName: "sparkles", title: "iOS 26 optimized".localized, subtitle: "Version 2.0 brings a striking new app icon and a thoughtfully refined Liquid Glass user interface. Built for iOS 26, it seamlessly embraces the newest technologies to deliver a more powerful and fluid experience.".localized),
-        WhatsNew(imageName: "ant.circle", title: "Improvements & Fixes".localized, subtitle: "We’ve also included various bug fixes and stability improvements to ensure a smoother and more reliable experience.".localized)
+        WhatsNew(imageName: "bolt.heart", title: "Healthchecks 2.0".localized, subtitle: "Checks from several locations with status, statistics, incidents and events. Create and edit them right in the app.".localized),
+        WhatsNew(imageName: "point.3.connected.trianglepath.dotted", title: "Nodes".localized, subtitle: "Link your Node64 or connect directly in your network: live status, modules, logs and commands.".localized),
+        WhatsNew(imageName: "arrow.left.arrow.right", title: "Proxy64 & CDN64".localized, subtitle: "Manage the proxy hosts of your node and make them reachable from the internet with CDN64.".localized),
+        WhatsNew(imageName: "server.rack", title: "DNS64".localized, subtitle: "Ad and tracker blocking on your node: pause it, see statistics, the live query log and local DNS records.".localized),
+        WhatsNew(imageName: "chart.xyaxis.line", title: "Monitor64".localized, subtitle: "The hosts your node monitors, with charts, services and open problems, now in Healthchecks.".localized),
+        WhatsNew(imageName: "bell.badge", title: "Push notifications".localized, subtitle: "Encrypted push notifications via SecNtfy and notification channels instead of integrations.".localized),
+        WhatsNew(imageName: "square.grid.2x2", title: "Widgets & Control Center".localized, subtitle: "The Healthchecks widget in every size, a DNS64 widget with chart and pause, and a DNS64 switch in Control Center.".localized),
+        WhatsNew(imageName: "ellipsis.circle", title: "More".localized, subtitle: "API keys, account links, IP lookup, password check and the honeypot network.".localized)
     ]
     
     var body: some View {
@@ -78,9 +83,14 @@ struct WhatsNewView26: View {
     var isFromSetting = false
     
     var whatsNewList: [WhatsNew] = [
-        WhatsNew(imageName: "appstore", title: "AppStore release".localized, subtitle: "It's now the time to give you all access to this app!".localized, assetIcon: true),
-        WhatsNew(imageName: "sparkles", title: "iOS 26 optimized".localized, subtitle: "Version 2.0 brings a striking new app icon and a thoughtfully refined Liquid Glass user interface. Built for iOS 26, it seamlessly embraces the newest technologies to deliver a more powerful and fluid experience.".localized),
-        WhatsNew(imageName: "ant.circle", title: "Improvements & Fixes".localized, subtitle: "We’ve also included various bug fixes and stability improvements to ensure a smoother and more reliable experience.".localized)
+        WhatsNew(imageName: "bolt.heart", title: "Healthchecks 2.0".localized, subtitle: "Checks from several locations with status, statistics, incidents and events. Create and edit them right in the app.".localized),
+        WhatsNew(imageName: "point.3.connected.trianglepath.dotted", title: "Nodes".localized, subtitle: "Link your Node64 or connect directly in your network: live status, modules, logs and commands.".localized),
+        WhatsNew(imageName: "arrow.left.arrow.right", title: "Proxy64 & CDN64".localized, subtitle: "Manage the proxy hosts of your node and make them reachable from the internet with CDN64.".localized),
+        WhatsNew(imageName: "server.rack", title: "DNS64".localized, subtitle: "Ad and tracker blocking on your node: pause it, see statistics, the live query log and local DNS records.".localized),
+        WhatsNew(imageName: "chart.xyaxis.line", title: "Monitor64".localized, subtitle: "The hosts your node monitors, with charts, services and open problems, now in Healthchecks.".localized),
+        WhatsNew(imageName: "bell.badge", title: "Push notifications".localized, subtitle: "Encrypted push notifications via SecNtfy and notification channels instead of integrations.".localized),
+        WhatsNew(imageName: "square.grid.2x2", title: "Widgets & Control Center".localized, subtitle: "The Healthchecks widget in every size, a DNS64 widget with chart and pause, and a DNS64 switch in Control Center.".localized),
+        WhatsNew(imageName: "ellipsis.circle", title: "More".localized, subtitle: "API keys, account links, IP lookup, password check and the honeypot network.".localized)
     ]
     
     var body: some View {
