@@ -76,12 +76,14 @@ struct User: Codable {
     func delete() {
         var userList = self.list
         let removedKey = UserStorage.shared.ApiKey
+        let removedOwners = userList.filter { $0.ApiKey == removedKey }.compactMap(\.uuid)
         userList.removeAll(where: { $0.ApiKey == removedKey })
         
         do {
             let data = try JSONEncoder().encode(userList)
             UserStorage.shared.UserAccounts = data
             guard UserStorage.shared.UserAccounts == data else { return }
+            removedOwners.forEach(LocalNodeStore.removeOwner)
             UserStorage.shared.ApiKey = userList.first?.ApiKey ?? ""
             if UserStorage.shared.ApiKeyWidget == removedKey {
                 UserStorage.shared.ApiKeyWidget = userList.first?.ApiKey ?? ""

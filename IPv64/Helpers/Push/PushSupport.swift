@@ -6,6 +6,8 @@ import IPv64
 nonisolated enum AppConfig {
     static let appGroup = "group.ipv64.net"
     static let secNtfyURL = "https://api.secntfy.app"
+    /// Name in a node's audit log for changes made from this app (`Node64.Configuration.agentActor`).
+    static let nodeAgentActor = "IPv64 iOS"
 
     /// iOS SecNtfy app key: Info.plist `SECNTFY_APP_KEY` (file IPv64-net-Info.plist).
     static var secNtfyAppKey: String {

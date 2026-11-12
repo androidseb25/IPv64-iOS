@@ -2,13 +2,11 @@ import SwiftUI
 
 struct TabbarView: View {
     @AppStorage("CURRENT_TAB", store: UserStorage.sharedDefault) private var selectedTab: Tabs = .domain
-    // shortcut: the node screens will write these two flags (a connected node with the cdn64 / dns64 module
-    // active); until they exist both stay false and the bar shows Domains, Healthchecks, CDN64, More.
-    @AppStorage("NODE_PROXY_ACTIVE", store: UserStorage.sharedDefault) private var proxyActive = false
-    @AppStorage("NODE_DNS_ACTIVE", store: UserStorage.sharedDefault) private var dnsActive = false
+    @Environment(ConnectedNodes.self) private var nodes
+    @Environment(\.scenePhase) private var scenePhase
     @State private var paths: [Tabs: NavigationPath] = [:]
 
-    private var visibleTabs: [Tabs] { Tabs.tabList(proxyActive: proxyActive, dnsActive: dnsActive) }
+    private var visibleTabs: [Tabs] { Tabs.tabList(proxyActive: nodes.proxyActive, dnsActive: !nodes.dnsIds.isEmpty) }
 
     private var selection: Binding<Tabs> {
         Binding(get: { selectedTab }, set: { tab in
@@ -38,13 +36,19 @@ struct TabbarView: View {
         .tabViewStyle(.sidebarAdaptable)
         .onAppear(perform: fixSelection)
         .onChange(of: visibleTabs) { fixSelection() }
+        // The view is rebuilt per account (`.id(sessionID)`), so this re-reads the nodes of the new account.
+        .task { nodes.refresh() }
+        .task(id: nodes.ids) { await nodes.refreshModules() }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { Task { await nodes.refreshModules() } }
+        }
     }
 
     /// A tab that left the bar (module switched off, old stored value) falls back to its slot or to Domains.
     private func fixSelection() {
         guard !visibleTabs.contains(selectedTab) else { return }
         switch selectedTab {
-        case .cdn where proxyActive: selectedTab = .proxy64
+        case .cdn where nodes.proxyActive: selectedTab = .proxy64
         case .proxy64: selectedTab = .cdn
         case .account, .notification, .dns64: selectedTab = .settings
         default: selectedTab = .domain
@@ -60,4 +64,4 @@ struct TabbarView: View {
 
 typealias TabbarView18 = TabbarView
 
-#Preview { TabbarView() }
+#Preview { TabbarView().environment(ConnectedNodes()) }

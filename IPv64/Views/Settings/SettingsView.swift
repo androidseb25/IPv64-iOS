@@ -47,6 +47,12 @@ struct SettingsView: View {
                 }
             }
             
+            Section {
+                NavigationLink(value: NodesView.route) {
+                    Text("Nodes")
+                }
+            }
+
             Section("Security") {
                 Toggle("Lockscreen \(userStorage.EnableLogscreen ? "enabled" : "disabled")", isOn: $userStorage.EnableLogscreen)
             }
@@ -94,6 +100,8 @@ struct SettingsView: View {
                 Tabs.myip.makeContentView(popToRootTab: $popToRootTab)
             case Tabs.about.route:
                 Tabs.about.makeContentView(popToRootTab: $popToRootTab)
+            case NodesView.route:
+                NodesView()
             case Tabs.syslog.route:
                 Tabs.syslog.makeContentView(popToRootTab: $popToRootTab)
             default:

@@ -13,11 +13,13 @@ struct IPv64App: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var session: Session
     @State private var registrar: PushRegistrar
+    @State private var nodes: ConnectedNodes
 
     init() {
         let session = Session()
         _session = State(initialValue: session)
         _registrar = State(initialValue: PushRegistrar(session: session))
+        _nodes = State(initialValue: ConnectedNodes())
         #if DEBUG
         DebugFixtures.configure()
         #endif
@@ -60,6 +62,7 @@ struct IPv64App: App {
                 .fontDesign(.rounded)
                 .environment(session)
                 .environment(registrar)
+                .environment(nodes)
                 .task { appDelegate.registrar = registrar }
         }
     }

@@ -189,6 +189,7 @@ public class UserStorage: ObservableObject {
     }
     
     public func clear() {
+        users.compactMap(\.uuid).forEach(LocalNodeStore.removeOwner)
         SelectedTab = .domain
         ShowWelcomeView = true
         ShowLoginView = false
