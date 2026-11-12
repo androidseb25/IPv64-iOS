@@ -10,7 +10,13 @@ struct HealthcheckCheckSection: View {
     var body: some View {
         Section {
             if editing {
-                LabeledContent("Type") { Label(f.type.label, systemImage: f.type.symbol) }
+                // A Label as LabeledContent value blows the row up in a Form; icon and text side by side instead.
+                LabeledContent("Type") {
+                    HStack(spacing: 6) {
+                        Image(systemName: f.type.symbol).foregroundStyle(.tint)
+                        Text(f.type.label)
+                    }
+                }
             } else {
                 Picker("Type", selection: typeBinding) {
                     ForEach(healthcheckCreateTypes, id: \.self) { Label($0.label, systemImage: $0.symbol).tag($0) }
