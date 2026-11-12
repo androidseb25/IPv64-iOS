@@ -223,7 +223,7 @@ nonisolated enum DomainKindFilter: String, CaseIterable, Identifiable, Sendable 
     }
 }
 
-extension DynDNSLogic {
+nonisolated extension DynDNSLogic {
     /// Android `formatGermanTime`: dd.MM.yyyy HH:mm:ss.
     static func germanTime(_ date: Date?, fallback: String = "–") -> String {
         guard let date else { return fallback }
