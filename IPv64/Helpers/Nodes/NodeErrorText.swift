@@ -1,7 +1,7 @@
 import Foundation
 import IPv64
 
-extension ErrorText {
+nonisolated extension ErrorText {
     /// Android `localNodeError(e)`: title + text for errors of direct node access.
     static func node(_ error: any Error) -> ErrorText {
         if let error = error as? Node64Error {

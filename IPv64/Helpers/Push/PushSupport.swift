@@ -49,7 +49,7 @@ func ipv64Retrying<T>(_ operation: () async throws -> T) async throws -> T {
     }
 }
 
-struct ErrorText: Identifiable {
+nonisolated struct ErrorText: Identifiable, Sendable {
     let id = UUID()
     var title: String
     var message: String
