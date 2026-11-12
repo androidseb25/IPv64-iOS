@@ -57,6 +57,7 @@ struct AccountView: View {
                         Label("Copy", systemImage: "document.on.document")
                     }
                     .tint(.blue)
+                    .labelStyle(.iconOnly)
                 }
             }
             
@@ -83,6 +84,7 @@ struct AccountView: View {
                         Label("Copy", systemImage: "document.on.document")
                     }
                     .tint(.blue)
+                    .labelStyle(.iconOnly)
                 }
             }
         }

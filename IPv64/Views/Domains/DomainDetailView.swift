@@ -393,6 +393,8 @@ struct DomainRecordRow: View {
                 .accessibilityAddTraits(.isButton)
                 .swipeActions {
                     Button("Delete", systemImage: "trash", role: .destructive, action: onDelete)
+                        .tint(.red)
+                        .labelStyle(.iconOnly)
                 }
         }
     }

@@ -35,14 +35,18 @@ struct HealthcheckView: View {
         List(visible) { check in
             HealthcheckItemView(check: check, isBusy: busyTokens.contains(check.token))
                 .swipeActions {
-                    Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = check }
-                    if check.paused == true {
-                        Button("Resume", systemImage: "play") { Task { await setPaused(check, false) } }
-                            .tint(.green)
-                    } else {
-                        Button("Pause", systemImage: "pause") { Task { await setPaused(check, true) } }
-                            .tint(.teal)
+                    Group {
+                        Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = check }
+                            .tint(.red)
+                        if check.paused == true {
+                            Button("Resume", systemImage: "play") { Task { await setPaused(check, false) } }
+                                .tint(.green)
+                        } else {
+                            Button("Pause", systemImage: "pause") { Task { await setPaused(check, true) } }
+                                .tint(.teal)
+                        }
                     }
+                    .labelStyle(.iconOnly)
                 }
         }
         .overlay { emptyState }

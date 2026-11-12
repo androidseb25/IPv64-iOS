@@ -63,6 +63,7 @@ struct HealthcheckDetailView: View {
                             Label("Open in Browser", systemImage: "arrow.up.forward.app")
                         }
                         .tint(.gray)
+                        .labelStyle(.iconOnly)
                     }
                     .foregroundStyle(.blue)
             }

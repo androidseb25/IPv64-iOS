@@ -35,6 +35,7 @@ struct MyIpView: View {
                             Label("Copy", systemImage: "document.on.document")
                         }
                         .tint(.blue)
+                        .labelStyle(.iconOnly)
                     }
             }
             Section("IPv6") {
@@ -46,6 +47,7 @@ struct MyIpView: View {
                             Label("Copy", systemImage: "document.on.document")
                         }
                         .tint(.blue)
+                        .labelStyle(.iconOnly)
                     }
             }
         }
