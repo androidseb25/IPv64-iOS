@@ -4,6 +4,7 @@ import IPv64
 /// Healthchecks 2.0 of the account (API v2): compact rows with a status tag, status filter, swipe actions.
 struct HealthcheckView: View {
     @Environment(Session.self) private var session
+    @Environment(ConnectedNodes.self) private var nodes
     @Binding var popToRootTab: Tabs
     @State private var checks: [HC2Check]?
     @State private var status = HcStatusFilter.all
@@ -13,9 +14,44 @@ struct HealthcheckView: View {
     @State private var deletedTokens: Set<String> = []
     @State private var confirmDelete: HC2Check?
     @State private var showNew = false
+    @State private var showTargetChoice = false
+    /// Form to present once the target sheet has closed (`nil` entry = account).
+    @State private var chosenTarget: String??
+    @State private var nodeForm: NodeFormTarget?
+    @State private var nodeData: [String: NodeChecksData] = [:]
+    @State private var confirmNodeDelete: NodeCheckRef?
     @State private var error: ErrorText?
 
-    private var all: [HC2Check] { (checks ?? []).filter { !deletedTokens.contains($0.token) } }
+    private struct NodeFormTarget: Identifiable {
+        let id: String
+    }
+
+    private struct NodeCheckRef: Identifiable {
+        let nodeId: String
+        let check: Node64.Check
+        var id: String { check.token }
+    }
+
+    /// Checks owned by a connected node are shown in its section instead.
+    private var hiddenTokens: Set<String> { Set(nodeData.values.flatMap(\.owned).map(\.token)) }
+
+    private var all: [HC2Check] {
+        (checks ?? []).filter { !deletedTokens.contains($0.token) && !hiddenTokens.contains($0.token) }
+    }
+
+    /// Reachable nodes with the healthchecks module on.
+    private var offeringNodes: [(id: String, name: String)] {
+        nodes.ids.filter { nodeData[$0].map { $0.module == .on && $0.error == nil } ?? false }
+            .map { ($0, nodes.name(of: $0)) }
+    }
+
+    private func nodeRows(_ id: String) -> [Node64.Check] {
+        (nodeData[id]?.owned ?? [])
+            .filter { !deletedTokens.contains($0.token) && status.matches($0.uiState) }
+            .sorted { ($0.name ?? "").localizedStandardCompare($1.name ?? "") == .orderedAscending }
+    }
+
+    private var hasNodeRows: Bool { nodes.ids.contains { !nodeRows($0).isEmpty } }
 
     private var visible: [HC2Check] {
         all.filter { status.matches(Hc2StateUi.from($0)) && exec.matches($0.execution) }
@@ -26,31 +62,29 @@ struct HealthcheckView: View {
 
     var body: some View {
         if #available(iOS 26.0, *) {
-            listView.setColorGradient(confirmDelete != nil || showNew ? .clear : .orange)
+            listView.setColorGradient(confirmDelete != nil || confirmNodeDelete != nil || showNew || showTargetChoice || nodeForm != nil ? .clear : .orange)
         } else {
             listView
         }
     }
 
     private var listView: some View {
-        List(visible) { check in
-            NavigationLink(value: HealthcheckRoute(token: check.token)) {
-                HealthcheckItemView(check: check, isBusy: busyTokens.contains(check.token))
-            }
-                .swipeActions {
-                    Group {
-                        Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = check }
-                            .tint(.red)
-                        if check.paused == true {
-                            Button("Resume", systemImage: "play") { Task { await setPaused(check, false) } }
-                                .tint(.green)
-                        } else {
-                            Button("Pause", systemImage: "pause") { Task { await setPaused(check, true) } }
-                                .tint(.teal)
-                        }
+        List {
+            Section {
+                ForEach(visible) { check in
+                    NavigationLink(value: HealthcheckRoute(token: check.token)) {
+                        HealthcheckItemView(check: check, isBusy: busyTokens.contains(check.token))
                     }
-                    .labelStyle(.iconOnly)
+                    .swipeActions {
+                        swipeButtons(paused: check.paused == true,
+                                     delete: { confirmDelete = check },
+                                     setPaused: { paused in Task { await setPaused(check, paused) } })
+                    }
                 }
+            } header: {
+                if !nodes.ids.isEmpty && !visible.isEmpty { Text("Account") }
+            }
+            ForEach(nodes.ids, id: \.self) { nodeSection($0) }
         }
         .overlay { emptyState }
         .navigationTitle(Tabs.healthcheck.labelNew)
@@ -59,10 +93,20 @@ struct HealthcheckView: View {
             // The list re-reads once; the detail has already updated itself.
             HealthcheckDetailView(token: route.token) { Task { await load() } }
         }
+        .navigationDestination(for: NodeCheckRoute.self) { route in
+            NodeCheckDetailView(nodeId: route.nodeId, token: route.token) { Task { await loadNodes() } }
+        }
         .toolbar { toolbar }
         .sheet(isPresented: $showNew) { HealthcheckFormView(token: nil) { Task { await load() } } }
+        .sheet(isPresented: $showTargetChoice, onDismiss: presentChosen) {
+            HealthcheckTargetSheet(nodes: offeringNodes) { chosenTarget = .some($0) }
+        }
+        .sheet(item: $nodeForm) { target in
+            NodeCheckFormView(nodeId: target.id, token: nil) { Task { await loadNodes() } }
+        }
         .refreshable { await load() }
         .task { await load() }
+        .task(id: nodes.ids) { await loadNodes() }
         .alert("Delete healthcheck?", isPresented: Binding(get: { confirmDelete != nil }, set: { if !$0 { confirmDelete = nil } }),
                presenting: confirmDelete) { check in
             Button("Delete", role: .destructive) { Task { await delete(check) } }
@@ -70,7 +114,73 @@ struct HealthcheckView: View {
         } message: { check in
             Text("Do you really want to delete \"\(check.name ?? check.token)\"? Its history is deleted as well.")
         }
+        .alert("Delete healthcheck?", isPresented: Binding(get: { confirmNodeDelete != nil }, set: { if !$0 { confirmNodeDelete = nil } }),
+               presenting: confirmNodeDelete) { ref in
+            Button("Delete", role: .destructive) { Task { await deleteNodeCheck(ref) } }
+            Button("Cancel", role: .cancel) {}
+        } message: { ref in
+            Text("Do you really want to delete \"\(ref.check.name ?? ref.check.token)\"? Its history is deleted as well.")
+        }
         .errorAlert($error)
+    }
+
+    /// Icon only; delete is red.
+    private func swipeButtons(paused: Bool, delete: @escaping () -> Void, setPaused: @escaping (Bool) -> Void) -> some View {
+        Group {
+            Button("Delete", systemImage: "trash", role: .destructive, action: delete)
+                .tint(.red)
+            if paused {
+                Button("Resume", systemImage: "play") { setPaused(false) }
+                    .tint(.green)
+            } else {
+                Button("Pause", systemImage: "pause") { setPaused(true) }
+                    .tint(.teal)
+            }
+        }
+        .labelStyle(.iconOnly)
+    }
+
+    @ViewBuilder private func nodeSection(_ id: String) -> some View {
+        let name = nodes.name(of: id)
+        if let data = nodeData[id] {
+            if let message = data.error {
+                Section {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Node not reachable")
+                        Text(verbatim: message).font(.subheadline).foregroundStyle(.secondary).lineLimit(4)
+                    }
+                } header: {
+                    Text(verbatim: name)
+                } footer: {
+                    Text("Check the connection under More → Nodes.")
+                }
+            } else if data.module == .off {
+                Section {
+                } header: {
+                    Text(verbatim: name)
+                } footer: {
+                    Text("Healthchecks module is off on this node")
+                }
+            } else if data.module == .on {
+                let rows = nodeRows(id)
+                if !rows.isEmpty {
+                    Section {
+                        ForEach(rows) { check in
+                            NavigationLink(value: NodeCheckRoute(nodeId: id, token: check.token)) {
+                                HealthcheckItemView(nodeCheck: check, isBusy: busyTokens.contains(check.token))
+                            }
+                            .swipeActions {
+                                swipeButtons(paused: check.uiState == .paused,
+                                             delete: { confirmNodeDelete = NodeCheckRef(nodeId: id, check: check) },
+                                             setPaused: { paused in Task { await setNodePaused(id, check, paused) } })
+                            }
+                        }
+                    } header: {
+                        Text(verbatim: name)
+                    }
+                }
+            }
+        }
     }
 
     @ToolbarContentBuilder
@@ -96,14 +206,14 @@ struct HealthcheckView: View {
             ToolbarSpacer(.fixed, placement: .topBarTrailing)
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Button { showNew = true } label: { Label("New healthcheck", systemImage: "plus") }
+            Button { addTapped() } label: { Label("New healthcheck", systemImage: "plus") }
         }
     }
 
     @ViewBuilder private var emptyState: some View {
         if checks == nil {
             ProgressView("Loading healthchecks…")
-        } else if visible.isEmpty {
+        } else if visible.isEmpty && !hasNodeRows {
             ContentUnavailableView(all.isEmpty ? "No healthchecks yet" : "No matching healthchecks",
                                    systemImage: "bolt.heart")
         }
@@ -111,9 +221,76 @@ struct HealthcheckView: View {
 
     private func count(_ filter: HcStatusFilter) -> Int {
         all.filter { filter.matches(Hc2StateUi.from($0)) }.count
+            + nodes.ids.flatMap { nodeData[$0]?.owned ?? [] }.filter { !deletedTokens.contains($0.token) && filter.matches($0.uiState) }.count
+    }
+
+    /// First choose where the check runs when a reachable node offers checks.
+    private func addTapped() {
+        if offeringNodes.isEmpty { showNew = true } else { showTargetChoice = true }
+    }
+
+    private func presentChosen() {
+        guard let chosen = chosenTarget else { return }
+        chosenTarget = nil
+        if let nodeId = chosen { nodeForm = NodeFormTarget(id: nodeId) } else { showNew = true }
     }
 
     private func load() async {
+        async let nodesLoad: Void = loadNodes()
+        await loadAccount()
+        await nodesLoad
+    }
+
+    /// Per node in parallel: status, module state, check list; a failing node never hides the account checks.
+    private func loadNodes() async {
+        let clients = nodes.ids.compactMap { id in nodes.client(for: id).map { (id, $0) } }
+        var result: [String: NodeChecksData] = [:]
+        await withTaskGroup(of: (String, NodeChecksData).self) { group in
+            for (id, client) in clients {
+                group.addTask { (id, await Self.loadNode(client)) }
+            }
+            for await (id, data) in group { result[id] = data }
+        }
+        if !Task.isCancelled { nodeData = result }
+    }
+
+    private nonisolated static func loadNode(_ client: Node64) async -> NodeChecksData {
+        do {
+            let module = nodeChecksModule(try await client.node.status().modules)
+            guard module == .on else { return NodeChecksData(module: module) }
+            return NodeChecksData(module: .on, checks: try await client.hc.checks.list())
+        } catch {
+            return NodeChecksData(module: .on, error: ErrorText.node(error).titledText)
+        }
+    }
+
+    private func setNodePaused(_ nodeId: String, _ check: Node64.Check, _ paused: Bool) async {
+        guard let client = nodes.client(for: nodeId) else { return }
+        busyTokens.insert(check.token)
+        defer { busyTokens.remove(check.token) }
+        do {
+            let updated = paused ? try await client.hc.checks.pause(check.token) : try await client.hc.checks.resume(check.token)
+            if let index = nodeData[nodeId]?.checks.firstIndex(where: { $0.token == check.token }) {
+                nodeData[nodeId]?.checks[index] = updated
+            }
+        } catch {
+            self.error = .node(error)
+        }
+    }
+
+    private func deleteNodeCheck(_ ref: NodeCheckRef) async {
+        guard let client = nodes.client(for: ref.nodeId) else { return }
+        _ = withAnimation { deletedTokens.insert(ref.check.token) }
+        do {
+            try await client.hc.checks.delete(ref.check.token)
+            nodeData[ref.nodeId]?.checks.removeAll { $0.token == ref.check.token }
+        } catch {
+            _ = withAnimation { deletedTokens.remove(ref.check.token) }
+            self.error = .node(error)
+        }
+    }
+
+    private func loadAccount() async {
         let api = session.api
         do {
             checks = try await ipv64Retrying { try await api.hc2.checks.list() }

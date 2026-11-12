@@ -3,31 +3,48 @@ import IPv64
 
 /// Healthcheck row (Android layout): name, type · target, last check, status tag.
 struct HealthcheckItemView: View {
-    let check: HC2Check
+    let name: String?
+    let typeLine: String
+    let metaLine: String?
+    let state: Hc2StateUi
     var isBusy = false
 
-    private var state: Hc2StateUi { Hc2StateUi.from(check) }
-
-    private var typeLine: String {
-        let type = check.type?.label ?? "Unknown"
-        guard let target = check.target?.nonBlank else { return type }
-        return "\(type) · \(target)"
+    /// Account check.
+    init(check: HC2Check, isBusy: Bool = false) {
+        var meta: [String] = []
+        if let last = check.state?.lastCheckAt {
+            meta.append(String(localized: "Checked \(last.formatted(.relative(presentation: .named)))"))
+        }
+        if let latency = check.state?.lastLatencyMS { meta.append("\(Int(latency.rounded())) ms") }
+        if let node = check.nodeName?.nonBlank, (check.execution ?? .online) != .online { meta.append(node) }
+        self.init(name: check.name, type: check.type?.label, target: check.target, meta: meta,
+                  state: Hc2StateUi.from(check), isBusy: isBusy)
     }
 
-    private var metaLine: String? {
-        var parts: [String] = []
-        if let last = check.state?.lastCheckAt {
-            parts.append(String(localized: "Checked \(last.formatted(.relative(presentation: .named)))"))
+    /// Check of a connected node.
+    init(nodeCheck check: Node64.Check, isBusy: Bool = false) {
+        var meta: [String] = []
+        if let last = HcFormat.real(nodeDate(check.state?.lastCheckAt)) {
+            meta.append(String(localized: "Checked \(last.formatted(.relative(presentation: .named)))"))
         }
-        if let latency = check.state?.lastLatencyMS { parts.append("\(Int(latency.rounded())) ms") }
-        if let node = check.nodeName?.nonBlank, (check.execution ?? .online) != .online { parts.append(node) }
-        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+        if let latency = check.state?.lastLatencyMS { meta.append("\(Int(latency.rounded())) ms") }
+        self.init(name: check.name, type: check.type?.label, target: check.target, meta: meta,
+                  state: check.uiState, isBusy: isBusy)
+    }
+
+    private init(name: String?, type: String?, target: String?, meta: [String], state: Hc2StateUi, isBusy: Bool) {
+        self.name = name
+        let type = type ?? "Unknown"
+        typeLine = target?.nonBlank.map { "\(type) · \($0)" } ?? type
+        metaLine = meta.isEmpty ? nil : meta.joined(separator: " · ")
+        self.state = state
+        self.isBusy = isBusy
     }
 
     var body: some View {
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 2) {
-                Text(check.name?.nonBlank ?? String(localized: "(unnamed)"))
+                Text(name?.nonBlank ?? String(localized: "(unnamed)"))
                     .font(.headline)
                     .lineLimit(1)
                 Text(typeLine)
