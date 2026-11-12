@@ -30,7 +30,7 @@ nonisolated struct StatsLine: Identifiable, Hashable, Sendable {
     }
 }
 
-private func bucketTime(_ date: Date, dayBucket: Bool) -> String {
+func bucketTime(_ date: Date, dayBucket: Bool) -> String {
     let gregorian = Calendar(identifier: .gregorian)
     if dayBucket {
         return date.formatted(Date.VerbatimFormatStyle(

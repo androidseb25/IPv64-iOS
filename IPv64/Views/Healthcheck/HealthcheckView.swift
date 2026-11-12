@@ -15,9 +15,11 @@ struct HealthcheckView: View {
     @State private var confirmDelete: HC2Check?
     @State private var showNew = false
     @State private var showTargetChoice = false
-    /// Form to present once the target sheet has closed (`nil` entry = account).
-    @State private var chosenTarget: String??
+    /// Form to present once the target sheet has closed.
+    @State private var chosenTarget: HealthcheckTarget?
     @State private var nodeForm: NodeFormTarget?
+    @State private var monitorForm: NodeFormTarget?
+    @State private var monitorData: [String: Monitor64ListData] = [:]
     @State private var nodeData: [String: NodeChecksData] = [:]
     @State private var confirmNodeDelete: NodeCheckRef?
     @State private var error: ErrorText?
@@ -45,13 +47,24 @@ struct HealthcheckView: View {
             .map { ($0, nodes.name(of: $0)) }
     }
 
+    /// Nodes where Monitor64 answered (module on).
+    private var monitorNodes: [(id: String, name: String)] {
+        nodes.ids.filter { monitorData[$0] != nil && monitorData[$0]?.error == nil }.map { ($0, nodes.name(of: $0)) }
+    }
+
+    private func hostRows(_ id: String) -> [Node64.Monitor64OverviewHost] {
+        (monitorData[id]?.hosts ?? [])
+            .filter { $0.uid != nil && $0.display.matches(status) }
+            .sorted { ($0.name ?? "").localizedStandardCompare($1.name ?? "") == .orderedAscending }
+    }
+
     private func nodeRows(_ id: String) -> [Node64.Check] {
         (nodeData[id]?.owned ?? [])
             .filter { !deletedTokens.contains($0.token) && status.matches($0.uiState) }
             .sorted { ($0.name ?? "").localizedStandardCompare($1.name ?? "") == .orderedAscending }
     }
 
-    private var hasNodeRows: Bool { nodes.ids.contains { !nodeRows($0).isEmpty } }
+    private var hasNodeRows: Bool { nodes.ids.contains { !nodeRows($0).isEmpty || !hostRows($0).isEmpty } }
 
     private var visible: [HC2Check] {
         all.filter { status.matches(Hc2StateUi.from($0)) && exec.matches($0.execution) }
@@ -62,7 +75,7 @@ struct HealthcheckView: View {
 
     var body: some View {
         if #available(iOS 26.0, *) {
-            listView.setColorGradient(confirmDelete != nil || confirmNodeDelete != nil || showNew || showTargetChoice || nodeForm != nil ? .clear : .orange)
+            listView.setColorGradient(confirmDelete != nil || confirmNodeDelete != nil || showNew || showTargetChoice || nodeForm != nil || monitorForm != nil ? .clear : .orange)
         } else {
             listView
         }
@@ -85,6 +98,7 @@ struct HealthcheckView: View {
                 if !nodes.ids.isEmpty && !visible.isEmpty { Text("Account") }
             }
             ForEach(nodes.ids, id: \.self) { nodeSection($0) }
+            ForEach(nodes.ids, id: \.self) { monitorSection($0) }
         }
         .overlay { emptyState }
         .navigationTitle(Tabs.healthcheck.labelNew)
@@ -96,13 +110,19 @@ struct HealthcheckView: View {
         .navigationDestination(for: NodeCheckRoute.self) { route in
             NodeCheckDetailView(nodeId: route.nodeId, token: route.token) { Task { await loadNodes() } }
         }
+        .navigationDestination(for: Monitor64HostRoute.self) { route in
+            Monitor64HostDetailView(nodeId: route.nodeId, uid: route.uid) { Task { await loadNodes() } }
+        }
         .toolbar { toolbar }
         .sheet(isPresented: $showNew) { HealthcheckFormView(token: nil) { Task { await load() } } }
         .sheet(isPresented: $showTargetChoice, onDismiss: presentChosen) {
-            HealthcheckTargetSheet(nodes: offeringNodes) { chosenTarget = .some($0) }
+            HealthcheckTargetSheet(nodes: offeringNodes, monitorNodes: monitorNodes) { chosenTarget = $0 }
         }
         .sheet(item: $nodeForm) { target in
             NodeCheckFormView(nodeId: target.id, token: nil) { Task { await loadNodes() } }
+        }
+        .sheet(item: $monitorForm) { target in
+            Monitor64HostFormView(nodeId: target.id, uid: nil) { Task { await loadNodes() } }
         }
         .refreshable { await load() }
         .task { await load() }
@@ -183,6 +203,32 @@ struct HealthcheckView: View {
         }
     }
 
+    @ViewBuilder private func monitorSection(_ id: String) -> some View {
+        let title = "\(nodes.name(of: id)) · Monitor64"
+        if let message = monitorData[id]?.error {
+            Section {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Monitor64 not available")
+                    Text(verbatim: message).font(.subheadline).foregroundStyle(.secondary).lineLimit(4)
+                }
+            } header: {
+                Text(verbatim: title)
+            }
+        }
+        let rows = hostRows(id)
+        if !rows.isEmpty {
+            Section {
+                ForEach(rows, id: \.uid) { host in
+                    NavigationLink(value: Monitor64HostRoute(nodeId: id, uid: host.uid ?? "")) {
+                        HealthcheckItemView(monitor64Host: host)
+                    }
+                }
+            } header: {
+                Text(verbatim: title)
+            }
+        }
+    }
+
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
@@ -222,17 +268,22 @@ struct HealthcheckView: View {
     private func count(_ filter: HcStatusFilter) -> Int {
         all.filter { filter.matches(Hc2StateUi.from($0)) }.count
             + nodes.ids.flatMap { nodeData[$0]?.owned ?? [] }.filter { !deletedTokens.contains($0.token) && filter.matches($0.uiState) }.count
+            + monitorData.values.flatMap(\.hosts).filter { $0.uid != nil && $0.display.matches(filter) }.count
     }
 
     /// First choose where the check runs when a reachable node offers checks.
     private func addTapped() {
-        if offeringNodes.isEmpty { showNew = true } else { showTargetChoice = true }
+        if offeringNodes.isEmpty && monitorNodes.isEmpty { showNew = true } else { showTargetChoice = true }
     }
 
     private func presentChosen() {
         guard let chosen = chosenTarget else { return }
         chosenTarget = nil
-        if let nodeId = chosen { nodeForm = NodeFormTarget(id: nodeId) } else { showNew = true }
+        switch chosen {
+        case .account: showNew = true
+        case .nodeCheck(let id): nodeForm = NodeFormTarget(id: id)
+        case .monitor64Host(let id): monitorForm = NodeFormTarget(id: id)
+        }
     }
 
     private func load() async {
@@ -242,16 +293,36 @@ struct HealthcheckView: View {
     }
 
     /// Per node in parallel: status, module state, check list; a failing node never hides the account checks.
+    /// Monitor64 loads independently of the checks: 404 = module off (no section), other errors show in its own group.
     private func loadNodes() async {
         let clients = nodes.ids.compactMap { id in nodes.client(for: id).map { (id, $0) } }
         var result: [String: NodeChecksData] = [:]
-        await withTaskGroup(of: (String, NodeChecksData).self) { group in
+        var monitor: [String: Monitor64ListData] = [:]
+        await withTaskGroup(of: (String, NodeChecksData, Monitor64ListData?).self) { group in
             for (id, client) in clients {
-                group.addTask { (id, await Self.loadNode(client)) }
+                group.addTask {
+                    let data = await Self.loadNode(client)
+                    // An unreachable node has no Monitor64 either.
+                    return (id, data, data.error == nil ? await Self.loadMonitor(client) : nil)
+                }
             }
-            for await (id, data) in group { result[id] = data }
+            for await (id, data, hosts) in group {
+                result[id] = data
+                monitor[id] = hosts
+            }
         }
-        if !Task.isCancelled { nodeData = result }
+        if !Task.isCancelled {
+            nodeData = result
+            monitorData = monitor
+        }
+    }
+
+    private nonisolated static func loadMonitor(_ client: Node64) async -> Monitor64ListData? {
+        do {
+            return Monitor64ListData(hosts: try await client.monitor64.hosts.list())
+        } catch {
+            return isNodeNotFound(error) ? nil : Monitor64ListData(error: ErrorText.node(error).message)
+        }
     }
 
     private nonisolated static func loadNode(_ client: Node64) async -> NodeChecksData {

@@ -6,7 +6,8 @@ struct HealthcheckItemView: View {
     let name: String?
     let typeLine: String
     let metaLine: String?
-    let state: Hc2StateUi
+    let tagText: String
+    let tagColor: Color
     var isBusy = false
 
     /// Account check.
@@ -32,12 +33,23 @@ struct HealthcheckItemView: View {
                   state: check.uiState, isBusy: isBusy)
     }
 
+    /// Monitor64 host of a connected node: "kind · address", then the host's text line.
+    init(monitor64Host host: Node64.Monitor64OverviewHost) {
+        let display = host.display
+        name = host.name
+        typeLine = [host.kind?.nonBlank, host.address?.nonBlank].compactMap { $0 }.joined(separator: " · ")
+        metaLine = host.text?.nonBlank?.m64Text
+        tagText = display.label
+        tagColor = display.color
+    }
+
     private init(name: String?, type: String?, target: String?, meta: [String], state: Hc2StateUi, isBusy: Bool) {
         self.name = name
         let type = type ?? "Unknown"
         typeLine = target?.nonBlank.map { "\(type) · \($0)" } ?? type
         metaLine = meta.isEmpty ? nil : meta.joined(separator: " · ")
-        self.state = state
+        tagText = state.label
+        tagColor = state.color
         self.isBusy = isBusy
     }
 
@@ -47,10 +59,12 @@ struct HealthcheckItemView: View {
                 Text(name?.nonBlank ?? String(localized: "(unnamed)"))
                     .font(.headline)
                     .lineLimit(1)
-                Text(typeLine)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                if !typeLine.isEmpty {
+                    Text(typeLine)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
                 if let metaLine {
                     Text(metaLine)
                         .font(.caption)
@@ -62,7 +76,7 @@ struct HealthcheckItemView: View {
             if isBusy {
                 ProgressView()
             } else {
-                HealthcheckStateTag(state: state)
+                HealthcheckTag(text: LocalizedStringKey(tagText), color: tagColor)
             }
         }
         .accessibilityElement(children: .combine)

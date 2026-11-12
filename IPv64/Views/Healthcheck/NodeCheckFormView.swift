@@ -206,15 +206,22 @@ struct HealthcheckTargetSheet: View {
     @Environment(\.dismiss) private var dismiss
     /// (nodeId, name) of the reachable nodes that offer checks.
     let nodes: [(id: String, name: String)]
-    /// `nil` = account, else the node id; the caller presents the form after this sheet closed.
-    let onChoose: (String?) -> Void
+    /// Nodes with Monitor64.
+    let monitorNodes: [(id: String, name: String)]
+    /// The caller presents the form after this sheet closed.
+    let onChoose: (HealthcheckTarget) -> Void
 
     var body: some View {
         NavigationStack {
             List {
-                choice(title: "Account healthcheck", subtitle: "Runs from ipv64.net locations", symbol: "cloud", nodeId: nil)
+                choice(title: "Account healthcheck", subtitle: "Runs from ipv64.net locations", symbol: "cloud", target: .account)
                 ForEach(nodes, id: \.id) { node in
-                    choice(title: "On node \(node.name)", subtitle: "Runs locally on \(node.name)", symbol: "network", nodeId: node.id)
+                    choice(title: "On node \(node.name)", subtitle: "Runs locally on \(node.name)", symbol: "network",
+                           target: .nodeCheck(node.id))
+                }
+                ForEach(monitorNodes, id: \.id) { node in
+                    choice(title: "Monitor64 host on \(node.name)", subtitle: "Monitors a server or device from \(node.name)",
+                           symbol: "server.rack", target: .monitor64Host(node.id))
                 }
             }
             .navigationTitle("New Healthcheck")
@@ -226,9 +233,9 @@ struct HealthcheckTargetSheet: View {
         .presentationDetents([.medium])
     }
 
-    private func choice(title: LocalizedStringKey, subtitle: LocalizedStringKey, symbol: String, nodeId: String?) -> some View {
+    private func choice(title: LocalizedStringKey, subtitle: LocalizedStringKey, symbol: String, target: HealthcheckTarget) -> some View {
         Button {
-            onChoose(nodeId)
+            onChoose(target)
             dismiss()
         } label: {
             Label {
