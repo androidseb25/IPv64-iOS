@@ -53,8 +53,10 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
             AboutView(popToRootTab: popToRootTab)
         case .cdn:
             CdnView(popToRootTab: popToRootTab)
-        case .proxy64, .dns64:
-            // Screens follow in a later step.
+        case .proxy64:
+            ProxyView(popToRootTab: popToRootTab)
+        case .dns64:
+            // Screen follows in a later step.
             ContentUnavailableView(labelNew, systemImage: iconName)
                 .navigationTitle(labelNew)
                 .navigationBarTitleDisplayMode(.inline)

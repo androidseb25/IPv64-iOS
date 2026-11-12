@@ -9,20 +9,29 @@ struct CdnUsageSection: View {
         if usage?.cdnDomains != nil || usage?.cdnTrafficGB != nil {
             Section("Usage") {
                 if let q = usage?.cdnDomains {
-                    block("CDN domains", value: Text("\(Int(q.used ?? 0))"),
+                    UsageBlock(title: "CDN domains", value: Text("\(Int(q.used ?? 0))"),
                           limit: q.limit.map { String(localized: "of \($0)") } ?? String(localized: "unlimited"),
                           fraction: CdnLogic.fraction(used: q.used, limit: q.limit))
                 }
                 if let q = usage?.cdnTrafficGB {
-                    block("Traffic this month", value: Text(verbatim: CdnLogic.gigabytes(q.used ?? 0)),
+                    UsageBlock(title: "Traffic this month", value: Text(verbatim: CdnLogic.gigabytes(q.used ?? 0)),
                           limit: q.limit.map { String(localized: "of \(CdnLogic.gigabytes(Double($0)))") } ?? String(localized: "unlimited"),
                           fraction: CdnLogic.fraction(used: q.used, limit: q.limit))
                 }
             }
         }
     }
+}
 
-    private func block(_ title: LocalizedStringKey, value: Text, limit: String, fraction: Double?) -> some View {
+/// One number block of a usage section: title, large value, limit text, progress bar and optional hint.
+struct UsageBlock: View {
+    let title: LocalizedStringKey
+    let value: Text
+    let limit: String
+    let fraction: Double?
+    var hint: String?
+
+    var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title).font(.subheadline).foregroundStyle(.secondary)
             HStack(alignment: .firstTextBaseline, spacing: 6) {
@@ -32,6 +41,7 @@ struct CdnUsageSection: View {
             if let fraction {
                 ProgressView(value: fraction).tint(fraction >= 1 ? .red : fraction >= 0.8 ? .orange : .accentColor)
             }
+            if let hint { Text(verbatim: hint).font(.footnote).foregroundStyle(.secondary) }
         }
         .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
