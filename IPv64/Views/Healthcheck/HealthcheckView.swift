@@ -12,6 +12,7 @@ struct HealthcheckView: View {
     /// Removed at once while the delete request runs; back on failure.
     @State private var deletedTokens: Set<String> = []
     @State private var confirmDelete: HC2Check?
+    @State private var showNew = false
     @State private var error: ErrorText?
 
     private var all: [HC2Check] { (checks ?? []).filter { !deletedTokens.contains($0.token) } }
@@ -25,7 +26,7 @@ struct HealthcheckView: View {
 
     var body: some View {
         if #available(iOS 26.0, *) {
-            listView.setColorGradient(confirmDelete != nil ? .clear : .orange)
+            listView.setColorGradient(confirmDelete != nil || showNew ? .clear : .orange)
         } else {
             listView
         }
@@ -59,6 +60,7 @@ struct HealthcheckView: View {
             HealthcheckDetailView(token: route.token) { Task { await load() } }
         }
         .toolbar { toolbar }
+        .sheet(isPresented: $showNew) { HealthcheckFormView(token: nil) { Task { await load() } } }
         .refreshable { await load() }
         .task { await load() }
         .alert("Delete healthcheck?", isPresented: Binding(get: { confirmDelete != nil }, set: { if !$0 { confirmDelete = nil } }),
@@ -89,6 +91,12 @@ struct HealthcheckView: View {
                 Label("Filter healthchecks", systemImage: status == .all && exec == .all
                       ? "line.3.horizontal.decrease" : "line.3.horizontal.decrease.circle.fill")
             }
+        }
+        if #available(iOS 26.0, *) {
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button { showNew = true } label: { Label("New healthcheck", systemImage: "plus") }
         }
     }
 

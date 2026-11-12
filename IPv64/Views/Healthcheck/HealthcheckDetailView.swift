@@ -29,6 +29,7 @@ struct HealthcheckDetailView: View {
     @State private var loadingMore = false
     @State private var waiting: String?
     @State private var confirmDelete = false
+    @State private var showEdit = false
     @State private var error: ErrorText?
     @State private var info: ErrorText?
     // Statistics and incidents load only when opened.
@@ -50,7 +51,7 @@ struct HealthcheckDetailView: View {
 
     var body: some View {
         if #available(iOS 26.0, *) {
-            content.setColorGradient(confirmDelete ? .clear : .orange)
+            content.setColorGradient(confirmDelete || showEdit ? .clear : .orange)
         } else {
             content
         }
@@ -88,6 +89,12 @@ struct HealthcheckDetailView: View {
         .task { await load() }
         .task(id: StatsKey(range: statsRange, generation: generation)) { await loadStats() }
         .task(id: IncidentsKey(generation: generation)) { await loadIncidents() }
+        .sheet(isPresented: $showEdit) {
+            HealthcheckFormView(token: token) {
+                onChanged()
+                Task { await load() }
+            }
+        }
         .alert("Delete healthcheck?", isPresented: $confirmDelete) {
             Button("Delete", role: .destructive) { Task { await delete() } }
             Button("Cancel", role: .cancel) {}
@@ -212,6 +219,13 @@ struct HealthcheckDetailView: View {
 
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            Button("Edit", systemImage: "pencil") { showEdit = true }
+                .disabled(detail == nil || busy || isLoading)
+        }
+        if #available(iOS 26.0, *) {
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
+        }
         ToolbarItem(placement: .topBarTrailing) {
             if busy || isLoading {
                 ProgressView()
