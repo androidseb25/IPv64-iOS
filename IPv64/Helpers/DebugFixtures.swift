@@ -43,6 +43,10 @@ enum DebugFixtures {
     /// `MOCK_NODES=nd_a=http://host/node/api,nd_b=…` (env or defaults): direct access to mock nodes
     /// for the logged-in account, so node screens can be tested where the simulator cannot type.
     private static func seedMockNodes() {
+        // `MOCK_NODES_CLEAR=nd_a,nd_b` (env): removes seeded mock node access again.
+        for id in (ProcessInfo.processInfo.environment["MOCK_NODES_CLEAR"] ?? "").split(separator: ",") {
+            LocalNodeStore.remove(String(id))
+        }
         let raw = ProcessInfo.processInfo.environment["MOCK_NODES"] ?? UserDefaults.standard.string(forKey: "MOCK_NODES")
         guard let raw, let owner = User.empty.current?.uuid, !owner.isEmpty else { return }
         for pair in raw.split(separator: ",") {
