@@ -102,7 +102,7 @@ struct ChannelsView: View {
             case .edit(let id):
                 ChannelFormSheet(channelId: id, onChanged: reload, onPush: { self.sheet = .push })
             case .push:
-                NavigationStack { PushSetupView() }.tint(.orange)
+                NavigationStack { PushSetupView() }.tint(.orange).appReadableWidth()
                     .onDisappear(perform: reload)
             case .verify(let channel):
                 ChannelVerifySheet(channelId: channel.id, name: ChannelLogic.displayName(channel), onVerified: reload)

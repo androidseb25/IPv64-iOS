@@ -52,7 +52,7 @@ struct ContentView: View {
                     .tint(.orange)
                     .task(id: userStorage.ApiKey) { await runPushLogic() }
                     .sheet(isPresented: $showPushSetup) {
-                        NavigationStack { PushSetupView() }.tint(.orange)
+                        NavigationStack { PushSetupView() }.tint(.orange).appReadableWidth()
                     }
                     .safeAreaInset(edge: .top, spacing: 0) {
                         if !networkMonitor.isConnected {

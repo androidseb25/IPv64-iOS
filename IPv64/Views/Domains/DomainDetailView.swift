@@ -88,7 +88,7 @@ struct DomainDetailView: View {
             switch sheet {
             case .newRecord: RecordNewSheet(domain: name) { changed() }
             case .dynDns: DomainDynDnsSheet(domain: name) { changed() }
-            case .settings: NavigationStack { DomainSettingsView(name: name) { changed() } }
+            case .settings: NavigationStack { DomainSettingsView(name: name) { changed() } }.appReadableWidth()
             case .rotated(let url): RotatedTokenSheet(url: url)
             }
         }

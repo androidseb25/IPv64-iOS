@@ -57,6 +57,7 @@ struct HealthcheckFormView: View {
                 }
             }
         }
+        .appReadableWidth()
         .presentationDetents([.large])
         .interactiveDismissDisabled(isSaving)
         .task { await load() }
@@ -226,6 +227,7 @@ struct PushUrlSheet: View {
                 }
             }
         }
+        .appReadableWidth()
         .presentationDetents([.medium])
         .interactiveDismissDisabled()
     }

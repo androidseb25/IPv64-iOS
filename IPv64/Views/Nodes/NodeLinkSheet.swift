@@ -59,6 +59,7 @@ struct NodeLinkSheet: View {
                 Section { Text(inlineError).font(.footnote).foregroundStyle(.red) }
             }
         }
+        .appReadableWidth()
         .presentationDetents([.large])
     }
 

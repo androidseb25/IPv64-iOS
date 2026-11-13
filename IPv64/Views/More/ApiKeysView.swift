@@ -112,7 +112,7 @@ struct ApiKeysView: View {
                 if key.expired == true { MoreTag(String(localized: "Expired"), .red) }
             }
             Text(verbatim: ApiKeyText.subtitle(key, current: current))
-                .font(.footnote.monospaced()).foregroundStyle(.secondary)
+                .font(.footnote.monospacedDigit()).foregroundStyle(.secondary)
         }
         .accessibilityElement(children: .combine)
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -185,6 +185,7 @@ struct ApiKeyCreateSheet: View {
             }
         }
         .errorAlert($error)
+        .appReadableWidth()
         .presentationDetents([.medium, .large])
     }
 

@@ -54,6 +54,7 @@ struct ChannelVerifySheet: View {
             }
         }
         .interactiveDismissDisabled()
+        .appReadableWidth()
         .presentationDetents([.medium, .large])
         .task(id: sendCount) { await runCountdown() }
     }

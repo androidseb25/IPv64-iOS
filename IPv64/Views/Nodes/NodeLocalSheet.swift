@@ -86,6 +86,7 @@ struct NodeLocalSheet: View {
         } message: { node in
             Text("The node at this address reports the ID \(node.remoteId) instead of \(node.id). The connection was saved anyway — check the address if this is unexpected.")
         }
+        .appReadableWidth()
         .presentationDetents([.large])
     }
 

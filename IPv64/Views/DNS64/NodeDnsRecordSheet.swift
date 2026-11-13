@@ -50,6 +50,7 @@ struct NodeDnsRecordSheet: View {
                 }
             }
         }
+        .appReadableWidth()
         .presentationDetents([.medium, .large])
         .onAppear(perform: fill)
         .onChange(of: ttl) { ttl = dns64DigitsOnly(ttl) }

@@ -77,6 +77,7 @@ struct ChannelFormSheet: View {
                 }
             }
         }
+        .appReadableWidth()
         .presentationDetents([.large])
         .interactiveDismissDisabled(isBusy)
         .task { await load() }

@@ -85,6 +85,7 @@ struct ProxyView: View {
                         }
                     }
                 }
+                .appReadableWidth()
                 .presentationDetents([.medium])
             case .enableCdn(let choice):
                 CdnModeSheet(hostLabel: choice.label) { mode, healthcheck in

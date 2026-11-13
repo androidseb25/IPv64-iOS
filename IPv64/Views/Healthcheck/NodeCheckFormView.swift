@@ -53,6 +53,7 @@ struct NodeCheckFormView: View {
                 }
             }
         }
+        .appReadableWidth()
         .presentationDetents([.large])
         .interactiveDismissDisabled(isSaving)
         .task { await load() }
@@ -230,6 +231,7 @@ struct HealthcheckTargetSheet: View {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel", systemImage: "xmark") { dismiss() } }
             }
         }
+        .appReadableWidth()
         .presentationDetents([.medium])
     }
 

@@ -78,6 +78,7 @@ struct Monitor64HostFormView: View {
                 }
             }
         }
+        .appReadableWidth()
         .presentationDetents([.large])
         .interactiveDismissDisabled(isSaving)
         .task { await load() }

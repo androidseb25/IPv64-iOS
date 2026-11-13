@@ -84,6 +84,7 @@ struct CdnModeSheet: View {
                     ToolbarItem(placement: .cancellationAction) { Button("Cancel", systemImage: "xmark") { dismiss() } }
                 }
         }
+        .appReadableWidth()
         .presentationDetents([.large])
     }
 }
@@ -122,6 +123,7 @@ struct CdnEnableFlow: View {
                 }
             }
         }
+        .appReadableWidth()
         .presentationDetents([.large])
     }
 }

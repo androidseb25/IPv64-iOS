@@ -51,6 +51,7 @@ struct UserView: View {
                 }
             }
         }
+        .appReadableWidth()
         .sheet(isPresented: $showEditUserSheet.animation()) {
             UserEditView(user: $selectedUser).onDisappear {
                 selectedUser = .empty

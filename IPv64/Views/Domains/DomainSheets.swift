@@ -41,6 +41,7 @@ struct DynDNSSheet<Content: View>: View {
                 }
             }
         }
+        .appReadableWidth()
         .interactiveDismissDisabled(isBusy)
     }
 }
@@ -222,6 +223,7 @@ struct DomainNewSheet: View {
             }
         }
         .errorAlert($error)
+        .appReadableWidth()
         .presentationDetents([.medium])
     }
 
@@ -272,6 +274,7 @@ struct RecordNewSheet: View {
             }
         }
         .errorAlert($error)
+        .appReadableWidth()
         .presentationDetents([.medium])
     }
 

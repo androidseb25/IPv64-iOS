@@ -50,6 +50,7 @@ struct UserEditView: View {
                 }
             }
         }
+        .appReadableWidth()
     }
 }
 
