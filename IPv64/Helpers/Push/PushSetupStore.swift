@@ -23,7 +23,10 @@ nonisolated enum PushSetupStore {
     /// `nil` when logged out.
     static func keyHash(apiKey: String) -> String? {
         let key = apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
-        return key.isEmpty ? nil : String(sha256Hex(key).prefix(16))
+        guard !key.isEmpty else { return nil }
+        // DEBUG mock server: its own namespace, so mock account ids never stick to a real API key.
+        let scoped = AppConfig.mockBase.map { "\(key)|\($0)" } ?? key
+        return String(sha256Hex(scoped).prefix(16))
     }
 
     static func accountScope(accountId: Int) -> String { "a" + sha256Hex("account:\(accountId)").prefix(16) }

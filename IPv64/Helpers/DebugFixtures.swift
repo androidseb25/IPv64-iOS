@@ -5,6 +5,12 @@ import OSLog
 /// Opt-in simulator fixtures. Release builds contain neither this transport nor its setup.
 enum DebugFixtures {
     static func configure() {
+        // `CLEAR_ACCOUNT_IDS=1` (env): forgets remembered account ids, e.g. one taken from the mock server.
+        if ProcessInfo.processInfo.environment["CLEAR_ACCOUNT_IDS"] == "1", let defaults = UserStorage.sharedDefault {
+            for key in defaults.dictionaryRepresentation().keys where key.hasPrefix("HC2_PUSH_SETUP.acct_") {
+                defaults.removeObject(forKey: key)
+            }
+        }
         seedMockLogin()
         seedMockNodes()
         guard ProcessInfo.processInfo.arguments.contains("--fixture-api") else { return }
