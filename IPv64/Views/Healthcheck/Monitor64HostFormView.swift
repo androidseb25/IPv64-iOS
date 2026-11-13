@@ -389,7 +389,7 @@ struct Monitor64AccessEditView: View {
                 if isSaving {
                     ProgressView()
                 } else {
-                    Button("Save") { Task { await save() } }.disabled(draft.type == nil)
+                    Button("Save", systemImage: "checkmark") { Task { await save() } }.disabled(draft.type == nil)
                 }
             }
         }

@@ -178,7 +178,7 @@ struct NodeDetailView: View {
             } else {
                 moreMenu.disabled(!loaded)
             }
-        }
+        }.appVerticalPreferred()
     }
 
     private var moreMenu: some View {

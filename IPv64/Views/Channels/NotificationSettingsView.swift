@@ -51,7 +51,7 @@ struct NotificationSettingsView: View {
                     } else {
                         Button("Save", systemImage: "checkmark", action: save).disabled(!valid)
                     }
-                }
+                }.appVerticalPreferred()
             }
         }
         .scrollDismissesKeyboard(.interactively)

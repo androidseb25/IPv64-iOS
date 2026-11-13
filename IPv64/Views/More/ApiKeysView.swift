@@ -58,7 +58,7 @@ struct ApiKeysView: View {
                     } else {
                         Button("New API key", systemImage: "plus") { showCreate = true }
                     }
-                }
+                }.appVerticalPreferred()
             }
         }
         .refreshable { await load() }

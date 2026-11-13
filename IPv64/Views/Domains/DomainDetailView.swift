@@ -196,7 +196,7 @@ struct DomainDetailView: View {
             } else {
                 moreMenu
             }
-        }
+        }.appVerticalPreferred()
     }
 
     private var moreMenu: some View {

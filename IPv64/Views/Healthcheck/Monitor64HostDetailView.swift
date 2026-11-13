@@ -263,7 +263,7 @@ struct Monitor64HostDetailView: View {
                     .tint(.red)
                     .disabled(detail == nil)
             }
-        }
+        }.appVerticalPreferred()
     }
 
     // MARK: Loading

@@ -35,3 +35,12 @@ private struct ReadableWidth: ViewModifier {
             }
     }
 }
+
+extension ToolbarContent {
+    /// iPhone Duo: a custom view item (spinner swapped in while loading) joins the vertical bar
+    /// instead of staying horizontal next to the status bar.
+    @ToolbarContentBuilder
+    func appVerticalPreferred() -> some ToolbarContent {
+        if #available(iOS 27.1, *) { axisBehavior(.verticalPreferred) } else { self }
+    }
+}

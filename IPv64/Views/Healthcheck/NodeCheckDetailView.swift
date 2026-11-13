@@ -216,7 +216,7 @@ struct NodeCheckDetailView: View {
                     .tint(.red)
                     .disabled(check == nil)
             }
-        }
+        }.appVerticalPreferred()
     }
 
     // MARK: Loading

@@ -54,7 +54,7 @@ struct ThreatLookupView: View {
     }
 
     private func ownRow(_ address: String?, family: String) -> some View {
-        HStack {
+        HStack(spacing: 20) {
             VStack(alignment: .leading, spacing: 2) {
                 if let address {
                     Text(verbatim: address).font(.body.monospaced())

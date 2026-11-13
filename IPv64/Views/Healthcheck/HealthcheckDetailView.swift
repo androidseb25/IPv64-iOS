@@ -234,7 +234,7 @@ struct HealthcheckDetailView: View {
                     .tint(.red)
                     .disabled(detail == nil)
             }
-        }
+        }.appVerticalPreferred()
     }
 
     // MARK: Loading

@@ -116,7 +116,7 @@ struct ProxyHostEditView: View {
                 } else {
                     Button("Save", systemImage: "checkmark") { Task { await save() } }
                 }
-            }
+            }.appVerticalPreferred()
         }
     }
 

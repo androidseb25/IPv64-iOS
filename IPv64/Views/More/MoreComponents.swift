@@ -20,7 +20,7 @@ extension View {
     /// Spinner in the toolbar while something runs (loading again or an action).
     func moreToolbarSpinner(_ busy: Bool) -> some View {
         toolbar {
-            ToolbarItem(placement: .topBarTrailing) { if busy { ProgressView() } }
+            ToolbarItem(placement: .topBarTrailing) { if busy { ProgressView() } }.appVerticalPreferred()
         }
     }
 }

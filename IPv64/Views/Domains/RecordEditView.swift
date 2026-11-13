@@ -54,7 +54,7 @@ struct RecordEditView: View {
                     Button("Save", systemImage: "checkmark") { Task { await save() } }
                         .disabled(original == nil || locked || trimmedContent.isEmpty)
                 }
-            }
+            }.appVerticalPreferred()
         }
         .task { await load() }
         .errorAlert($error)
