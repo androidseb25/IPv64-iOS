@@ -64,9 +64,10 @@ struct NotificationPermissionActions: View {
     }
 
     @ViewBuilder private var permissionButtons: some View {
-        Button("Allow notifications", systemImage: "bell", action: allow)
+        // Text only: an SF Symbol in a bordered button inside a list row leaves an empty icon gap.
+        Button("Allow notifications", action: allow)
             .buttonStyle(.borderedProminent)
-        Button("Settings", systemImage: "gear", action: openSettings)
+        Button("Settings", action: openSettings)
             .buttonStyle(.bordered)
     }
 

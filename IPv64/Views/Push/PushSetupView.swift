@@ -43,6 +43,9 @@ struct PushSetupView: View {
             RegisterStep(deviceName: $deviceName, permissionAllowed: permission.isAllowed,
                          registeredText: registeredText, appSupported: appSupported,
                          isRegistering: isRegistering, canRegister: canRegister) {
+                // Spinner at once and keyboard away; the first registration can take a while.
+                isRegistering = true
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 Task { await register() }
             }
             TestStep(registered: deviceChannel != nil, notificationsAllowed: permission.isAllowed, resultText: testText,
