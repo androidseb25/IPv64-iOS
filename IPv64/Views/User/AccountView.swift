@@ -35,10 +35,14 @@ struct AccountView: View {
         List {
             accountSelectionView
             
+            // Rows and texts as in Android 2.1.0 (AccountView).
             Section("Account") {
+                labeled("Username", badge: me?.username?.nonBlank ?? "none", color: .gray)
                 labeled("Account Plan", badge: me?.plan?.name?.nonBlank ?? "none", color: .yellow)
+                labeled("Plan valid until", badge: planValidUntil, color: .gray)
                 labeled("E-Mail", badge: me?.email?.nonBlank ?? "none", color: .gray)
-                labeled("Registered since", badge: registeredSince, color: .gray)
+                labeled("Registered since", badge: dateText(me?.registeredAt), color: .gray)
+                labeled("Last login", badge: dateText(me?.lastLoginAt), color: .gray)
             }
             
             Section("DynDNS") {
@@ -53,6 +57,22 @@ struct AccountView: View {
                 quota("SMS Limit / 24h", usage?.sms24h)
             }
             
+            Section("Failover") {
+                quota("Failover Policies", usage?.failoverPolicies)
+                quota("Failover Monitors", usage?.failoverMonitors)
+                quota("Failover Rules", usage?.failoverRules)
+            }
+
+            Section("CDN") {
+                quota("CDN Domains", usage?.cdnDomains)
+                quota("CDN Traffic (GB)", usage?.cdnTrafficGB)
+            }
+
+            Section("VPN / DNS64") {
+                labeled("VPN Traffic (GB)", badge: vpnTraffic, color: usage?.vpnTrafficGB?.limited == true ? .red : .green)
+                quota("DNS64 Clients", usage?.dns64Clients)
+            }
+
             Section("API") {
                 HStack {
                     Text("API Key")
@@ -114,8 +134,22 @@ struct AccountView: View {
     
     private var usage: Me.Usage? { me?.usage }
     
-    private var registeredSince: String {
-        me?.registeredAt?.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year().locale(Locale(identifier: "de_DE"))) ?? "01.01.0001"
+    /// Android `formatGermanTime`, "none" when missing.
+    private func dateText(_ date: Date?) -> String {
+        date.map { DynDNSLogic.germanTime($0) } ?? "none"
+    }
+
+    /// No plan: "–"; plan without end (free plan): "unlimited".
+    private var planValidUntil: String {
+        guard let plan = me?.plan else { return "–" }
+        return plan.validUntil.map { DynDNSLogic.germanTime($0) } ?? "unlimited"
+    }
+
+    /// Android `VpnTrafficUsage.usageText`: "used / limit", "(limit reached)" when limited, "–" without data.
+    private var vpnTraffic: String {
+        guard let q = usage?.vpnTrafficGB, let limit = q.limit else { return "–" }
+        let text = "\((q.used ?? 0).formatted(.number.precision(.fractionLength(0...2)))) / \(limit.formatted())"
+        return q.limited == true ? text + " (limit reached)" : text
     }
     
     private func load() async {
