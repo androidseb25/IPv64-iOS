@@ -155,7 +155,7 @@ struct LoginView: View {
         defer { isLoading = false }
         let me: Me
         do {
-            me = try await ipv64Retrying { try await IPv64(apiKey: key).account.me() }
+            me = try await ipv64Retrying { try await AppConfig.cloudClient(apiKey: key).account.me() }
         } catch {
             guard !Task.isCancelled else { return }
             // 401/403 = key rejected or account inactive; anything else keeps the server text.

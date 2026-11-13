@@ -7,14 +7,14 @@ import IPv64
 @Observable
 final class Session {
     var apiKey: String { UserStorage.shared.ApiKey.trimmingCharacters(in: .whitespacesAndNewlines) }
-    var api: IPv64 { IPv64(apiKey: apiKey) }
+    var api: IPv64 { AppConfig.cloudClient(apiKey: apiKey) }
 
     enum IPFamilyChoice { case v4, v6 }
 
     /// Public IPv4 / IPv6 of this device (`meta.ip()` on ipv4./ipv6.ipv64.net), `nil` if the family is unreachable.
     func myIP(_ family: IPFamilyChoice) async -> String? {
         let host = family == .v4 ? "https://ipv4.ipv64.net/api/v2" : "https://ipv6.ipv64.net/api/v2"
-        let client = IPv64(configuration: .init(apiKey: nil, baseURL: URL(string: host)!, timeoutInterval: 5))
+        let client = AppConfig.cloudClient(apiKey: nil, production: host, timeout: 5)
         guard let result = try? await client.meta.ip() else { return nil }
         if let reported = result.family, reported != (family == .v4 ? .ipv4 : .ipv6) { return nil }
         return result.ip?.trimmingCharacters(in: .whitespacesAndNewlines).nonBlank
