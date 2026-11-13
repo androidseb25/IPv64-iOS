@@ -65,7 +65,7 @@ struct CdnModeForm: View {
                         }
                     }
                 }
-            }
+            }.appVerticalPreferred()
         }
         .interactiveDismissDisabled(busy)
     }

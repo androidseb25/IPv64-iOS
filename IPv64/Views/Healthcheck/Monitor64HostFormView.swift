@@ -67,10 +67,10 @@ struct Monitor64HostFormView: View {
                     if isSaving {
                         ProgressView()
                     } else {
-                        Button(editing ? "Save" : "Create") { Task { await save() } }
+                        Button(editing ? "Save" : "Create", systemImage: "checkmark") { Task { await save() } }
                             .disabled(loading || issue != nil)
                     }
-                }
+                }.appVerticalPreferred()
             }
             .navigationDestination(item: $accessEdit) { edit in
                 Monitor64AccessEditView(nodeId: nodeId, hostUID: uid ?? "", address: address, draft: edit) {
@@ -391,7 +391,7 @@ struct Monitor64AccessEditView: View {
                 } else {
                     Button("Save", systemImage: "checkmark") { Task { await save() } }.disabled(draft.type == nil)
                 }
-            }
+            }.appVerticalPreferred()
         }
         .alert("Delete access?", isPresented: $confirmDelete) {
             Button("Delete", role: .destructive) { Task { await delete() } }

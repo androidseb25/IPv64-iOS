@@ -74,7 +74,7 @@ struct ChannelFormSheet: View {
                     } else {
                         Button(isEdit ? "Save" : "Create", action: save).disabled(!loaded || type == nil && !isEdit)
                     }
-                }
+                }.appVerticalPreferred()
             }
         }
         .appReadableWidth()

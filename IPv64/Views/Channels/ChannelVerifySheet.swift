@@ -50,7 +50,7 @@ struct ChannelVerifySheet: View {
                     } else {
                         Button("Verify", systemImage: "checkmark", action: verify).disabled(code.count != 6)
                     }
-                }
+                }.appVerticalPreferred()
             }
         }
         .interactiveDismissDisabled()

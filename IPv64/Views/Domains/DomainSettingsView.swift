@@ -42,7 +42,7 @@ struct DomainSettingsView: View {
                     Button("Save", systemImage: "checkmark") { Task { await save() } }
                         .disabled(original == nil || !prefixValid)
                 }
-            }
+            }.appVerticalPreferred()
         }
         .task { await load() }
         .errorAlert($error)

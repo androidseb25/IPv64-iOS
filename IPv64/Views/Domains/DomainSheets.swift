@@ -37,7 +37,7 @@ struct DynDNSSheet<Content: View>: View {
                         } else {
                             Button(confirmLabel, systemImage: "checkmark", action: onConfirm).disabled(!confirmEnabled)
                         }
-                    }
+                    }.appVerticalPreferred()
                 }
             }
         }

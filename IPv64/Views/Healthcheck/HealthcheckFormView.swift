@@ -51,10 +51,10 @@ struct HealthcheckFormView: View {
                     if isSaving {
                         ProgressView()
                     } else {
-                        Button(editing ? "Save" : "Create") { Task { await save() } }
+                        Button(editing ? "Save" : "Create", systemImage: "checkmark") { Task { await save() } }
                             .disabled(loading || issue != nil)
                     }
-                }
+                }.appVerticalPreferred()
             }
         }
         .appReadableWidth()
