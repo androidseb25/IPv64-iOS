@@ -190,7 +190,11 @@ private struct DnsKpiTile: View {
         VStack(alignment: .leading, spacing: 2) {
             Text(label).font(.subheadline).foregroundStyle(.secondary)
             Text(verbatim: value).font(.system(.title2, design: .rounded).weight(.bold)).lineLimit(1).minimumScaleFactor(0.6)
-            if let caption { Text(verbatim: caption).font(.caption).foregroundStyle(.secondary).lineLimit(2) }
+                .fixedSize(horizontal: false, vertical: true)
+            if let caption {
+                Text(verbatim: caption).font(.caption).foregroundStyle(.secondary).lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true) // wrap and grow the row instead of shrinking the value
+            }
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .accessibilityElement(children: .combine)
