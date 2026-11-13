@@ -39,10 +39,14 @@ struct NodeDnsView: View {
         .toolbar {
             if nodes.dnsIds.count > 1, let id = currentId {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Picker("Node", selection: Binding(get: { id }, set: { picked = $0 })) {
-                        ForEach(nodes.dnsIds, id: \.self) { Text(verbatim: nodes.name(of: $0)).tag($0) }
+                    // Title + icon so the item can join the vertical bar on iPhone Duo.
+                    Menu {
+                        Picker("Node", selection: Binding(get: { id }, set: { picked = $0 })) {
+                            ForEach(nodes.dnsIds, id: \.self) { Text(verbatim: nodes.name(of: $0)).tag($0) }
+                        }
+                    } label: {
+                        Label(nodes.name(of: id), systemImage: "server.rack")
                     }
-                    .pickerStyle(.menu)
                 }
             }
         }

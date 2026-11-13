@@ -5,6 +5,7 @@ import OSLog
 /// Opt-in simulator fixtures. Release builds contain neither this transport nor its setup.
 enum DebugFixtures {
     static func configure() {
+        seedMockNodes()
         guard ProcessInfo.processInfo.arguments.contains("--fixture-api") else { return }
         URLProtocol.registerClass(FixtureURLProtocol.self)
         // A separate non-user key verifies the configured shared Keychain access group.
@@ -22,6 +23,18 @@ enum DebugFixtures {
             UserStorage.sharedDefault?.set("fixture-key", forKey: "API_KEY_WIDGET")
             let user = User(Username: "Fixture account", ApiKey: "fixture-key", Information: "Local test data")
             UserStorage.sharedDefault?.set(try? JSONEncoder().encode([user]), forKey: "USER_ACCOUNTS")
+        }
+    }
+
+    /// `MOCK_NODES=nd_a=http://host/node/api,nd_b=…` (env or defaults): direct access to mock nodes
+    /// for the logged-in account, so node screens can be tested where the simulator cannot type.
+    private static func seedMockNodes() {
+        let raw = ProcessInfo.processInfo.environment["MOCK_NODES"] ?? UserDefaults.standard.string(forKey: "MOCK_NODES")
+        guard let raw, let owner = User.empty.current?.uuid, !owner.isEmpty else { return }
+        for pair in raw.split(separator: ",") {
+            let parts = pair.split(separator: "=", maxSplits: 1).map(String.init)
+            guard parts.count == 2 else { continue }
+            try? LocalNodeStore.save(id: parts[0], url: parts[1], key: "node64_mock", owner: owner)
         }
     }
 }
