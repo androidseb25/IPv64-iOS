@@ -49,7 +49,7 @@ struct NotificationSettingsView: View {
                     if isSaving {
                         ProgressView()
                     } else {
-                        Button("Save", action: save).disabled(!valid)
+                        Button("Save", systemImage: "checkmark", action: save).disabled(!valid)
                     }
                 }
             }

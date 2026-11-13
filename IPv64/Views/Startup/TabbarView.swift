@@ -57,6 +57,7 @@ struct TabbarView: View {
         NavigationStack(path: Binding(get: { paths[tab] ?? NavigationPath() }, set: { paths[tab] = $0 })) {
             tab.makeContentView(popToRootTab: .constant(.other))
         }
+        .appReadableWidth()
     }
 }
 

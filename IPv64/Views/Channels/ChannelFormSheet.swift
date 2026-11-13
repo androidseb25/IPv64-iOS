@@ -66,7 +66,7 @@ struct ChannelFormSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }.disabled(isBusy)
+                    Button("Cancel", systemImage: "xmark") { dismiss() }.disabled(isBusy)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     if isBusy {

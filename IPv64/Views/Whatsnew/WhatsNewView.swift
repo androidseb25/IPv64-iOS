@@ -64,7 +64,7 @@ struct WhatsNewView: View {
                     .cornerRadius(8.0)
             }
             .padding(.horizontal, 27.5)
-            .padding(.bottom, UIDevice.isIpad ? 27.5 : 8)
+            .padding(.bottom, 8)
             
         }
         .navigationTitle("")

@@ -41,7 +41,7 @@ struct NodeCheckFormView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }.disabled(isSaving)
+                    Button("Cancel", systemImage: "xmark") { dismiss() }.disabled(isSaving)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     if isSaving {
@@ -227,7 +227,7 @@ struct HealthcheckTargetSheet: View {
             .navigationTitle("New Healthcheck")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel", systemImage: "xmark") { dismiss() } }
             }
         }
         .presentationDetents([.medium])

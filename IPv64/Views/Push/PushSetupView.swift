@@ -59,6 +59,7 @@ struct PushSetupView: View {
             }
         }
         .interactiveDismissDisabled()
+        .appHorizontalBars()
         .trackingNotificationPermission($permission)
         .task { await initialLoad() }
         .errorAlert($error)
