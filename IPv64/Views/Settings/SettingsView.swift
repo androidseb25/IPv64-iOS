@@ -16,6 +16,8 @@ struct SettingsView: View {
     @StateObject private var userStorage = UserStorage.shared
     
     @State private var alertType: AlertType?
+    @Environment(ConnectedNodes.self) private var nodes
+    @AppStorage(NodeSyncStore.enabledKey, store: UserStorage.sharedDefault) private var syncNodes = true
 
     private static let apiKeysRoute = "settings.apikeys"
     private static let accountLinksRoute = "settings.accountlinks"
@@ -47,6 +49,10 @@ struct SettingsView: View {
 
             Section {
                 NavigationLink(value: NodesView.route) { Text("Nodes") }
+                Toggle("Sync with iCloud", isOn: $syncNodes)
+                    .onChange(of: syncNodes) { _, on in if on { nodes.syncWithCloud(force: true) } }
+            } footer: {
+                Text("Node URLs and API keys sync end-to-end encrypted through your iCloud Keychain.")
             }
 
             Section("Notifications") {
@@ -145,6 +151,7 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView(popToRootTab: .constant(.settings))
+        .environment(ConnectedNodes())
 }
 
 /// Row label for a link that leaves the app: title plus the trailing external-link arrow.

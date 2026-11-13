@@ -3,15 +3,19 @@ import Security
 
 /// Shared by the app and widget; never falls back to plaintext storage.
 nonisolated enum SecureStore {
-    private static func query(_ account: String) throws -> [String: Any] {
+    static func accessGroup() throws -> String {
         guard let group = Bundle.main.object(forInfoDictionaryKey: "SecureKeychainAccessGroup") as? String,
               !group.isEmpty, !group.contains("$(") else {
             throw StoreError.configuration
         }
-        return [kSecClass as String: kSecClassGenericPassword,
-                kSecAttrService as String: "net.ipv64.credentials",
-                kSecAttrAccount as String: account,
-                kSecAttrAccessGroup as String: group]
+        return group
+    }
+
+    private static func query(_ account: String) throws -> [String: Any] {
+        try [kSecClass as String: kSecClassGenericPassword,
+             kSecAttrService as String: "net.ipv64.credentials",
+             kSecAttrAccount as String: account,
+             kSecAttrAccessGroup as String: accessGroup()]
     }
 
     static func read(_ account: String) throws -> Data? {

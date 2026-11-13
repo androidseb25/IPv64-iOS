@@ -2,7 +2,7 @@ import Foundation
 import IPv64
 
 /// Direct node access stored on this device (Android `LocalNodeStore`, prefs `NODE64_LOCAL`).
-/// Metadata (`<id>.url/.owner/.name/.proxy/.dns`) lives in the app-group UserDefaults under the prefix
+/// Metadata (`<id>.url/.owner/.name/.proxy/.dns/.synced`) lives in the app-group UserDefaults under the prefix
 /// `NODE64_LOCAL.`; the node API key lives in the Keychain (`NODE64_KEY.<id>`). Owner = the account's `User.uuid`.
 nonisolated enum LocalNodeStore {
     struct Access: Hashable, Sendable {
@@ -27,7 +27,13 @@ nonisolated enum LocalNodeStore {
 
     static func name(_ id: String) -> String? { defaults.string(forKey: key(id, "name")) }
 
-    static func setName(_ id: String, _ name: String) { defaults.set(name, forKey: key(id, "name")) }
+    static func setName(_ id: String, _ name: String) {
+        defaults.set(name, forKey: key(id, "name"))
+        defaults.set(true, forKey: key(id, "dirty"))
+    }
+
+    /// Account owning the stored access of `id` (one entry per node id on this device).
+    static func owner(_ id: String) -> String? { defaults.string(forKey: key(id, "owner")) }
 
     /// Stored URL without reading the Keychain (list rows).
     static func url(_ id: String) -> String? { defaults.string(forKey: key(id, "url")) }
@@ -55,6 +61,17 @@ nonisolated enum LocalNodeStore {
         defaults.set(url, forKey: key(id, "url"))
         defaults.set(owner, forKey: key(id, "owner"))
         if let name { defaults.set(name, forKey: key(id, "name")) }
+        // Changed here: wins over the iCloud copy on the next sync (also when saved offline).
+        defaults.set(true, forKey: key(id, "dirty"))
+    }
+
+    /// Set once the access was written to or imported from the iCloud Keychain (`NodeSyncStore`).
+    static func isSynced(_ id: String) -> Bool { defaults.bool(forKey: key(id, "synced")) }
+    /// Saved or renamed here and not yet written to the iCloud Keychain.
+    static func isDirty(_ id: String) -> Bool { defaults.bool(forKey: key(id, "dirty")) }
+    static func markSynced(_ id: String) {
+        defaults.set(true, forKey: key(id, "synced"))
+        defaults.removeObject(forKey: key(id, "dirty"))
     }
 
     static func proxyActive(_ id: String) -> Bool { defaults.bool(forKey: key(id, "proxy")) }
@@ -73,7 +90,7 @@ nonisolated enum LocalNodeStore {
     }
 
     static func remove(_ id: String) {
-        for field in ["url", "owner", "name", "proxy", "dns"] { defaults.removeObject(forKey: key(id, field)) }
+        for field in ["url", "owner", "name", "proxy", "dns", "synced", "dirty"] { defaults.removeObject(forKey: key(id, field)) }
         try? SecureStore.remove(secretAccount(id))
     }
 

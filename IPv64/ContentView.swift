@@ -19,6 +19,7 @@ struct ContentView: View {
     @State private var activeSheet: ActiveSheet? = nil
     @Environment(Session.self) private var session
     @Environment(PushRegistrar.self) private var registrar
+    @Environment(ConnectedNodes.self) private var nodes
     @State private var showPushSetup = false
     
     /// After login: sync a changed device token, then open "Push notifications" once per account unless it is
@@ -26,6 +27,7 @@ struct ContentView: View {
     private func runPushLogic() async {
         let apiKey = session.apiKey
         await registrar.ensureAccountId()
+        nodes.syncWithCloud(force: true)
         _ = try? await registrar.syncTokenIfChanged(channels: nil)
         guard !Task.isCancelled, PushSetupStore.shouldShow(apiKey: apiKey),
               let account = PushSetupStore.scope(apiKey: apiKey), registrar.setupTriggeredFor != account else { return }
@@ -83,6 +85,8 @@ struct ContentView: View {
                 UNUserNotificationCenter.current().setBadgeCount(0)
                 UNUserNotificationCenter.current().removeAllDeliveredNotifications()
                 userStorage.InAppSwitcher = false
+                // Retries the account id too: the first lookup may have failed offline.
+                Task { await registrar.ensureAccountId(); nodes.syncWithCloud() }
             } else if newPhase == .inactive {
                 biometrics.isAuthenticated = false
                 userStorage.InAppSwitcher = true

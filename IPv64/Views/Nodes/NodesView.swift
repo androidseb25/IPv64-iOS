@@ -192,7 +192,7 @@ struct NodesView: View {
     }
 
     private func forget(_ id: String) {
-        LocalNodeStore.remove(id)
+        nodes.forget(id)
         withAnimation { nodes.refresh() }
     }
 }

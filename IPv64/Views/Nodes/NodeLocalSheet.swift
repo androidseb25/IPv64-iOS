@@ -146,6 +146,7 @@ struct NodeLocalSheet: View {
                 try LocalNodeStore.save(id: remoteId, url: url, key: key, owner: nodes.owner, name: status.node?.name?.nonBlank)
             }
             if let modules = status.modules { LocalNodeStore.saveModules(id, modules: modules) }
+            nodes.push(id)
             apiKey = ""
             if let remoteId, remoteId != id {
                 differentNode = DifferentNode(id: id, remoteId: remoteId)

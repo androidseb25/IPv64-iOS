@@ -98,7 +98,10 @@ extension NodeDetailView {
             // Status first: the screen shows the node as connected without waiting for the (slower) logs.
             let status = try await client.node.status()
             guard access == config else { return }
-            if let name = status.node?.name?.nonBlank, name != LocalNodeStore.name(nodeId) { LocalNodeStore.setName(nodeId, name) }
+            if let name = status.node?.name?.nonBlank, name != LocalNodeStore.name(nodeId) {
+                LocalNodeStore.setName(nodeId, name)
+                nodes.push(nodeId)
+            }
             if let modules = status.modules { LocalNodeStore.saveModules(nodeId, modules: modules) }
             nodes.refresh()
             live = NodeLive(status: status, logs: live.logs, lastOk: .now, failing: false, rejected: nil)
@@ -214,7 +217,7 @@ extension NodeDetailView {
     // MARK: Forget / unlink
 
     func forget() {
-        LocalNodeStore.remove(nodeId)
+        nodes.forget(nodeId)
         nodes.refresh()
         onChanged()
         if directOnly {
