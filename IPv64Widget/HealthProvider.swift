@@ -70,8 +70,9 @@ struct HealthProvider: AppIntentTimelineProvider {
             return Timeline(entries: [entry], policy: .after(nextRefresh()))
         }
 
+        let recent = await ApiServiceWidget.fetchRecentStates(tokens: selected.map(\.id))
         let byID = Dictionary(snapshot.checks.map {
-            ($0.token, HealthCheckEntity(id: $0.token, name: $0.name, states: $0.states))
+            ($0.token, HealthCheckEntity(id: $0.token, name: $0.name, states: recent[$0.token] ?? $0.states))
         }, uniquingKeysWith: { first, _ in first })
         // Preserve every slot, including its own fallback when that check is unavailable.
         let items = selected.map { byID[$0.id] ?? HealthCheckEntity(id: $0.id, name: $0.name, states: []) }
