@@ -45,7 +45,7 @@ struct NodeDnsView: View {
                             ForEach(nodes.dnsIds, id: \.self) { Text(verbatim: nodes.name(of: $0)).tag($0) }
                         }
                     } label: {
-                        Label(nodes.name(of: id), systemImage: "server.rack")
+                        Label(nodes.name(of: id), systemImage: "cpu")
                     }
                 }
             }
