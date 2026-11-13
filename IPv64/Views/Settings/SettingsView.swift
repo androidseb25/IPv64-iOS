@@ -70,9 +70,9 @@ struct SettingsView: View {
             Section("App") {
                 Toggle("Lockscreen \(userStorage.EnableLogscreen ? "enabled" : "disabled")", isOn: $userStorage.EnableLogscreen)
                 NavigationLink(value: Tabs.about.route) { Text("About") }
-                Button("YouTube") { open("https://www.youtube.com/c/RaspberryPiCloud") }
+                Button { open("https://www.youtube.com/c/RaspberryPiCloud") } label: { ExternalLinkRow(title: "YouTube") }
                     .tint(.primary)
-                Button("Discord") { open("https://discord.gg/rpicloud") }
+                Button { open("https://discord.gg/rpicloud") } label: { ExternalLinkRow(title: "Discord") }
                     .tint(.primary)
             }
 
@@ -145,4 +145,20 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView(popToRootTab: .constant(.settings))
+}
+
+/// Row label for a link that leaves the app: title plus the trailing external-link arrow.
+private struct ExternalLinkRow: View {
+    let title: LocalizedStringKey
+
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Image(systemName: "arrow.up.right")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
+        }
+    }
 }
