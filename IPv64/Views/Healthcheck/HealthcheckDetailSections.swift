@@ -170,9 +170,12 @@ struct HealthcheckConfigRows: View {
 struct StatusPillsBar: View {
     let states: [Hc2StateUi]
     let noun: String
+    @State private var width: CGFloat = 0
 
     var body: some View {
-        let shown = Array(states.prefix(30).reversed())
+        // As many 10 pt pills (+3 pt gap) as fit, so wide windows show more history.
+        let fitting = width > 0 ? max(1, Int((width + 3) / 13)) : 30
+        let shown = Array(states.prefix(fitting).reversed())
         HStack(spacing: 3) {
             ForEach(Array(shown.enumerated()), id: \.offset) { _, state in
                 RoundedRectangle(cornerRadius: 3, style: .continuous).fill(state.color).frame(maxWidth: 10)
@@ -180,6 +183,7 @@ struct StatusPillsBar: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(height: 32)
+        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
         .accessibilityElement()
         .accessibilityLabel(shown.last.map { "Last \(shown.count) \(noun), latest: \($0.label.lowercased())" } ?? "No \(noun)")
     }

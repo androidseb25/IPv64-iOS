@@ -5,6 +5,7 @@ import OSLog
 /// Opt-in simulator fixtures. Release builds contain neither this transport nor its setup.
 enum DebugFixtures {
     static func configure() {
+        seedMockLogin()
         seedMockNodes()
         guard ProcessInfo.processInfo.arguments.contains("--fixture-api") else { return }
         URLProtocol.registerClass(FixtureURLProtocol.self)
@@ -24,6 +25,19 @@ enum DebugFixtures {
             let user = User(Username: "Fixture account", ApiKey: "fixture-key", Information: "Local test data")
             UserStorage.sharedDefault?.set(try? JSONEncoder().encode([user]), forKey: "USER_ACCOUNTS")
         }
+    }
+
+    /// `MOCK_LOGIN=<key>` (env, only together with MOCK_API): logs in like LoginView when no account is stored,
+    /// for simulators that cannot type.
+    private static func seedMockLogin() {
+        guard AppConfig.mockBase != nil, let key = ProcessInfo.processInfo.environment["MOCK_LOGIN"], !key.isEmpty,
+              UserStorage.shared.ApiKey.isEmpty else { return }
+        let storage = UserStorage.shared
+        User(Username: "Mock account", ApiKey: key, Information: "").save()
+        storage.ApiKey = key
+        storage.ApiKeyWidget = key
+        storage.ShowWelcomeView = false
+        storage.ShowLoginView = false
     }
 
     /// `MOCK_NODES=nd_a=http://host/node/api,nd_b=…` (env or defaults): direct access to mock nodes

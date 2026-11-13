@@ -79,9 +79,7 @@ struct LoggerView: View {
         .toolbar(content: {
             if (showToolbar) {
                 ToolbarItem(placement: .primaryAction) {
-                    Button(action: { dismiss() }) {
-                        Text("Close")
-                    }
+                    Button("Close", systemImage: "xmark") { dismiss() }
                     .tint(systemColorScheme == .dark ? .white : .black)
                 }
             }

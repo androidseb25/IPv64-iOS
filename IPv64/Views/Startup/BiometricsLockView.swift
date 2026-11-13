@@ -78,7 +78,7 @@ struct BiometricsLockView: View {
         }) {
             if bio.disableFields {
                 Spinner(isAnimating: true, style: .medium, color: UIColor.white)
-                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .frame(minWidth: 0, maxWidth: 500)
                     .padding(16)
             } else {
                 Text("Unlock")
@@ -86,7 +86,7 @@ struct BiometricsLockView: View {
                     .foregroundStyle(.white)
                     .fontWeight(.bold)
                     .textCase(.uppercase)
-                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .frame(minWidth: 0, maxWidth: 500)
                     .padding(16)
             }
         }

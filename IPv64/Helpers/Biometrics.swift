@@ -64,36 +64,11 @@ class Biometrics: ObservableObject {
         }
     }
     
-    func tryToAuthenticate(isIntro: Bool = false) {
-        let context = LAContext()
-        var error: NSError?
-        let reason = "Please authenticate to continue with the app."
-        
-        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
-            self.disableFields = false
-            tryToAuthenticatePIN()
-            return
-        }
-        
-        context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason, reply: { (success, error) -> Void in
-            DispatchQueue.main.async {
-                if success {
-                    self.isAuthenticated = true
-                } else {
-                    // Check if there is an error
-                    if let errorObj = error as? LAError {
-                        if errorObj.code == .userFallback {
-                            self.tryToAuthenticatePIN()
-                        } else {
-                            self.isAuthenticated = false
-                        }
-                    }
-                }
-            }
-        })
-    }
-    
+    /// One instance for all windows: a second request while the system prompt is up is ignored.
+    private var isEvaluating = false
+
     func tryToAuthenticatePIN() {
+        guard !isEvaluating else { return }
         let context = LAContext()
         var error: NSError?
         let reason = "Please authenticate to continue with the app."
@@ -103,17 +78,14 @@ class Biometrics: ObservableObject {
             return
         }
         
-        context.evaluatePolicy(LAPolicy.deviceOwnerAuthentication, localizedReason: reason, reply: { (success, error) -> Void in
-            DispatchQueue.main.async {
-                if success {
-                    self.isAuthenticated = true
-                } else {
-                    // Check if there is an error
-                    if error is LAError {
-                        self.isAuthenticated = false
-                    }
-                }
+        isEvaluating = true
+        context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { @Sendable success, _ in
+            Task { @MainActor in
+                self.isEvaluating = false
+                // Also after Cancel / failure, otherwise the spinner stays and the button is disabled.
+                self.disableFields = false
+                if success { self.isAuthenticated = true }
             }
-        })
+        }
     }
 }

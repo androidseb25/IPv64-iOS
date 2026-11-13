@@ -72,7 +72,7 @@ struct ChannelFormSheet: View {
                     if isBusy {
                         ProgressView()
                     } else {
-                        Button(isEdit ? "Save" : "Create", action: save).disabled(!loaded || type == nil && !isEdit)
+                        Button(isEdit ? "Save" : "Create", systemImage: "checkmark", action: save).disabled(!loaded || type == nil && !isEdit)
                     }
                 }.appVerticalPreferred()
             }

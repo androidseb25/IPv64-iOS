@@ -26,19 +26,6 @@ extension View {
     }
 }
 
-extension UIDevice {
-    static var idiom: UIUserInterfaceIdiom {
-        UIDevice.current.userInterfaceIdiom
-    }
-    static var isIpad: Bool {
-        idiom == .pad
-    }
-    
-    static var isiPhone: Bool {
-        idiom == .phone
-    }
-}
-
 extension SettingsView {
     func performLogout() -> Bool {
         let user = User.empty

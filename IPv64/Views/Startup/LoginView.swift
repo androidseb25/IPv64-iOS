@@ -141,7 +141,7 @@ struct LoginView: View {
                 .foregroundStyle(.white)
                 .fontWeight(.bold)
                 .textCase(.uppercase)
-                .frame(minWidth: 0, maxWidth: .infinity)
+                .frame(minWidth: 0, maxWidth: 500) // capped on iPad, full width on iPhone
                 .padding(16)
         }
         .disabled(isLoading || apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)

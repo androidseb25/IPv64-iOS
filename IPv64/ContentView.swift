@@ -13,15 +13,13 @@ struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     
     @StateObject var networkMonitor = NetworkMonitor()
-    @StateObject private var biometrics = Biometrics()
+    @EnvironmentObject private var biometrics: Biometrics
     @StateObject private var userStorage = UserStorage.shared
     @State private var showWhatsNew = false
     @State private var activeSheet: ActiveSheet? = nil
     @Environment(Session.self) private var session
     @Environment(PushRegistrar.self) private var registrar
     @State private var showPushSetup = false
-    /// Account scope the setup was opened for: at most once per account and app start (Android `MainActivity`).
-    @State private var pushSetupTriggeredFor: String?
     
     /// After login: sync a changed device token, then open "Push notifications" once per account unless it is
     /// done or this device already has a channel (Android `MainActivity` + `PushSetupStore.shouldShow`).
@@ -30,8 +28,8 @@ struct ContentView: View {
         await registrar.ensureAccountId()
         _ = try? await registrar.syncTokenIfChanged(channels: nil)
         guard !Task.isCancelled, PushSetupStore.shouldShow(apiKey: apiKey),
-              let account = PushSetupStore.scope(apiKey: apiKey), pushSetupTriggeredFor != account else { return }
-        pushSetupTriggeredFor = account
+              let account = PushSetupStore.scope(apiKey: apiKey), registrar.setupTriggeredFor != account else { return }
+        registrar.setupTriggeredFor = account
         showPushSetup = true
     }
 
@@ -41,18 +39,22 @@ struct ContentView: View {
                 WelcomeView()
             } else if !biometrics.isAuthenticated && userStorage.EnableLogscreen {
                 BiometricsLockView()
-                    .environmentObject(biometrics)
             } else if userStorage.ShowLoginView || userStorage.ApiKey.isEmpty {
                 NavigationStack {
                     LoginView()
                 }
+                .appReadableWidth()
             } else {
                 TabbarView()
                     .id(userStorage.sessionID)
                     .tint(.orange)
                     .task(id: userStorage.ApiKey) { await runPushLogic() }
-                    .sheet(isPresented: $showPushSetup) {
+                    .sheet(isPresented: $showPushSetup, onDismiss: { registrar.setupClosed += 1 }) {
                         NavigationStack { PushSetupView() }.tint(.orange).appReadableWidth()
+                    }
+                    // Skipped / done in another window: close this window's copy too.
+                    .onChange(of: registrar.setupClosed) {
+                        if !PushSetupStore.shouldShow(apiKey: session.apiKey) { showPushSetup = false }
                     }
                     .safeAreaInset(edge: .top, spacing: 0) {
                         if !networkMonitor.isConnected {
@@ -98,6 +100,13 @@ struct ContentView: View {
                     showWhatsNew = true
                     activeSheet = .whatsnew
                 }
+            }
+        }
+        // Closed in another window (LAST_BUILD_NUMBER is shared): close this window's copy too.
+        .onChange(of: userStorage.LAST_BUILD_NUMBER) { _, build in
+            if build == Bundle.main.buildNumber {
+                showWhatsNew = false
+                activeSheet = nil
             }
         }
         .sheet(item: $activeSheet) { item in

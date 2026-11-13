@@ -107,6 +107,27 @@ private struct CameraPreview: UIViewRepresentable {
     final class VideoView: UIView {
         override class var layerClass: AnyClass { AVCaptureVideoPreviewLayer.self }
         var previewLayer: AVCaptureVideoPreviewLayer { layer as! AVCaptureVideoPreviewLayer }
+        private var coordinator: AVCaptureDevice.RotationCoordinator?
+        private var observation: NSKeyValueObservation?
+
+        /// Keeps the preview upright in every orientation and window size (iPad landscape, Split View).
+        func followRotation() {
+            guard coordinator == nil,
+                  let device = (previewLayer.session?.inputs.first as? AVCaptureDeviceInput)?.device else { return }
+            let coordinator = AVCaptureDevice.RotationCoordinator(device: device, previewLayer: previewLayer)
+            self.coordinator = coordinator
+            apply(coordinator.videoRotationAngleForHorizonLevelPreview)
+            observation = coordinator.observe(\.videoRotationAngleForHorizonLevelPreview, options: [.new]) { [weak self] _, change in
+                guard let angle = change.newValue else { return }
+                let view = self
+                Task { @MainActor in view?.apply(angle) }
+            }
+        }
+
+        private func apply(_ angle: CGFloat) {
+            guard let connection = previewLayer.connection, connection.isVideoRotationAngleSupported(angle) else { return }
+            connection.videoRotationAngle = angle
+        }
     }
     
     let session: AVCaptureSession
@@ -116,31 +137,13 @@ private struct CameraPreview: UIViewRepresentable {
         let v = VideoView()
         v.previewLayer.session = session
         v.previewLayer.videoGravity = .resizeAspectFill
-        
-        if let connection = v.previewLayer.connection {
-            if #available(iOS 17.0, *) {
-                if connection.isVideoRotationAngleSupported(90) {
-                    connection.videoRotationAngle = 90 // Hochformat
-                }
-            } else if connection.isVideoOrientationSupported {
-                connection.videoOrientation = .portrait
-            }
-        }
-        
+        v.followRotation()
         onLayerAvailable(v.previewLayer)
         return v
     }
     
     func updateUIView(_ uiView: VideoView, context: Context) {
-        if let connection = uiView.previewLayer.connection {
-            if #available(iOS 17.0, *) {
-                if connection.isVideoRotationAngleSupported(90) {
-                    connection.videoRotationAngle = 90
-                }
-            } else if connection.isVideoOrientationSupported {
-                connection.videoOrientation = .portrait
-            }
-        }
+        uiView.followRotation() // the camera input may be added after the view was made
         onLayerAvailable(uiView.previewLayer)
     }
 }
@@ -235,6 +238,8 @@ final class QRScanner: NSObject, ObservableObject, AVCaptureMetadataOutputObject
         
         session.beginConfiguration()
         session.sessionPreset = .high
+        // Keep scanning while other apps share the screen (Split View, Slide Over, Stage Manager).
+        if session.isMultitaskingCameraAccessSupported { session.isMultitaskingCameraAccessEnabled = true }
         
         // Input
         guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back),

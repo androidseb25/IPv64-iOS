@@ -54,6 +54,11 @@ final class PushRegistrar {
     @ObservationIgnored private var configuredFor: String?
     /// Last device registration; a new one waits for it (Android serialises with a mutex).
     @ObservationIgnored private var registration: Task<String?, Never>?
+    /// Account scope the push setup sheet was opened for in this app run, shared by all windows
+    /// so only one window opens it (Android `MainActivity`: once per account and app start).
+    @ObservationIgnored var setupTriggeredFor: String?
+    /// Bumped when a window closes the setup sheet; other windows close theirs once `PushSetupStore.shouldShow` is false.
+    var setupClosed = 0
 
     init(session: Session) {
         self.session = session

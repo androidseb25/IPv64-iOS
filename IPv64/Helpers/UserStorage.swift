@@ -16,7 +16,6 @@ import WidgetKit
 public class UserStorage: ObservableObject {
     class Storage {
         
-        @AppStorage("CURRENT_TAB", store: UserStorage.sharedDefault) var SelectedTab: Tabs = .domain
         @AppStorage("SHOW_WELCOME_VIEW", store: UserStorage.sharedDefault) var ShowWelcomeView: Bool = true
         @AppStorage("SHOW_LOGIN_VIEW", store: UserStorage.sharedDefault) var ShowLoginView: Bool = false
         @AppStorage("ENABLLE_LOCKSCREEN", store: UserStorage.sharedDefault) var EnableLogscreen: Bool = false
@@ -48,12 +47,6 @@ public class UserStorage: ObservableObject {
         if needsMigration, let data = try? JSONEncoder().encode(users) { UserAccounts = data }
         cachedUsers = users
         return users
-    }
-    
-    @Published public var SelectedTab: Tabs = .domain {
-        didSet {
-            storage.SelectedTab = SelectedTab
-        }
     }
     
     @Published public var ShowWelcomeView: Bool = true {
@@ -178,7 +171,6 @@ public class UserStorage: ObservableObject {
             storageError = error.localizedDescription
         }
 
-        SelectedTab = storage.SelectedTab
         ShowWelcomeView = storage.ShowWelcomeView
         ShowLoginView = storage.ShowLoginView
         EnableLogscreen = storage.EnableLogscreen
@@ -190,7 +182,6 @@ public class UserStorage: ObservableObject {
     
     public func clear() {
         users.compactMap(\.uuid).forEach(LocalNodeStore.removeOwner)
-        SelectedTab = .domain
         ShowWelcomeView = true
         ShowLoginView = false
         EnableLogscreen = false

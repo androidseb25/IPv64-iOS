@@ -14,6 +14,8 @@ struct IPv64App: App {
     @State private var session: Session
     @State private var registrar: PushRegistrar
     @State private var nodes: ConnectedNodes
+    /// App-wide so unlocking once unlocks every window (iPad multi-window).
+    @StateObject private var biometrics = Biometrics()
 
     init() {
         #if DEBUG
@@ -63,6 +65,7 @@ struct IPv64App: App {
                 .environment(session)
                 .environment(registrar)
                 .environment(nodes)
+                .environmentObject(biometrics)
                 .task { appDelegate.registrar = registrar }
         }
     }

@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct TabbarView: View {
-    @AppStorage("CURRENT_TAB", store: UserStorage.sharedDefault) private var selectedTab: Tabs = .domain
+    /// Per window (iPad multi-window): each scene keeps its own tab.
+    @SceneStorage("CURRENT_TAB") private var selectedTab: Tabs = .domain
     @Environment(ConnectedNodes.self) private var nodes
     @Environment(\.scenePhase) private var scenePhase
     @State private var paths: [Tabs: NavigationPath] = [:]
