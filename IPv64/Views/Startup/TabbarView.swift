@@ -16,10 +16,8 @@ struct TabbarView: View {
     }
 
     var body: some View {
-        if #available(iOS 27.0, *) {
-            // iPhone Duo: sidebar on the inner display.
-            tabs.tabBarMinimizeBehavior(.onScrollDown).defaultTabBarPlacement(.sidebar)
-        } else if #available(iOS 26.0, *) {
+        // No default sidebar placement: on iPhone (also landscape) always the tab bar.
+        if #available(iOS 26.0, *) {
             tabs.tabBarMinimizeBehavior(.onScrollDown)
         } else {
             tabs
