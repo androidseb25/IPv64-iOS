@@ -16,13 +16,13 @@ struct IPv64App: App {
     @State private var nodes: ConnectedNodes
 
     init() {
+        #if DEBUG
+        DebugFixtures.configure() // before ConnectedNodes reads the stored node access
+        #endif
         let session = Session()
         _session = State(initialValue: session)
         _registrar = State(initialValue: PushRegistrar(session: session))
         _nodes = State(initialValue: ConnectedNodes())
-        #if DEBUG
-        DebugFixtures.configure()
-        #endif
         
         /// Load and configure the state of all the tips of the app
         try? Tips.configure()
