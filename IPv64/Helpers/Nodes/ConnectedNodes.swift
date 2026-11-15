@@ -12,6 +12,8 @@ final class ConnectedNodes {
     private(set) var proxyIds: [String] = []
     /// Subset whose last known status has DNS64 enabled.
     private(set) var dnsIds: [String] = []
+    /// Installed Node64 version per node id from the last status call (direct connections show it in the list).
+    private(set) var versions: [String: String] = [:]
 
     var proxyActive: Bool { !proxyIds.isEmpty }
 
@@ -95,14 +97,17 @@ final class ConnectedNodes {
     /// Asks every connected node for its modules in parallel; unreachable nodes keep their last state.
     func refreshModules() async {
         let clients = ids.compactMap { id in client(for: id).map { (id, $0) } }
-        await withTaskGroup(of: Void.self) { group in
+        let found = await withTaskGroup(of: (String, String?).self) { group in
             for (id, client) in clients {
                 group.addTask {
-                    guard let modules = try? await client.node.status().modules else { return }
-                    LocalNodeStore.saveModules(id, modules: modules)
+                    guard let status = try? await client.node.status() else { return (id, nil) }
+                    if let modules = status.modules { LocalNodeStore.saveModules(id, modules: modules) }
+                    return (id, status.node?.version?.nonBlank)
                 }
             }
+            return await group.reduce(into: [String: String]()) { if let v = $1.1 { $0[$1.0] = v } }
         }
+        versions.merge(found) { $1 }
         refresh()
     }
 }

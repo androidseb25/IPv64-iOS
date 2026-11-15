@@ -14,7 +14,8 @@ struct NodeDnsLogView: View {
     @State private var live = true
     @State private var query = ""
     @State private var filter: Dns64LogFilter = .all
-    @State private var toAllow: Node64.DNS64LogRow?
+    /// Tapped row: a blocked one can be allowed, any other one blocked.
+    @State private var selected: Node64.DNS64LogRow?
     @State private var busy = false
     @State private var error: ErrorText?
 
@@ -63,19 +64,25 @@ struct NodeDnsLogView: View {
         }
         .showLoading($busy)
         .errorAlert($error)
-        .alert(toAllow?.domain ?? "", isPresented: Binding(get: { toAllow != nil }, set: { if !$0 { toAllow = nil } }),
-               presenting: toAllow) { row in
-            Button("Allow this domain") { allow(row) }
+        .alert(selected?.domain ?? "", isPresented: Binding(get: { selected != nil }, set: { if !$0 { selected = nil } }),
+               presenting: selected) { row in
+            if isBlocked(row) {
+                Button("Allow this domain") { change(row, block: false) }
+            } else {
+                Button("Block this domain", role: .destructive) { change(row, block: true) }
+            }
             Button("Cancel", role: .cancel) {}
         } message: { row in
-            Text(dns64AllowMessage(reason: row.reason))
+            Text(isBlocked(row) ? dns64AllowMessage(reason: row.reason) : dns64BlockMessage)
         }
         .task(id: PollKey(active: scenePhase == .active, live: live, filter: filter, query: query)) { await poll() }
     }
 
+    private func isBlocked(_ row: Node64.DNS64LogRow) -> Bool { row.status?.rawValue == "blocked" }
+
     @ViewBuilder private func logRow(_ row: Node64.DNS64LogRow) -> some View {
-        if row.status?.rawValue == "blocked" && row.domain != nil {
-            Button { toAllow = row } label: { rowContent(row) }.buttonStyle(.plain)
+        if row.domain != nil {
+            Button { selected = row } label: { rowContent(row) }.buttonStyle(.plain)
         } else {
             rowContent(row)
         }
@@ -120,12 +127,14 @@ struct NodeDnsLogView: View {
         }
     }
 
-    private func allow(_ row: Node64.DNS64LogRow) {
+    private func change(_ row: Node64.DNS64LogRow, block: Bool) {
         guard let domain = row.domain, let dns = nodes.client(for: nodeId)?.dns64 else { return }
         Task {
             busy = true
             defer { busy = false }
-            do { _ = try await dns.allowlist.add(domain) } catch { self.error = .node(error) }
+            do {
+                if block { _ = try await dns.denylist.add(domain) } else { _ = try await dns.allowlist.add(domain) }
+            } catch { self.error = .node(error) }
         }
     }
 }

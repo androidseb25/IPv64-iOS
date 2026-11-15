@@ -56,7 +56,8 @@ struct NodesView: View {
             }
             ForEach(directIds, id: \.self) { id in
                 NavigationLink(value: NodeRoute(id: id)) {
-                    DirectNodeRow(name: nodes.name(of: id), host: NodesLogic.directSubtitle(url: LocalNodeStore.url(id)))
+                    DirectNodeRow(name: nodes.name(of: id), host: NodesLogic.directSubtitle(url: LocalNodeStore.url(id)),
+                                  version: nodes.versions[id])
                 }
                 .swipeActions {
                     Button("Forget access", systemImage: "network.slash", role: .destructive) { confirmForget = id }
@@ -152,6 +153,7 @@ struct NodesView: View {
             self.error = ErrorText(error)
         }
         nodes.refresh()
+        await nodes.refreshModules()
     }
 
     /// Polls the list every 5 s for up to 60 s until a new node (or a changed `linkedAt`) appears; one network
@@ -231,6 +233,7 @@ private struct CloudNodeRow: View {
 private struct DirectNodeRow: View {
     let name: String
     let host: String
+    let version: String?
 
     var body: some View {
         HStack(spacing: 12) {
@@ -238,7 +241,7 @@ private struct DirectNodeRow: View {
                 Text(name)
                     .font(.headline)
                     .lineLimit(1)
-                Text(host)
+                Text(verbatim: [version.map { "v" + $0 }, host.nonBlank].compactMap { $0 }.joined(separator: " · "))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)

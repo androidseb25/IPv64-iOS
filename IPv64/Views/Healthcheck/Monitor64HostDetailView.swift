@@ -17,6 +17,11 @@ struct Monitor64HostDetailView: View {
     @State private var range = Node64.Monitor64SeriesRange.day
     @State private var charts: [String: [StatsLine]] = [:]
     @State private var chartsLoaded = false
+    @State private var chartsOpen = true
+    @State private var problemsOpen = true
+    @State private var serviceChartsOpen = false
+    @State private var serviceChartLines: [String: [StatsLine]] = [:]
+    @State private var serviceChartsLoaded = false
     @State private var generation = 0
     @State private var busy = false
     @State private var isLoading = false
@@ -25,6 +30,16 @@ struct Monitor64HostDetailView: View {
     @State private var error: ErrorText?
 
     private struct ChartKey: Equatable { let range: Node64.Monitor64SeriesRange, generation: Int }
+    private struct ServiceChartKey: Equatable { let range: Node64.Monitor64SeriesRange, generation: Int, open: Bool }
+
+    /// One chart per service and unit, built from the service's current metrics.
+    private struct ServiceChart: Identifiable {
+        let id: String
+        let title: String
+        let unit: String
+        let top: Double?
+        let series: [(key: String, label: String)]
+    }
 
     private static let ranges: [(Node64.Monitor64SeriesRange, LocalizedStringKey)] = [
         (.sixHours, "6 h"), (.day, "24 h"), (.week, "7 d"), (.month, "30 d"),
@@ -48,6 +63,7 @@ struct Monitor64HostDetailView: View {
                 infoSection(detail)
                 actions
                 if !(detail.charts ?? []).isEmpty && (!charts.isEmpty || !chartsLoaded) { chartsSection(detail) }
+                serviceChartsSection(detail)
                 problemsSection
                 newServicesSection(detail)
                 ForEach(serviceGroups(detail), id: \.category) { group in
@@ -70,6 +86,7 @@ struct Monitor64HostDetailView: View {
         .refreshable { await load() }
         .task { await load() }
         .task(id: ChartKey(range: range, generation: generation)) { await loadCharts() }
+        .task(id: ServiceChartKey(range: range, generation: generation, open: serviceChartsOpen)) { await loadServiceCharts() }
         .sheet(isPresented: $showEdit) {
             Monitor64HostFormView(nodeId: nodeId, uid: uid) {
                 onChanged()
@@ -135,12 +152,16 @@ struct Monitor64HostDetailView: View {
         .tint(.primary)
     }
 
+    private var rangePicker: some View {
+        Picker("Range", selection: $range) {
+            ForEach(Self.ranges, id: \.0) { Text($0.1).tag($0.0) }
+        }
+        .pickerStyle(.segmented)
+    }
+
     private func chartsSection(_ d: Node64.Monitor64HostDetail) -> some View {
-        Section("Charts") {
-            Picker("Range", selection: $range) {
-                ForEach(Self.ranges, id: \.0) { Text($0.1).tag($0.0) }
-            }
-            .pickerStyle(.segmented)
+        HcCollapsibleSection(title: "Charts", isExpanded: $chartsOpen) {
+            rangePicker
             ForEach(d.charts ?? [], id: \.id) { chart in
                 if let lines = charts[chart.id?.rawValue ?? ""] {
                     Monitor64ChartView(title: (chart.id?.rawValue ?? "").uppercased(), unit: chart.unit ?? "",
@@ -156,8 +177,32 @@ struct Monitor64HostDetailView: View {
         }
     }
 
+    /// Further charts from the numeric metrics of the services (only series that have a history in the range).
+    @ViewBuilder private func serviceChartsSection(_ d: Node64.Monitor64HostDetail) -> some View {
+        let list = serviceCharts(d)
+        if !list.isEmpty {
+            HcCollapsibleSection(title: "Service charts", isExpanded: $serviceChartsOpen) {
+                // The range picker sits in Charts; without host charts it is shown here.
+                if (d.charts ?? []).isEmpty || (chartsLoaded && charts.isEmpty) { rangePicker }
+                if !serviceChartsLoaded {
+                    ProgressView().frame(maxWidth: .infinity)
+                } else if serviceChartLines.isEmpty {
+                    Text("No data in this range.").font(.footnote).foregroundStyle(.secondary)
+                } else {
+                    ForEach(list) { chart in
+                        if let lines = serviceChartLines[chart.id] {
+                            Monitor64ChartView(title: chart.title, unit: chart.unit,
+                                               top: (chart.top ?? lines.flatMap(\.points).map(\.value).max() ?? 1).nonZero,
+                                               lines: lines)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private var problemsSection: some View {
-        Section("Problems") {
+        HcCollapsibleSection(title: "Problems", isExpanded: $problemsOpen) {
             if let problemsError {
                 Text(verbatim: problemsError).foregroundStyle(.red)
             } else if problems.isEmpty {
@@ -216,6 +261,27 @@ struct Monitor64HostDetailView: View {
         for s in services where !order.contains(s.category?.rawValue ?? "other") { order.append(s.category?.rawValue ?? "other") }
         return order.map { category in
             ServiceGroup(category: category, services: services.filter { ($0.category?.rawValue ?? "other") == category })
+        }
+    }
+
+    /// Series already in the host charts are left out; `%` charts go up to 100, others to the metric's maximum (e.g. disk size).
+    private func serviceCharts(_ d: Node64.Monitor64HostDetail) -> [ServiceChart] {
+        let hostKeys = Set((d.charts ?? []).flatMap { $0.series ?? [] }.map { "\($0.svc ?? "")|\($0.metric ?? "")" })
+        return serviceGroups(d).flatMap(\.services).flatMap { s -> [ServiceChart] in
+            guard let key = s.key else { return [] }
+            let metrics = (s.metrics ?? []).filter { m in
+                guard m.value != nil, let name = m.name?.nonBlank else { return false }
+                return !hostKeys.contains("\(key)|\(name)")
+            }
+            var units: [String] = []
+            for m in metrics where !units.contains(m.unit ?? "") { units.append(m.unit ?? "") }
+            let title = (s.customName?.nonBlank ?? s.name?.nonBlank ?? key).m64Text
+            return units.map { unit in
+                let group = metrics.filter { ($0.unit ?? "") == unit }
+                return ServiceChart(id: "\(key)|\(unit)", title: units.count > 1 && !unit.isEmpty ? "\(title) (\(unit))" : title,
+                                    unit: unit, top: unit == "%" ? 100 : group.compactMap(\.max).max(),
+                                    series: group.map { ("\(key)|\($0.name ?? "")", $0.name ?? "") })
+            }
         }
     }
 
@@ -295,31 +361,60 @@ struct Monitor64HostDetailView: View {
         }
     }
 
-    /// One call for all charts of the range (the server allows 16 series); an error only hides the charts.
+    /// Host charts of the range; an error only hides the charts.
     private func loadCharts() async {
         guard let client, let detail else { return }
-        let keys = (detail.charts ?? []).flatMap { $0.series ?? [] }.map { "\($0.svc ?? "")|\($0.metric ?? "")" }
-        let unique = Array(NSOrderedSet(array: keys).array as? [String] ?? keys).prefix(16)
         chartsLoaded = false
         defer { chartsLoaded = true }
-        guard !unique.isEmpty,
-              let result = try? await client.monitor64.series(host: uid, series: Array(unique), range: range) else {
-            charts = [:]
-            return
-        }
+        let keys = (detail.charts ?? []).flatMap { $0.series ?? [] }.map { "\($0.svc ?? "")|\($0.metric ?? "")" }
+        let points = await fetchSeries(keys, client: client)
         var lines: [String: [StatsLine]] = [:]
         for chart in detail.charts ?? [] {
-            let chartLines = (result.series ?? []).compactMap { entry -> StatsLine? in
-                guard let series = chart.series?.first(where: { "\($0.svc ?? "")|\($0.metric ?? "")" == entry.s }) else { return nil }
-                let points = (entry.points ?? []).compactMap { p -> StatsLine.Point? in
-                    guard let t = p.t, let avg = p.avg else { return nil }
-                    return StatsLine.Point(time: Date(timeIntervalSince1970: TimeInterval(t)), value: avg)
-                }.sorted { $0.time < $1.time }
-                return points.count >= 2 ? StatsLine(name: series.label?.nonBlank ?? entry.s ?? "", points: points) : nil
+            let chartLines = (chart.series ?? []).compactMap { series -> StatsLine? in
+                let key = "\(series.svc ?? "")|\(series.metric ?? "")"
+                guard let p = points[key] else { return nil }
+                return StatsLine(name: series.label?.nonBlank ?? key, points: p)
             }
             if !chartLines.isEmpty { lines[chart.id?.rawValue ?? ""] = chartLines }
         }
         charts = lines
+    }
+
+    /// Service charts, only while their section is open.
+    private func loadServiceCharts() async {
+        guard serviceChartsOpen, let client, let detail else { return }
+        serviceChartsLoaded = false
+        defer { serviceChartsLoaded = true }
+        let list = serviceCharts(detail)
+        // shortcut: at most 64 series (4 calls); load per chart on demand if hosts with more metrics are common.
+        let points = await fetchSeries(Array(list.flatMap { $0.series.map(\.key) }.prefix(64)), client: client)
+        var lines: [String: [StatsLine]] = [:]
+        for chart in list {
+            let chartLines = chart.series.compactMap { s in points[s.key].map { StatsLine(name: s.label, points: $0) } }
+            if !chartLines.isEmpty { lines[chart.id] = chartLines }
+        }
+        serviceChartLines = lines
+    }
+
+    /// Averages per `service|metric` key with at least two points, in calls of at most 16 series (server limit).
+    /// A failing call only drops its series.
+    private func fetchSeries(_ keys: [String], client: Node64) async -> [String: [StatsLine.Point]] {
+        var unique: [String] = []
+        for key in keys where !unique.contains(key) { unique.append(key) }
+        var result: [String: [StatsLine.Point]] = [:]
+        for start in stride(from: 0, to: unique.count, by: 16) {
+            let batch = Array(unique[start..<min(start + 16, unique.count)])
+            guard let series = try? await client.monitor64.series(host: uid, series: batch, range: range) else { continue }
+            for entry in series.series ?? [] {
+                guard let key = entry.s else { continue }
+                let points = (entry.points ?? []).compactMap { p -> StatsLine.Point? in
+                    guard let t = p.t, let avg = p.avg else { return nil }
+                    return StatsLine.Point(time: Date(timeIntervalSince1970: TimeInterval(t)), value: avg)
+                }.sorted { $0.time < $1.time }
+                if points.count >= 2 { result[key] = points }
+            }
+        }
+        return result
     }
 
     // MARK: Actions

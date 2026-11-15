@@ -88,6 +88,8 @@ nonisolated func dns64AllowMessage(reason: String?) -> String {
     return String(localized: "Blocked\(by). Allow this domain and its subdomains for all clients?")
 }
 
+nonisolated let dns64BlockMessage = String(localized: "Block this domain and its subdomains for all clients?")
+
 // MARK: - Records
 
 nonisolated let dns64RecordTypes = ["A", "AAAA", "CNAME", "TXT", "MX", "SRV", "PTR", "CAA"]

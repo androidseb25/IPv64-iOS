@@ -128,7 +128,7 @@ private func moreDay(_ date: Date) -> String {
 }
 
 /// Line per day; touching the chart shows the day and value above it and marks the point.
-struct DayLineChart: View {
+struct DayBarChart: View {
     let days: [DayValue]
     let color: Color
     @State private var rawSelection: Date?
@@ -150,16 +150,8 @@ struct DayLineChart: View {
             .font(.caption).foregroundStyle(.secondary)
             Chart {
                 ForEach(days) { item in
-                    LineMark(x: .value("Day", item.day, unit: .day), y: .value("Events", item.value))
-                        .foregroundStyle(color)
-                        .interpolationMethod(.monotone)
-                }
-                if let selected {
-                    RuleMark(x: .value("Selected", selected.day, unit: .day)).foregroundStyle(.secondary.opacity(0.5))
-                    PointMark(x: .value("Day", selected.day, unit: .day), y: .value("Events", selected.value))
-                        .foregroundStyle(color).symbolSize(70)
-                } else if days.count == 1, let only = days.first {
-                    PointMark(x: .value("Day", only.day, unit: .day), y: .value("Events", only.value)).foregroundStyle(color)
+                    BarMark(x: .value("Day", item.day, unit: .day), y: .value("Events", item.value))
+                        .foregroundStyle(color.opacity(selected == nil || selected?.id == item.id ? 1 : 0.35))
                 }
             }
             .chartYScale(domain: 0...max(days.map(\.value).max() ?? 0, 1))

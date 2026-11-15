@@ -116,6 +116,7 @@ struct ContentView: View {
         .sheet(item: $activeSheet) { item in
             showActiveSheet(item: item)
         }
+        .screenshotProtected(userStorage.ScreenshotProtection)
     }
     
     @ViewBuilder

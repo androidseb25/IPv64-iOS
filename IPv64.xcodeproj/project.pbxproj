@@ -16,6 +16,7 @@
 		9A68F3492EBE088C0033CC42 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A0C48042EBA963700BEDFEA /* SwiftUI.framework */; };
 		9A68F3562EBE088D0033CC42 /* IPv64WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9A68F3472EBE088C0033CC42 /* IPv64WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9A68F35C2EBE08C80033CC42 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 9A68F35B2EBE08C80033CC42 /* SwiftyBeaver */; };
+		C3D1000000000000000000A1 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = C3D1000000000000000000A2 /* SwiftyBeaver */; };
 		9A8CA8AF2EA6969D0073978F /* ipv64.icon in Resources */ = {isa = PBXBuildFile; fileRef = 9A8CA8AD2EA6969D0073978F /* ipv64.icon */; };
 		9A8CA8B02EA6969D0073978F /* ipv64_beta.icon in Resources */ = {isa = PBXBuildFile; fileRef = 9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */; };
 		9AD116FC2EBCAC2000EE7E81 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD116FB2EBCAC2000EE7E81 /* SwiftyBeaver */; };
@@ -140,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3D100000000000000000003 /* SecNtfy in Frameworks */,
+				C3D1000000000000000000A1 /* SwiftyBeaver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,6 +225,7 @@
 			name = IPv64NotificationService;
 			packageProductDependencies = (
 				C3D100000000000000000004 /* SecNtfy */,
+				C3D1000000000000000000A2 /* SwiftyBeaver */,
 			);
 			productName = IPv64NotificationService;
 			productReference = C3D100000000000000000001 /* IPv64NotificationService.appex */;
@@ -825,7 +828,7 @@
 			repositoryURL = "https://github.com/androidseb25/IPv64-SPM";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.0;
+				minimumVersion = 2.2.0;
 			};
 		};
 		B1A0000000000000000000C2 /* XCRemoteSwiftPackageReference "SecNtfy-SPM" */ = {
@@ -873,6 +876,11 @@
 			productName = SwiftyBeaver;
 		};
 		9AD116FB2EBCAC2000EE7E81 /* SwiftyBeaver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			productName = SwiftyBeaver;
+		};
+		C3D1000000000000000000A2 /* SwiftyBeaver */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
 			productName = SwiftyBeaver;

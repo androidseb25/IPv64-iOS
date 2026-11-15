@@ -217,28 +217,6 @@ struct HealthcheckEventRow: View {
     }
 }
 
-/// Pushed list of the incidents of a check.
-struct HealthcheckIncidentsView: View {
-    let incidents: [HC2Incident]
-
-    var body: some View {
-        if #available(iOS 26.0, *) {
-            list.setColorGradient(.orange)
-        } else {
-            list
-        }
-    }
-
-    private var list: some View {
-        List(incidents) { HealthcheckIncidentRow(incident: $0) }
-            .navigationTitle("Incidents")
-            .navigationBarTitleDisplayMode(.inline)
-            .overlay {
-                if incidents.isEmpty { ContentUnavailableView("No incidents", systemImage: "checkmark.circle") }
-            }
-    }
-}
-
 struct HealthcheckIncidentRow: View {
     let incident: HC2Incident
 

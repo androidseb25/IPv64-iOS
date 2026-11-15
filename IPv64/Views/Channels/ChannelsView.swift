@@ -54,16 +54,19 @@ struct ChannelsView: View {
                 Section {
                     ForEach(channels) { channel in
                         // No outer Button: the "Not verified" tag is a button of its own.
-                        ChannelRow(channel: channel,
+                        ChannelRow(channel: channel, isThisDevice: channel.id == deviceChannelId,
                                    awaitingVerification: ChannelLogic.isAwaitingVerification(channel, types: types),
                                    onVerify: { sheet = .verify(channel) })
                             .contentShape(Rectangle())
                             .onTapGesture { sheet = .edit(channel.id) }
                             .accessibilityAddTraits(.isButton)
+                        // This device's push channel can't be deleted here (it would silently stop its pushes).
                         .swipeActions {
-                            Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = channel }
-                                .labelStyle(.iconOnly)
-                                .tint(.red)
+                            if channel.id != deviceChannelId {
+                                Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = channel }
+                                    .labelStyle(.iconOnly)
+                                    .tint(.red)
+                            }
                         }
                     }
                 } header: {
@@ -176,9 +179,7 @@ struct ChannelsView: View {
     }
 
     private func deleteText(_ channel: HC2Channel) -> String {
-        var text = String(localized: "“\(ChannelLogic.displayName(channel))” will be deleted. Checks using only this channel will notify default channels instead.")
-        if channel.id == deviceChannelId { text += String(localized: " This device will no longer receive push notifications.") }
-        return text
+        String(localized: "“\(ChannelLogic.displayName(channel))” will be deleted. Checks using only this channel will notify default channels instead.")
     }
 
     private func delete(_ channel: HC2Channel) {
@@ -201,6 +202,7 @@ struct ChannelsView: View {
 /// Compact row: name, type · target, trailing tags, last error.
 private struct ChannelRow: View {
     let channel: HC2Channel
+    let isThisDevice: Bool
     let awaitingVerification: Bool
     let onVerify: () -> Void
 
@@ -224,6 +226,7 @@ private struct ChannelRow: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 VStack(alignment: .trailing, spacing: 4) {
+                    if isThisDevice { ChannelTag(text: "This device", color: .orange) }
                     if channel.default == true { ChannelTag(text: "Default", color: .blue) }
                     if channel.enabled == false { ChannelTag(text: "Disabled", color: .gray) }
                     if awaitingVerification {

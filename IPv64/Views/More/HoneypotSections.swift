@@ -23,7 +23,7 @@ struct HoneypotNetworkSections: View {
             Text("ipv64.net network")
         }
         let days = DayValue.parse((stats.timeline ?? []).map { ($0.day, $0.events) })
-        if !days.isEmpty { Section("Attacks per day (30 days)") { DayLineChart(days: days, color: .blue) } }
+        if !days.isEmpty { Section("Attacks per day (30 days)") { DayBarChart(days: days, color: .blue) } }
         ranking("Most attacked ports (7 days)", (stats.topPorts ?? []).map {
             ("\($0.service ?? "–") · \($0.port.map(String.init) ?? "–")", $0.events ?? 0, nil, false)
         })
@@ -135,7 +135,7 @@ struct HoneypotContributionSections: View {
             }
         }
         let days = DayValue.parse((stats.timeline ?? []).map { ($0.day, $0.events) })
-        if !days.isEmpty { Section("Events per day (7 days)") { DayLineChart(days: days, color: .orange) } }
+        if !days.isEmpty { Section("Events per day (7 days)") { DayBarChart(days: days, color: .orange) } }
         if !sensors.isEmpty {
             Section("Sensors") {
                 ForEach(sensors) { sensor in

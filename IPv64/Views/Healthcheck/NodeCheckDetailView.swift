@@ -26,6 +26,8 @@ struct NodeCheckDetailView: View {
     @State private var statsCache: [Node64.CheckStatsRange: Node64.CheckStats] = [:]
     @State private var statsError: String?
     @State private var eventsExpanded = false
+    @State private var statsExpanded = true
+    @State private var incidentsExpanded = false
     @State private var incidents: [Node64.CheckIncident]?
     @State private var incidentsError: String?
 
@@ -132,7 +134,7 @@ struct NodeCheckDetailView: View {
     }
 
     private var statsSection: some View {
-        Section("Statistics") {
+        HcCollapsibleSection(title: "Statistics", isExpanded: $statsExpanded) {
             Picker("Range", selection: $statsRange) {
                 Text("1 h").tag(Node64.CheckStatsRange.lastHour)
                 Text("24 h").tag(Node64.CheckStatsRange.last24Hours)
@@ -152,48 +154,29 @@ struct NodeCheckDetailView: View {
     }
 
     private var incidentsSection: some View {
-        Section {
-            NavigationLink {
-                NodeCheckIncidentsView(incidents: incidents ?? [])
-            } label: {
-                LabeledContent("Incidents") {
-                    if incidentsError != nil {
-                        Text("Unavailable")
-                    } else if let incidents {
-                        if incidents.isEmpty { Text("None") } else { Text(incidents.count.formatted()) }
-                    } else {
-                        ProgressView()
-                    }
+        HcCollapsibleSection(title: "Incidents", isExpanded: $incidentsExpanded) {
+            if let incidentsError {
+                Text(verbatim: incidentsError).foregroundStyle(.red)
+            } else if let incidents {
+                if incidents.isEmpty {
+                    Text("No incidents").foregroundStyle(.secondary)
+                } else {
+                    ForEach(incidents) { NodeCheckIncidentRow(incident: $0) }
                 }
+            } else {
+                ProgressView().frame(maxWidth: .infinity)
             }
-            .disabled(incidents?.isEmpty ?? true)
         }
     }
 
     private var eventsSection: some View {
-        Section {
-            if eventsExpanded {
-                ForEach(events) { NodeCheckEventRow(event: $0) }
-                if hasMoreEvents {
-                    Button(loadingMore ? "Loading..." : "Load more") { Task { await loadMore() } }
-                        .disabled(loadingMore)
-                        .frame(maxWidth: .infinity)
-                }
+        HcCollapsibleSection(title: "Events", isExpanded: $eventsExpanded) {
+            ForEach(events) { NodeCheckEventRow(event: $0) }
+            if hasMoreEvents {
+                Button(loadingMore ? "Loading..." : "Load more") { Task { await loadMore() } }
+                    .disabled(loadingMore)
+                    .frame(maxWidth: .infinity)
             }
-        } header: {
-            Button {
-                withAnimation { eventsExpanded.toggle() }
-            } label: {
-                HStack {
-                    Text("Events")
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .rotationEffect(.degrees(eventsExpanded ? 90 : 0))
-                }
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityValue(eventsExpanded ? "Expanded" : "Collapsed")
         }
     }
 

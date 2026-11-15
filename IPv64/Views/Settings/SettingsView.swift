@@ -24,6 +24,7 @@ struct SettingsView: View {
     private static let notificationSettingsRoute = "settings.notificationsettings"
     private static let passwordCheckRoute = "settings.passwordcheck"
     private static let honeypotRoute = "settings.honeypot"
+    private static let notificationLogsRoute = "settings.notificationlogs"
 
     private func open(_ link: String) {
         if let url = URL(string: link) { UIApplication.shared.open(url) }
@@ -68,6 +69,7 @@ struct SettingsView: View {
 
             Section("Tools") {
                 NavigationLink(value: Tabs.log.route) { Text("Logs") }
+                NavigationLink(value: Self.notificationLogsRoute) { Text("Notification logs") }
                 #if DEBUG
                 NavigationLink(value: Tabs.syslog.route) { Text("System Logs") }
                 #endif
@@ -75,6 +77,8 @@ struct SettingsView: View {
 
             Section("App") {
                 Toggle("Lockscreen \(userStorage.EnableLogscreen ? "enabled" : "disabled")", isOn: $userStorage.EnableLogscreen)
+                Toggle("Screenshot protection", isOn: $userStorage.ScreenshotProtection)
+                LabeledContent("Version", value: "\(Bundle.main.versionNumber) (\(Bundle.main.buildNumber))")
                 NavigationLink(value: Tabs.about.route) { Text("About") }
                 Button { open("https://www.youtube.com/c/RaspberryPiCloud") } label: { ExternalLinkRow(title: "YouTube") }
                     .tint(.primary)
@@ -117,6 +121,9 @@ struct SettingsView: View {
                 PasswordCheckView()
             case Self.honeypotRoute:
                 HoneypotView()
+            case Self.notificationLogsRoute:
+                LoggerView(popToRootTab: $popToRootTab, showToolbar: false, prefix: iLogger.pushLogPrefix,
+                           title: String(localized: "Notification logs"))
             case Tabs.syslog.route:
                 Tabs.syslog.makeContentView(popToRootTab: $popToRootTab)
             default:

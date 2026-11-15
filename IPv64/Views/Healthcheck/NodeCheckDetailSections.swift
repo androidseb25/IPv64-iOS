@@ -112,28 +112,6 @@ struct NodeCheckEventRow: View {
     }
 }
 
-/// Pushed list of the incidents of a node check.
-struct NodeCheckIncidentsView: View {
-    let incidents: [Node64.CheckIncident]
-
-    var body: some View {
-        if #available(iOS 26.0, *) {
-            list.setColorGradient(.orange)
-        } else {
-            list
-        }
-    }
-
-    private var list: some View {
-        List(incidents) { NodeCheckIncidentRow(incident: $0) }
-            .navigationTitle("Incidents")
-            .navigationBarTitleDisplayMode(.inline)
-            .overlay {
-                if incidents.isEmpty { ContentUnavailableView("No incidents", systemImage: "checkmark.circle") }
-            }
-    }
-}
-
 struct NodeCheckIncidentRow: View {
     let incident: Node64.CheckIncident
 

@@ -38,6 +38,8 @@ struct HealthcheckDetailView: View {
     @State private var statsLoading = false
     @State private var statsError: String?
     @State private var eventsExpanded = false
+    @State private var statsExpanded = true
+    @State private var incidentsExpanded = false
     @State private var incidents: [HC2Incident]?
     @State private var incidentsLoading = false
     @State private var incidentsError: String?
@@ -147,7 +149,7 @@ struct HealthcheckDetailView: View {
     }
 
     private var statsSection: some View {
-        Section("Statistics") {
+        HcCollapsibleSection(title: "Statistics", isExpanded: $statsExpanded) {
             Picker("Range", selection: $statsRange) {
                 Text("24 h").tag(HC2StatsRange.last24Hours)
                 Text("7 d").tag(HC2StatsRange.last7Days)
@@ -166,52 +168,33 @@ struct HealthcheckDetailView: View {
     }
 
     private var incidentsSection: some View {
-        Section {
-            NavigationLink {
-                HealthcheckIncidentsView(incidents: incidents ?? [])
-            } label: {
-                LabeledContent("Incidents") {
-                    if incidentsError != nil {
-                        Text("Unavailable")
-                    } else if let incidents {
-                        if incidents.isEmpty { Text("None") } else { Text(incidents.count.formatted()) }
-                    } else {
-                        ProgressView()
-                    }
+        HcCollapsibleSection(title: "Incidents", isExpanded: $incidentsExpanded) {
+            if let incidentsError {
+                Text(verbatim: incidentsError).foregroundStyle(.red)
+            } else if let incidents {
+                if incidents.isEmpty {
+                    Text("No incidents").foregroundStyle(.secondary)
+                } else {
+                    ForEach(incidents) { HealthcheckIncidentRow(incident: $0) }
                 }
+            } else {
+                ProgressView().frame(maxWidth: .infinity)
             }
-            .disabled(incidents?.isEmpty ?? true)
         }
     }
 
     private var eventsSection: some View {
-        Section {
-            if eventsExpanded {
-                if events.isEmpty {
-                    Text("No events").foregroundStyle(.secondary)
-                } else {
-                    ForEach(events) { HealthcheckEventRow(event: $0) }
-                }
-                if nextBefore != nil {
-                    Button(loadingMore ? "Loading..." : "Load more") { Task { await loadMore() } }
-                        .disabled(loadingMore)
-                        .frame(maxWidth: .infinity)
-                }
+        HcCollapsibleSection(title: "Events", isExpanded: $eventsExpanded) {
+            if events.isEmpty {
+                Text("No events").foregroundStyle(.secondary)
+            } else {
+                ForEach(events) { HealthcheckEventRow(event: $0) }
             }
-        } header: {
-            Button {
-                withAnimation { eventsExpanded.toggle() }
-            } label: {
-                HStack {
-                    Text("Events")
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .rotationEffect(.degrees(eventsExpanded ? 90 : 0))
-                }
-                .contentShape(Rectangle())
+            if nextBefore != nil {
+                Button(loadingMore ? "Loading..." : "Load more") { Task { await loadMore() } }
+                    .disabled(loadingMore)
+                    .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.plain)
-            .accessibilityValue(eventsExpanded ? "Expanded" : "Collapsed")
         }
     }
 

@@ -126,6 +126,9 @@ struct ChannelFormSheet: View {
                 }
                 Section {
                     Button("Delete channel", systemImage: "trash", role: .destructive) { confirmDelete = true }
+                        .disabled(isThisDevice)
+                } footer: {
+                    if isThisDevice { Text("This device's push channel can't be deleted.") }
                 }
             }
         }
@@ -191,9 +194,7 @@ struct ChannelFormSheet: View {
 
     private var deleteText: String {
         guard let channel else { return "" }
-        var text = String(localized: "“\(ChannelLogic.displayName(channel))” will be deleted. Checks using only this channel will notify default channels instead.")
-        if isThisDevice { text += String(localized: " This device will no longer receive push notifications.") }
-        return text
+        return String(localized: "“\(ChannelLogic.displayName(channel))” will be deleted. Checks using only this channel will notify default channels instead.")
     }
 
     private func binding(_ key: String) -> Binding<String> {
