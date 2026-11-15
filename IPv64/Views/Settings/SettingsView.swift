@@ -24,7 +24,6 @@ struct SettingsView: View {
     private static let notificationSettingsRoute = "settings.notificationsettings"
     private static let passwordCheckRoute = "settings.passwordcheck"
     private static let honeypotRoute = "settings.honeypot"
-    private static let notificationLogsRoute = "settings.notificationlogs"
 
     private func open(_ link: String) {
         if let url = URL(string: link) { UIApplication.shared.open(url) }
@@ -69,10 +68,7 @@ struct SettingsView: View {
 
             Section("Tools") {
                 NavigationLink(value: Tabs.log.route) { Text("Logs") }
-                NavigationLink(value: Self.notificationLogsRoute) { Text("Notification logs") }
-                #if DEBUG
                 NavigationLink(value: Tabs.syslog.route) { Text("System Logs") }
-                #endif
             }
 
             Section("App") {
@@ -121,9 +117,6 @@ struct SettingsView: View {
                 PasswordCheckView()
             case Self.honeypotRoute:
                 HoneypotView()
-            case Self.notificationLogsRoute:
-                LoggerView(popToRootTab: $popToRootTab, showToolbar: false, prefix: iLogger.pushLogPrefix,
-                           title: String(localized: "Notification logs"))
             case Tabs.syslog.route:
                 Tabs.syslog.makeContentView(popToRootTab: $popToRootTab)
             default:

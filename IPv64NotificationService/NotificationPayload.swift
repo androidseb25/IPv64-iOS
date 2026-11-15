@@ -8,29 +8,32 @@ struct NotificationPayload: Equatable, Sendable {
     var image: String
     var messageId: String
 
+    /// Message id keys in order: SecNtfy's APNs payload sends `msgId` (String or number); `messageId` | `id` as on Android.
+    static let idKeys = ["msgId", "messageId", "id"]
+
     /// Title/body come from `aps.alert` (already parsed by the system); image and id from custom keys
-    /// (`image`, `messageId` | `id`, top level or inside `data`, like Android).
+    /// (top level of `userInfo` or inside `data`).
     static func parse(title: String, body: String, userInfo: [AnyHashable: Any]) -> NotificationPayload {
-        let data = userInfo["data"] as? [AnyHashable: Any] ?? [:]
+        let places = [userInfo, userInfo["data"] as? [AnyHashable: Any] ?? [:]]
         func string(_ key: String) -> String? {
-            (userInfo[key] ?? data[key]).map { String(describing: $0) }?.trimmingCharacters(in: .whitespacesAndNewlines)
+            places.lazy.compactMap { $0[key] }.first
+                .map { String(describing: $0).trimmingCharacters(in: .whitespacesAndNewlines) }
+                .flatMap { $0.isEmpty ? nil : $0 }
         }
         return NotificationPayload(title: title, body: body, image: string("image") ?? "",
-                                   messageId: string("messageId") ?? string("id") ?? "")
+                                   messageId: idKeys.lazy.compactMap(string).first ?? "")
     }
 
-    /// Decrypts each part; empty title/body get the Android defaults, a failed decryption keeps the raw value.
-    func decrypted(_ decrypt: (String) -> String?) -> NotificationPayload {
-        NotificationPayload(
-            title: title.isEmpty ? "IPv64.net Notification" : decrypt(title) ?? title,
-            body: body.isEmpty ? "New notification received" : decrypt(body) ?? body,
-            image: image.isEmpty ? "" : decrypt(image) ?? image,
-            messageId: messageId)
+    /// Key names of the payload (nested as `data.x`), without values, for the log when no id is found.
+    static func keyNames(_ userInfo: [AnyHashable: Any]) -> String {
+        userInfo.flatMap { key, value -> [String] in
+            let name = String(describing: key)
+            guard let nested = value as? [AnyHashable: Any] else { return [name] }
+            return nested.keys.map { "\(name).\($0)" }
+        }.sorted().joined(separator: ", ")
     }
 
-    /// Only `https://` images are downloaded.
-    var imageURL: URL? {
-        guard image.lowercased().hasPrefix("https://") else { return nil }
-        return URL(string: image)
-    }
+    /// Shown until decryption succeeds (Android defaults).
+    static let defaultTitle = "IPv64.net Notification"
+    static let defaultBody = "New notification received"
 }

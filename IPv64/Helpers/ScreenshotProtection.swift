@@ -32,42 +32,41 @@ private struct ScreenshotProtection: ViewModifier {
     }
 }
 
-/// Moves each window's layer into the secure canvas of a password field, which iOS leaves out of screenshots and
-/// recordings. Touches and layout are unaffected (only the layer moves, the view tree stays).
-/// shortcut: relies on UITextField's private canvas subview; if a future iOS changes it, `secure` does nothing
-/// and only the cover above remains — check after each major iOS update.
+/// Hangs each window's layer into the secure layer of a password field, which iOS leaves out of screenshots and
+/// recordings (same setup as ScreenProtectorKit: iOS 17+ uses the field's last sublayer). Touches and layout are
+/// unaffected (only the layer moves, the view tree stays). Installed once per window; on/off only flips
+/// `isSecureTextEntry`, so the layer tree is never rebuilt while the app runs.
+/// shortcut: relies on UITextField's private layer layout; check after each major iOS update.
 @MainActor private enum ScreenshotShield {
     private static var fields: [ObjectIdentifier: UITextField] = [:]
 
     static func apply(_ on: Bool) {
         let windows = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.flatMap(\.windows)
-        for window in windows { on ? secure(window) : release(window) }
+        for window in windows {
+            if let field = fields[ObjectIdentifier(window)] {
+                field.isSecureTextEntry = on
+            } else if on {
+                install(window)
+            }
+        }
     }
 
-    private static func secure(_ window: UIWindow) {
-        let id = ObjectIdentifier(window)
-        guard fields[id] == nil, let superlayer = window.layer.superlayer else { return }
+    private static func install(_ window: UIWindow) {
+        guard let superlayer = window.layer.superlayer else { return }
         let field = UITextField()
         field.isSecureTextEntry = true
         field.isUserInteractionEnabled = false
+        field.translatesAutoresizingMaskIntoConstraints = false
         window.addSubview(field)
-        field.layoutIfNeeded()
-        guard let canvas = field.subviews.first(where: { String(describing: type(of: $0)).contains("CanvasView") })
-                ?? field.subviews.first else {
+        field.centerYAnchor.constraint(equalTo: window.centerYAnchor).isActive = true
+        field.centerXAnchor.constraint(equalTo: window.centerXAnchor).isActive = true
+        guard let secure = field.layer.sublayers?.last else {
             field.removeFromSuperview()
             return
         }
         superlayer.addSublayer(field.layer)
-        canvas.layer.addSublayer(window.layer)
-        fields[id] = field
-    }
-
-    private static func release(_ window: UIWindow) {
-        guard let field = fields.removeValue(forKey: ObjectIdentifier(window)),
-              let superlayer = field.layer.superlayer else { return }
-        superlayer.addSublayer(window.layer)
-        field.layer.removeFromSuperlayer()
-        field.removeFromSuperview()
+        secure.addSublayer(window.layer)
+        fields[ObjectIdentifier(window)] = field
     }
 }
 

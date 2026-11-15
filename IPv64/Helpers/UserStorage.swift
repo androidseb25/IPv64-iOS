@@ -19,7 +19,7 @@ public class UserStorage: ObservableObject {
         @AppStorage("SHOW_WELCOME_VIEW", store: UserStorage.sharedDefault) var ShowWelcomeView: Bool = true
         @AppStorage("SHOW_LOGIN_VIEW", store: UserStorage.sharedDefault) var ShowLoginView: Bool = false
         @AppStorage("ENABLLE_LOCKSCREEN", store: UserStorage.sharedDefault) var EnableLogscreen: Bool = false
-        @AppStorage("SCREENSHOT_PROTECTION", store: UserStorage.sharedDefault) var ScreenshotProtection: Bool = false
+        @AppStorage("SCREENSHOT_PROTECTION", store: UserStorage.sharedDefault) var ScreenshotProtection: Bool = true
         @AppStorage("IS_INIT_DOMAIN", store: UserStorage.sharedDefault) var IsInitDomain: Bool = false
         @AppStorage("IN_APP_SWITCHER", store: UserStorage.sharedDefault) var InAppSwitcher: Bool = false
         @AppStorage("LAST_BUILD_NUMBER", store: UserStorage.sharedDefault) var LAST_BUILD_NUMBER: String = ""
@@ -68,7 +68,7 @@ public class UserStorage: ObservableObject {
         }
     }
     
-    @Published public var ScreenshotProtection: Bool = false {
+    @Published public var ScreenshotProtection: Bool = true {
         didSet {
             storage.ScreenshotProtection = ScreenshotProtection
         }

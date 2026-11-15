@@ -15,9 +15,6 @@ struct LoggerView: View {
     @Binding var popToRootTab: Tabs
     
     @State var showToolbar: Bool
-    /// iLogger.pushLogPrefix shows the notification logs instead of the app logs.
-    var prefix = "app_"
-    var title = Tabs.syslog.labelNew
     
     @Environment(\.dismiss) var dismiss
     @State private var selectedLog = ""
@@ -43,7 +40,7 @@ struct LoggerView: View {
                     let result = await iLogger.removeLogFile(file: selectedLog)
                     if (result) {
                         iLogger.log.info("File: \"\(selectedLog)\" successfully deleted!")
-                        logFiles = await iLogger.getFileList(prefix: prefix)
+                        logFiles = await iLogger.getFileList()
                     }
                 }
             }
@@ -77,7 +74,7 @@ struct LoggerView: View {
                 }
             }
         }
-        .navigationTitle(title)
+        .navigationTitle(Tabs.syslog.labelNew)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(content: {
             if (showToolbar) {
@@ -89,7 +86,7 @@ struct LoggerView: View {
         })
         .onAppear {
             Task {
-                logFiles = await iLogger.getFileList(prefix: prefix)
+                logFiles = await iLogger.getFileList()
             }
         }
     }

@@ -11,8 +11,6 @@ import Foundation
 public struct iLogger: Sendable {
     
     public static let log = SwiftyBeaver.self
-    /// Prefix of the notification log files (app: secntfy_app.log, extension: secntfy_extension.log, rotated: .1.log).
-    static let pushLogPrefix = "secntfy_"
     private var file: FileDestination? = nil
     static let shared = iLogger()
     
@@ -25,14 +23,6 @@ public struct iLogger: Sendable {
         // add the destinations to SwiftyBeaver
         iLogger.log.addDestination(console)
         iLogger.log.addDestination(file!)
-        // Notification logs (Tools): only SecNtfy SDK and push lines; the extension writes its own file.
-        if let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.ipv64.net") {
-            let push = FileDestination(logFileURL: container.appendingPathComponent("\(Self.pushLogPrefix)app.log"))
-            push.logFileAmount = 2
-            push.logFileMaxSize = 512 * 1024
-            push.addFilter(Filters.Path.contains("SecNtfy", "PushRegistrar", "AppDelegate", "PushSetup"))
-            iLogger.log.addDestination(push)
-        }
         rotateLogFileIfNeeded()
         iLogger.log.info("♻️ - Initialize iLogger")
     }
@@ -106,14 +96,13 @@ public struct iLogger: Sendable {
         }
     }
     
-    /// App logs (app_...) by default; pushLogPrefix lists the notification logs.
-    public static func getFileList(prefix: String = "app_") async -> [String] {
+    public static func getFileList() async -> [String] {
         let containerPath = await defaultLogPath()
         if (containerPath.isEmpty) {
             return []
         }
         do {
-            let fileList = try FileManager.default.contentsOfDirectory(atPath: containerPath).filter({ $0.hasPrefix(prefix) && $0.contains(".log") })
+            let fileList = try FileManager.default.contentsOfDirectory(atPath: containerPath).filter({ $0.contains(".log") })
             return fileList.sorted().reversed()
         } catch _ { }
         return []

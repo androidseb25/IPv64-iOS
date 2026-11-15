@@ -1,7 +1,6 @@
 import UIKit
 import UserNotifications
 import SwiftyBeaver
-import SecNtfy
 
 /// APNs registration (spec 01 §9): the token goes to SecNtfy via `PushRegistrar` on every launch.
 final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -13,7 +12,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        _ = iLogger.shared   // log file destinations (app logs and notification logs)
+        _ = iLogger.shared   // log file destination (System Logs)
         UNUserNotificationCenter.current().delegate = self
         application.registerForRemoteNotifications()   // no prompt; the permission is asked in Push setup step 1
         return true
@@ -37,33 +36,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     /// Show pushes while the app is open (the Notification Service Extension already decrypted them).
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
                                             willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
-        Self.acknowledgeIfNeeded(notification.request.content.userInfo)
-        return [.banner, .list, .sound]
-    }
-
-    nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-        Self.acknowledgeIfNeeded(response.notification.request.content.userInfo)
-    }
-
-    /// Fallback receipt for pushes the extension didn't ack (it didn't run, or its receipt failed): the extension
-    /// stores acked ids under `SECNTFY_ACKED_IDS`. Id lookup as in `NotificationPayload.parse` (extension target).
-    nonisolated private static func acknowledgeIfNeeded(_ userInfo: [AnyHashable: Any]) {
-        let data = userInfo["data"] as? [AnyHashable: Any] ?? [:]
-        func string(_ key: String) -> String? {
-            (userInfo[key] ?? data[key]).map { String(describing: $0).trimmingCharacters(in: .whitespacesAndNewlines) }
-        }
-        guard let id = (string("messageId") ?? string("id"))?.nonBlank else { return }
-        let group = AppConfig.appGroup
-        guard !(UserDefaults(suiteName: group)?.stringArray(forKey: "SECNTFY_ACKED_IDS") ?? []).contains(id) else { return }
-        Task.detached {
-            if SecNtfySwifty.OfflineMessageReceived(id, group) {
-                let defaults = UserDefaults(suiteName: group)
-                let acked = (defaults?.stringArray(forKey: "SECNTFY_ACKED_IDS") ?? []) + [id]
-                defaults?.set(Array(acked.suffix(100)), forKey: "SECNTFY_ACKED_IDS")
-                iLogger.log.info("Receipt sent by the app for \(id)")
-            } else {
-                iLogger.log.error("Receipt by the app failed for \(id)")
-            }
-        }
+        [.banner, .list, .sound]
     }
 }
