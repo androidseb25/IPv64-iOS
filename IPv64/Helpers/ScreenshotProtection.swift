@@ -14,7 +14,16 @@ private struct ScreenshotProtection: ViewModifier {
                 if enabled && (captured || scenePhase != .active) {
                     ZStack {
                         Color(.systemBackground)
-                        Image(systemName: "eye.slash").font(.largeTitle).foregroundStyle(.secondary)
+                        VStack(spacing: 12) {
+                            Image(systemName: "eye.slash").font(.largeTitle)
+                            Text("Screenshot protection is on")
+                                .font(.headline)
+                            Text("You can turn it off under More → App → Screenshot protection.")
+                                .font(.footnote)
+                                .multilineTextAlignment(.center)
+                        }
+                        .foregroundStyle(.secondary)
+                        .padding(32)
                     }
                     .ignoresSafeArea()
                 }
@@ -56,10 +65,9 @@ private struct ScreenshotProtection: ViewModifier {
         let field = UITextField()
         field.isSecureTextEntry = true
         field.isUserInteractionEnabled = false
-        field.translatesAutoresizingMaskIntoConstraints = false
+        // Zero-size field at the window origin: the window layer is positioned in the field's coordinates, so any
+        // offset of the field (e.g. centring it) shifts the whole app on screen.
         window.addSubview(field)
-        field.centerYAnchor.constraint(equalTo: window.centerYAnchor).isActive = true
-        field.centerXAnchor.constraint(equalTo: window.centerXAnchor).isActive = true
         guard let secure = field.layer.sublayers?.last else {
             field.removeFromSuperview()
             return
