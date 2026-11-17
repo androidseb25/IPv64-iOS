@@ -1,0 +1,4 @@
+// Build settings of the app target. Secrets come from Secrets.xcconfig (git-ignored):
+//   SECNTFY_APP_KEY = NTFY-APP-…
+SECNTFY_APP_KEY =
+#include? "Secrets.xcconfig"

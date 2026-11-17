@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<!-- Direct node access over http is allowed for IP literals (also public IPs, with an in-app warning) and local
+		     names, like Android. NSAllowsLocalNetworking alone blocks http to public IP literals (verified: NSURLError -1022),
+		     and it would disable NSAllowsArbitraryLoads, so it is not set. Node requests go through NodeTransport, which only
+		     sends http to IP literals / names resolving to local addresses. ipv64.net and secntfy.app stay HTTPS only. -->
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>ipv64.net</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<false/>
+			</dict>
+			<key>secntfy.app</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<false/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>IPv64.net connects directly to your Node64 nodes in your local network.</string>
+	<key>SECNTFY_APP_KEY</key>
+	<string>$(SECNTFY_APP_KEY)</string>
+	<key>SecureKeychainAccessGroup</key>
+	<string>$(AppIdentifierPrefix)group.ipv64.net</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>UIDesignRequiresCompatibility</key>
+	<false/>
+</dict>
+</plist>
