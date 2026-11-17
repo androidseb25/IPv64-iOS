@@ -32,19 +32,14 @@ public struct QRScannerView: View {
     
     public var body: some View {
         ZStack {
-            CameraPreview(session: scanner.session) { layer in
-                // PreviewLayer an den Scanner durchreichen (für rectOfInterest-Konvertierung)
-                scanner.attach(previewLayer: layer)
-            }
-            .ignoresSafeArea()
-            
-            GeometryReader { geo in
-                let side = min(geo.size.width, geo.size.height) * 0.62
-                ScannerCutoutOverlay(side: side) { cutout in
-                    // Bei Layout-Änderungen das Interesse-Rechteck updaten
-                    scanner.updateRectOfInterest(fromLayerRect: cutout)
-                }
+            CameraPreview(session: scanner.session)
                 .ignoresSafeArea()
+            
+            // The cutout is only a visual guide: the whole camera frame is scanned (no rectOfInterest, which
+            // silently stopped all detection when converted before the preview had its size or rotation).
+            GeometryReader { geo in
+                ScannerCutoutOverlay(side: min(geo.size.width, geo.size.height) * 0.62)
+                    .ignoresSafeArea()
             }
             .allowsHitTesting(false)
         }
@@ -67,7 +62,6 @@ public struct QRScannerView: View {
 
 private struct ScannerCutoutOverlay: View {
     let side: CGFloat
-    var onCutoutChanged: (CGRect) -> Void
     
     var body: some View {
         GeometryReader { geo in
@@ -77,11 +71,6 @@ private struct ScannerCutoutOverlay: View {
             let cy = h / 2
             let cutout = CGRect(x: cx - side/2, y: cy - side/2, width: side, height: side)
             let corner = side * 0.10
-            
-            // notify scanner about new cutout each layout pass
-            Color.clear
-                .onAppear { onCutoutChanged(cutout) }
-                .onChange(of: geo.size) { _, _ in onCutoutChanged(cutout) }
             
             // Frosted Außenbereich (even-odd)
             Path { path in
@@ -131,20 +120,17 @@ private struct CameraPreview: UIViewRepresentable {
     }
     
     let session: AVCaptureSession
-    var onLayerAvailable: (AVCaptureVideoPreviewLayer) -> Void
     
     func makeUIView(context: Context) -> VideoView {
         let v = VideoView()
         v.previewLayer.session = session
         v.previewLayer.videoGravity = .resizeAspectFill
         v.followRotation()
-        onLayerAvailable(v.previewLayer)
         return v
     }
     
     func updateUIView(_ uiView: VideoView, context: Context) {
         uiView.followRotation() // the camera input may be added after the view was made
-        onLayerAvailable(uiView.previewLayer)
     }
 }
 
@@ -157,47 +143,7 @@ final class QRScanner: NSObject, ObservableObject, AVCaptureMetadataOutputObject
     private var onCode: ((String) -> Void)?
     private var isRunning = false
     
-    // Für rectOfInterest
     private let metadataOutput = AVCaptureMetadataOutput()
-    private weak var previewLayer: AVCaptureVideoPreviewLayer?
-    private var pendingLayerRectForROI: CGRect?
-    
-    func attach(previewLayer: AVCaptureVideoPreviewLayer) {
-        self.previewLayer = previewLayer
-        // Falls bereits ein Cutout bekannt ist, setze ROI jetzt
-        if let cutout = pendingLayerRectForROI {
-            setRectOfInterest(layerRect: cutout)
-        }
-    }
-    
-    func updateRectOfInterest(fromLayerRect layerRect: CGRect) {
-        // Wenn PreviewLayer schon da ist: direkt setzen, sonst merken
-        guard let layer = previewLayer else {
-            pendingLayerRectForROI = layerRect
-            return
-        }
-        // Normierung im Layer-Koordinatensystem — Layer gehört zur Main-Thread-Welt
-        let normalized = layer.metadataOutputRectConverted(fromLayerRect: layerRect)
-
-        sessionQueue.async { [weak self] in
-            guard let self else { return }
-            if self.session.outputs.contains(self.metadataOutput) {
-                self.metadataOutput.rectOfInterest = normalized
-            } else {
-                self.pendingLayerRectForROI = layerRect
-            }
-        }
-    }
-    
-    private func setRectOfInterest(layerRect: CGRect) {
-        guard let layer = previewLayer else { return }
-        let normalized = layer.metadataOutputRectConverted(fromLayerRect: layerRect)
-        // Nur setzen, wenn Session schon konfiguriert ist
-        if session.outputs.contains(metadataOutput) {
-            metadataOutput.rectOfInterest = normalized
-        }
-        pendingLayerRectForROI = nil
-    }
     
     // MARK: Public API
     
@@ -210,11 +156,6 @@ final class QRScanner: NSObject, ObservableObject, AVCaptureMetadataOutputObject
                 self.configureSessionIfNeeded()     // ⬅️ auf der Queue
                 self.session.startRunning()         // ⬅️ auf der Queue
                 self.isRunning = true
-                
-                // Falls Cutout schon da war, ROI setzen
-                if let cut = self.pendingLayerRectForROI, self.previewLayer != nil {
-                    self._setRectOfInterestOnSessionQueue(layerRect: cut)
-                }
                 cont.resume()
             }
         }
@@ -274,21 +215,6 @@ final class QRScanner: NSObject, ObservableObject, AVCaptureMetadataOutputObject
         device.unlockForConfiguration()
     }
 
-    // Fallback falls wir schon auf sessionQueue sind
-    private func _setRectOfInterestOnSessionQueue(layerRect: CGRect) {
-        guard let layer = previewLayer else { return }
-        // Konvertierung muss über den Layer passieren → zurück auf Main, dann wieder setzen
-        DispatchQueue.main.async {
-            let normalized = layer.metadataOutputRectConverted(fromLayerRect: layerRect)
-            self.sessionQueue.async {
-                if self.session.outputs.contains(self.metadataOutput) {
-                    self.metadataOutput.rectOfInterest = normalized
-                }
-                self.pendingLayerRectForROI = nil
-            }
-        }
-    }
-    
     // MARK: Delegate
     
     func metadataOutput(_ output: AVCaptureMetadataOutput,

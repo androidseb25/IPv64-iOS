@@ -25,6 +25,7 @@ struct LoginView: View {
     @State private var error: ErrorText?
     @State private var loginTask: Task<Void, Never>?
     @State private var apiKey = ""
+    @State private var scannedKey: String?
     
     @State private var user = User.empty
     
@@ -51,12 +52,16 @@ struct LoginView: View {
                 }
             }
         }
-        .sheet(isPresented: $showQrSheet.animation()) {
+        // Login after the scanner is gone, so its spinner and any error alert show on this screen.
+        .sheet(isPresented: $showQrSheet.animation(), onDismiss: {
+            guard let key = scannedKey else { return }
+            scannedKey = nil
+            loginTask?.cancel()
+            loginTask = Task { await login(key) }
+        }) {
             QRScannerView() { key in
-                
                 apiKey = key
-                loginTask?.cancel()
-                loginTask = Task { await login(key) }
+                scannedKey = key
             }.onDisappear {
                 withAnimation {
                     showQrSheet = false
