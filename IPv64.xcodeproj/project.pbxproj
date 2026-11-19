@@ -7,35 +7,36 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C3D100000000000000000002 /* IPv64NotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C3D100000000000000000001 /* IPv64NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C3D100000000000000000003 /* SecNtfy in Frameworks */ = {isa = PBXBuildFile; productRef = C3D100000000000000000004 /* SecNtfy */; };
-		B1A0000000000000000000A1 /* IPv64 in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B1 /* IPv64 */; };
-		B1A0000000000000000000A2 /* SecNtfy in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B2 /* SecNtfy */; };
-		B1A0000000000000000000A3 /* IPv64 in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B3 /* IPv64 */; };
 		9A68F3482EBE088C0033CC42 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A0C48022EBA963700BEDFEA /* WidgetKit.framework */; };
 		9A68F3492EBE088C0033CC42 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A0C48042EBA963700BEDFEA /* SwiftUI.framework */; };
 		9A68F3562EBE088D0033CC42 /* IPv64WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9A68F3472EBE088C0033CC42 /* IPv64WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9A68F35C2EBE08C80033CC42 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 9A68F35B2EBE08C80033CC42 /* SwiftyBeaver */; };
-		C3D1000000000000000000A1 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = C3D1000000000000000000A2 /* SwiftyBeaver */; };
 		9A8CA8AF2EA6969D0073978F /* ipv64.icon in Resources */ = {isa = PBXBuildFile; fileRef = 9A8CA8AD2EA6969D0073978F /* ipv64.icon */; };
 		9A8CA8B02EA6969D0073978F /* ipv64_beta.icon in Resources */ = {isa = PBXBuildFile; fileRef = 9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */; };
 		9AD116FC2EBCAC2000EE7E81 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD116FB2EBCAC2000EE7E81 /* SwiftyBeaver */; };
+		B1A0000000000000000000A1 /* IPv64 in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B1 /* IPv64 */; };
+		B1A0000000000000000000A2 /* SecNtfy in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B2 /* SecNtfy */; };
+		B1A0000000000000000000A3 /* IPv64 in Frameworks */ = {isa = PBXBuildFile; productRef = B1A0000000000000000000B3 /* IPv64 */; };
+		C3D100000000000000000002 /* IPv64NotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C3D100000000000000000001 /* IPv64NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C3D100000000000000000003 /* SecNtfy in Frameworks */ = {isa = PBXBuildFile; productRef = C3D100000000000000000004 /* SecNtfy */; };
+		C3D1000000000000000000A1 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = C3D1000000000000000000A2 /* SwiftyBeaver */; };
+		E7A100000000000000000008 /* IPv64 in Frameworks */ = {isa = PBXBuildFile; productRef = E7A100000000000000000009 /* IPv64 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C3D100000000000000000005 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9A5178CB2EA3995200731FFB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C3D100000000000000000009;
-			remoteInfo = IPv64NotificationService;
-		};
 		9A68F3542EBE088D0033CC42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9A5178CB2EA3995200731FFB /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 9A68F3462EBE088C0033CC42;
 			remoteInfo = IPv64WidgetExtension;
+		};
+		C3D100000000000000000005 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9A5178CB2EA3995200731FFB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C3D100000000000000000009;
+			remoteInfo = IPv64NotificationService;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -55,8 +56,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		D4E100000000000000000001 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
-		C3D100000000000000000001 /* IPv64NotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = IPv64NotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A0C48022EBA963700BEDFEA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		9A0C48042EBA963700BEDFEA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		9A2777102EAD457E0025862B /* IPv64-net-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "IPv64-net-Info.plist"; sourceTree = "<group>"; };
@@ -65,17 +64,12 @@
 		9A68F35D2EBE08F70033CC42 /* IPv64WidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IPv64WidgetExtension.entitlements; sourceTree = "<group>"; };
 		9A8CA8AD2EA6969D0073978F /* ipv64.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ipv64.icon; sourceTree = "<group>"; };
 		9A8CA8AE2EA6969D0073978F /* ipv64_beta.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ipv64_beta.icon; sourceTree = "<group>"; };
+		C3D100000000000000000001 /* IPv64NotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = IPv64NotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4E100000000000000000001 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		E7A100000000000000000001 /* IPv64TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IPv64TV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		C3D100000000000000000007 /* Exceptions for "IPv64NotificationService" folder in "IPv64NotificationService" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-				IPv64NotificationService.entitlements,
-			);
-			target = C3D100000000000000000009 /* IPv64NotificationService */;
-		};
 		9A68F3572EBE088D0033CC42 /* Exceptions for "IPv64Widget" folder in "IPv64WidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -105,21 +99,40 @@
 			);
 			target = 9A5178D22EA3995200731FFB /* IPv64.net */;
 		};
+		C3D100000000000000000007 /* Exceptions for "IPv64NotificationService" folder in "IPv64NotificationService" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = C3D100000000000000000009 /* IPv64NotificationService */;
+		};
+		E7A100000000000000000003 /* Exceptions for "IPv64TV" folder in "IPv64TV" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = E7A10000000000000000000A /* IPv64TV */;
+		};
+		E7A100000000000000000004 /* Exceptions for "IPv64" folder in "IPv64TV" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Helpers/AppConfig.swift,
+				Helpers/Nodes/LocalNodeStore.swift,
+				Helpers/Nodes/LocalNodeURL.swift,
+				Helpers/Nodes/NodeCloudStore.swift,
+				Helpers/Nodes/NodeTransport.swift,
+				Helpers/SecureStore.swift,
+			);
+			target = E7A10000000000000000000A /* IPv64TV */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		C3D100000000000000000008 /* IPv64NotificationService */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C3D100000000000000000007 /* Exceptions for "IPv64NotificationService" folder in "IPv64NotificationService" target */,
-			);
-			path = IPv64NotificationService;
-			sourceTree = "<group>";
-		};
 		9A5178D52EA3995200731FFB /* IPv64 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				9A68F3622EBE0A370033CC42 /* Exceptions for "IPv64" folder in "IPv64WidgetExtension" target */,
+				E7A100000000000000000004 /* Exceptions for "IPv64" folder in "IPv64TV" target */,
 			);
 			path = IPv64;
 			sourceTree = "<group>";
@@ -133,18 +146,25 @@
 			path = IPv64Widget;
 			sourceTree = "<group>";
 		};
+		C3D100000000000000000008 /* IPv64NotificationService */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C3D100000000000000000007 /* Exceptions for "IPv64NotificationService" folder in "IPv64NotificationService" target */,
+			);
+			path = IPv64NotificationService;
+			sourceTree = "<group>";
+		};
+		E7A100000000000000000002 /* IPv64TV */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E7A100000000000000000003 /* Exceptions for "IPv64TV" folder in "IPv64TV" target */,
+			);
+			path = IPv64TV;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		C3D10000000000000000000B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C3D100000000000000000003 /* SecNtfy in Frameworks */,
-				C3D1000000000000000000A1 /* SwiftyBeaver in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9A5178D02EA3995200731FFB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -163,6 +183,23 @@
 				9A68F3482EBE088C0033CC42 /* WidgetKit.framework in Frameworks */,
 				9A68F35C2EBE08C80033CC42 /* SwiftyBeaver in Frameworks */,
 				B1A0000000000000000000A3 /* IPv64 in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C3D10000000000000000000B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3D100000000000000000003 /* SecNtfy in Frameworks */,
+				C3D1000000000000000000A1 /* SwiftyBeaver in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E7A100000000000000000006 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E7A100000000000000000008 /* IPv64 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +226,7 @@
 				9A5178D52EA3995200731FFB /* IPv64 */,
 				9A68F34A2EBE088C0033CC42 /* IPv64Widget */,
 				C3D100000000000000000008 /* IPv64NotificationService */,
+				E7A100000000000000000002 /* IPv64TV */,
 				9A0C48012EBA963700BEDFEA /* Frameworks */,
 				9A5178D42EA3995200731FFB /* Products */,
 			);
@@ -200,6 +238,7 @@
 				9A5178D32EA3995200731FFB /* IPv64.net.app */,
 				9A68F3472EBE088C0033CC42 /* IPv64WidgetExtension.appex */,
 				C3D100000000000000000001 /* IPv64NotificationService.appex */,
+				E7A100000000000000000001 /* IPv64TV.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -207,30 +246,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C3D100000000000000000009 /* IPv64NotificationService */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C3D10000000000000000000F /* Build configuration list for PBXNativeTarget "IPv64NotificationService" */;
-			buildPhases = (
-				C3D10000000000000000000A /* Sources */,
-				C3D10000000000000000000B /* Frameworks */,
-				C3D10000000000000000000C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				C3D100000000000000000008 /* IPv64NotificationService */,
-			);
-			name = IPv64NotificationService;
-			packageProductDependencies = (
-				C3D100000000000000000004 /* SecNtfy */,
-				C3D1000000000000000000A2 /* SwiftyBeaver */,
-			);
-			productName = IPv64NotificationService;
-			productReference = C3D100000000000000000001 /* IPv64NotificationService.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		9A5178D22EA3995200731FFB /* IPv64.net */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9A5178DE2EA3995300731FFB /* Build configuration list for PBXNativeTarget "IPv64.net" */;
@@ -283,6 +298,53 @@
 			productReference = 9A68F3472EBE088C0033CC42 /* IPv64WidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		C3D100000000000000000009 /* IPv64NotificationService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C3D10000000000000000000F /* Build configuration list for PBXNativeTarget "IPv64NotificationService" */;
+			buildPhases = (
+				C3D10000000000000000000A /* Sources */,
+				C3D10000000000000000000B /* Frameworks */,
+				C3D10000000000000000000C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C3D100000000000000000008 /* IPv64NotificationService */,
+			);
+			name = IPv64NotificationService;
+			packageProductDependencies = (
+				C3D100000000000000000004 /* SecNtfy */,
+				C3D1000000000000000000A2 /* SwiftyBeaver */,
+			);
+			productName = IPv64NotificationService;
+			productReference = C3D100000000000000000001 /* IPv64NotificationService.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		E7A10000000000000000000A /* IPv64TV */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E7A10000000000000000000B /* Build configuration list for PBXNativeTarget "IPv64TV" */;
+			buildPhases = (
+				E7A100000000000000000005 /* Sources */,
+				E7A100000000000000000006 /* Frameworks */,
+				E7A100000000000000000007 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				E7A100000000000000000002 /* IPv64TV */,
+			);
+			name = IPv64TV;
+			packageProductDependencies = (
+				E7A100000000000000000009 /* IPv64 */,
+			);
+			productName = IPv64TV;
+			productReference = E7A100000000000000000001 /* IPv64TV.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -301,6 +363,9 @@
 					};
 					C3D100000000000000000009 = {
 						CreatedOnToolsVersion = 26.1;
+					};
+					E7A10000000000000000000A = {
+						CreatedOnToolsVersion = 27.2;
 					};
 				};
 			};
@@ -326,18 +391,12 @@
 				9A5178D22EA3995200731FFB /* IPv64.net */,
 				9A68F3462EBE088C0033CC42 /* IPv64WidgetExtension */,
 				C3D100000000000000000009 /* IPv64NotificationService */,
+				E7A10000000000000000000A /* IPv64TV */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		C3D10000000000000000000C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9A5178D12EA3995200731FFB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -354,16 +413,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
-		C3D10000000000000000000A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
+		C3D10000000000000000000C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E7A100000000000000000007 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
 		9A5178CF2EA3995200731FFB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -378,88 +444,36 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C3D10000000000000000000A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E7A100000000000000000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C3D100000000000000000006 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C3D100000000000000000009 /* IPv64NotificationService */;
-			targetProxy = C3D100000000000000000005 /* PBXContainerItemProxy */;
-		};
 		9A68F3552EBE088D0033CC42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9A68F3462EBE088C0033CC42 /* IPv64WidgetExtension */;
 			targetProxy = 9A68F3542EBE088D0033CC42 /* PBXContainerItemProxy */;
 		};
+		C3D100000000000000000006 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C3D100000000000000000009 /* IPv64NotificationService */;
+			targetProxy = C3D100000000000000000005 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		C3D10000000000000000000D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = IPv64NotificationService/IPv64NotificationService.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
-				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = IPv64NotificationService/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = IPv64NotificationService;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 2.2.1;
-				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.NotificationService;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		C3D10000000000000000000E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = IPv64NotificationService/IPv64NotificationService.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
-				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = IPv64NotificationService/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = IPv64NotificationService;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 2.2.1;
-				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.NotificationService;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		9A5178DC2EA3995300731FFB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -781,18 +795,141 @@
 			};
 			name = Release;
 		};
+		C3D10000000000000000000D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = IPv64NotificationService/IPv64NotificationService.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 45;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IPv64NotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = IPv64NotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.2.1;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.NotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C3D10000000000000000000E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = IPv64NotificationService/IPv64NotificationService.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 45;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IPv64NotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = IPv64NotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.2.1;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64.NotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E7A10000000000000000000C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				CODE_SIGN_ENTITLEMENTS = IPv64TV/IPv64TV.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 45;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IPv64TV/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.2.1;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = appletvos;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 18.0;
+			};
+			name = Debug;
+		};
+		E7A10000000000000000000D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				CODE_SIGN_ENTITLEMENTS = IPv64TV/IPv64TV.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 45;
+				DEVELOPMENT_TEAM = 3V2L6G4Y5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IPv64TV/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = IPv64.net;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.2.1;
+				PRODUCT_BUNDLE_IDENTIFIER = de.rpicloud.IPv64;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = appletvos;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 18.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C3D10000000000000000000F /* Build configuration list for PBXNativeTarget "IPv64NotificationService" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C3D10000000000000000000D /* Debug */,
-				C3D10000000000000000000E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		9A5178CE2EA3995200731FFB /* Build configuration list for PBXProject "IPv64" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -820,9 +957,35 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		C3D10000000000000000000F /* Build configuration list for PBXNativeTarget "IPv64NotificationService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3D10000000000000000000D /* Debug */,
+				C3D10000000000000000000E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E7A10000000000000000000B /* Build configuration list for PBXNativeTarget "IPv64TV" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E7A10000000000000000000C /* Debug */,
+				E7A10000000000000000000D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.1;
+			};
+		};
 		B1A0000000000000000000C1 /* XCRemoteSwiftPackageReference "IPv64-SPM" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/androidseb25/IPv64-SPM";
@@ -839,21 +1002,18 @@
 				minimumVersion = 1.3.1;
 			};
 		};
-		9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C3D100000000000000000004 /* SecNtfy */ = {
+		9A68F35B2EBE08C80033CC42 /* SwiftyBeaver */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B1A0000000000000000000C2 /* XCRemoteSwiftPackageReference "SecNtfy-SPM" */;
-			productName = SecNtfy;
+			package = 9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			productName = SwiftyBeaver;
+		};
+		9AD116FB2EBCAC2000EE7E81 /* SwiftyBeaver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			productName = SwiftyBeaver;
 		};
 		B1A0000000000000000000B1 /* IPv64 */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -870,20 +1030,20 @@
 			package = B1A0000000000000000000C1 /* XCRemoteSwiftPackageReference "IPv64-SPM" */;
 			productName = IPv64;
 		};
-		9A68F35B2EBE08C80033CC42 /* SwiftyBeaver */ = {
+		C3D100000000000000000004 /* SecNtfy */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
-			productName = SwiftyBeaver;
-		};
-		9AD116FB2EBCAC2000EE7E81 /* SwiftyBeaver */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
-			productName = SwiftyBeaver;
+			package = B1A0000000000000000000C2 /* XCRemoteSwiftPackageReference "SecNtfy-SPM" */;
+			productName = SecNtfy;
 		};
 		C3D1000000000000000000A2 /* SwiftyBeaver */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9AD116FA2EBCAC2000EE7E81 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
 			productName = SwiftyBeaver;
+		};
+		E7A100000000000000000009 /* IPv64 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B1A0000000000000000000C1 /* XCRemoteSwiftPackageReference "IPv64-SPM" */;
+			productName = IPv64;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
