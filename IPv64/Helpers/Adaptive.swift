@@ -4,7 +4,12 @@ extension View {
     /// iPhone Duo: keeps this screen's bars horizontal (sheet with a single text control Skip/Done).
     @ViewBuilder
     func appHorizontalBars() -> some View {
+        // compiler(>=6.4) = Xcode 27 with the iOS 27 SDK; older toolchains (CI runner) skip the iPhone Duo API.
+        #if compiler(>=6.4)
         if #available(iOS 27.1, *) { toolbarVerticalBehavior(.disabled) } else { self }
+        #else
+        self
+        #endif
     }
 
     /// Caps the content at a readable width on wide windows and centres it.
@@ -41,6 +46,10 @@ extension ToolbarContent {
     /// instead of staying horizontal next to the status bar.
     @ToolbarContentBuilder
     func appVerticalPreferred() -> some ToolbarContent {
+        #if compiler(>=6.4)
         if #available(iOS 27.1, *) { axisBehavior(.verticalPreferred) } else { self }
+        #else
+        self
+        #endif
     }
 }
