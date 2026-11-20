@@ -107,10 +107,10 @@ struct ProxyTrafficSection: View {
     private func requestsBars(_ points: [ProxyStats.Point], sel: ProxyStats.Point?, total: Double) -> some View {
         Chart {
             ForEach(points) { p in
-                ForEach(Array(zip(Self.requestSeries, [p.ok, p.c4, p.err, p.blocked, p.decoy])), id: \.0.name) { s, v in
-                    BarMark(x: .value("Time", p.time, unit: .hour), y: .value("Requests", v))
-                        .foregroundStyle(by: .value("Series", s.name))
-                        .opacity(sel == nil || sel?.id == p.id ? 1 : 0.35)
+                let values: [Double] = [p.ok, p.c4, p.err, p.blocked, p.decoy]
+                let dimmed: Bool = sel != nil && sel?.id != p.id
+                ForEach(0..<values.count, id: \.self) { i in
+                    bar(time: p.time, value: values[i], series: Self.requestSeries[i].name, dimmed: dimmed)
                 }
             }
         }
@@ -122,6 +122,13 @@ struct ProxyTrafficSection: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Requests")
         .accessibilityValue(Text("\(Int(total)) requests, \(Int(points.reduce(0) { $0 + $1.blocked })) rejected"))
+    }
+
+    /// One stacked segment; a separate typed function, so older compilers (Xcode 26) type-check the chart in time.
+    private func bar(time: Date, value: Double, series: String, dimmed: Bool) -> some ChartContent {
+        BarMark(x: .value("Time", time, unit: .hour), y: .value("Requests", value))
+            .foregroundStyle(by: .value("Series", series))
+            .opacity(dimmed ? 0.35 : 1)
     }
 
     private func trafficChart(_ points: [ProxyStats.Point]) -> some View {
