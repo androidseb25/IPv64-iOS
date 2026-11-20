@@ -19,9 +19,9 @@ struct TVWhatsNewView: View {
     ]
 
     var body: some View {
-        VStack(spacing: 40) {
+        VStack(spacing: 32) {
             Text("What's New in IPv64.net").font(.largeTitle.bold())
-            VStack(alignment: .leading, spacing: 28) {
+            VStack(alignment: .leading, spacing: 22) {
                 ForEach(entries) { entry in
                     HStack(spacing: 32) {
                         Image(systemName: entry.icon)
@@ -31,16 +31,24 @@ struct TVWhatsNewView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(entry.title).font(.title3.bold())
                             Text(entry.subtitle).font(.callout).foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                 }
             }
-            .frame(maxWidth: 1200, alignment: .leading)
+            .frame(maxWidth: 1400, alignment: .leading)
             Button("Continue") { dismiss() }
                 .focused($focused)
         }
-        .padding(60)
+        .padding(.horizontal, 60)
+        .padding(.vertical, 40)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // A full-screen cover is transparent on tvOS: an opaque background hides the tabs behind it.
+        .background {
+            LinearGradient(colors: [Color.ipv64.opacity(0.25), .black], startPoint: .top, endPoint: .center)
+                .background(.black)
+                .ignoresSafeArea()
+        }
         .defaultFocus($focused, true)
     }
 }
