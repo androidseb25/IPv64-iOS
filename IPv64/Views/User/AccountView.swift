@@ -37,10 +37,10 @@ struct AccountView: View {
             
             // Rows and texts as in Android 2.1.0 (AccountView).
             Section("Account") {
-                labeled("Username", badge: me?.username?.nonBlank ?? "none", color: .gray)
-                labeled("Account Plan", badge: me?.plan?.name?.nonBlank ?? "none", color: .yellow)
+                labeled("Username", badge: me?.username?.nonBlank ?? String(localized: "none"), color: .gray)
+                labeled("Account Plan", badge: me?.plan?.name?.nonBlank ?? String(localized: "none"), color: .yellow)
                 labeled("Plan valid until", badge: planValidUntil, color: .gray)
-                labeled("E-Mail", badge: me?.email?.nonBlank ?? "none", color: .gray)
+                labeled("E-Mail", badge: me?.email?.nonBlank ?? String(localized: "none"), color: .gray)
                 labeled("Registered since", badge: dateText(me?.registeredAt), color: .gray)
                 labeled("Last login", badge: dateText(me?.lastLoginAt), color: .gray)
             }
@@ -116,12 +116,12 @@ struct AccountView: View {
                     .scaledToFit()
                     .frame(width: 55, height: 55)
                 VStack(alignment: .leading) {
-                    Text(user.current?.Username ?? "No User found")
+                    Text(user.current?.Username ?? String(localized: "No User found"))
                         .lineLimit(1)
                         .multilineTextAlignment(.leading)
                         .font(.title3)
                         .fontWeight(.bold)
-                    Text(user.current?.Information ?? "No Information")
+                    Text(user.current?.Information ?? String(localized: "No Information"))
                         .lineLimit(1)
                         .multilineTextAlignment(.leading)
                 }
@@ -136,13 +136,13 @@ struct AccountView: View {
     
     /// Android `formatGermanTime`, "none" when missing.
     private func dateText(_ date: Date?) -> String {
-        date.map { DynDNSLogic.germanTime($0) } ?? "none"
+        date.map { DynDNSLogic.germanTime($0) } ?? String(localized: "none")
     }
 
     /// No plan: "–"; plan without end (free plan): "unlimited".
     private var planValidUntil: String {
         guard let plan = me?.plan else { return "–" }
-        return plan.validUntil.map { DynDNSLogic.germanTime($0) } ?? "unlimited"
+        return plan.validUntil.map { DynDNSLogic.germanTime($0) } ?? String(localized: "unlimited")
     }
 
     /// Android `VpnTrafficUsage.usageText`: "used / limit", "(limit reached)" when limited, "–" without data.
@@ -164,7 +164,7 @@ struct AccountView: View {
     }
     
     /// "used / limit", ∞ without limit; green below 70 %, yellow below 90 %, otherwise red.
-    private func quota(_ title: String, _ q: Me.Quota?) -> some View {
+    private func quota(_ title: LocalizedStringKey, _ q: Me.Quota?) -> some View {
         let used = Int(q?.used ?? 0)
         let text: String
         var color = Color.green
@@ -179,7 +179,7 @@ struct AccountView: View {
     }
     
     @ViewBuilder
-    private func labeled(_ title: String, badge: String, color: Color? = nil) -> some View {
+    private func labeled(_ title: LocalizedStringKey, badge: String, color: Color? = nil) -> some View {
         LabeledContent(title) {
             Text(badge)
                 .foregroundStyle(color ?? .primary)

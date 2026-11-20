@@ -48,7 +48,7 @@ nonisolated enum DNS64Nodes {
         guard let owner = owner() else { return [] }
         return LocalNodeStore.list(owner: owner).filter(LocalNodeStore.dnsActive).map {
             DNS64NodeEntity(id: $0, name: LocalNodeStore.name($0)?.trimmingCharacters(in: .whitespaces).nilIfEmpty
-                            ?? "Node …" + String($0.suffix(4)))
+                            ?? String(localized: "Node …") + String($0.suffix(4)))
         }
     }
 

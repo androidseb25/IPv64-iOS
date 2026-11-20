@@ -23,7 +23,7 @@ struct LogItemView: View {
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.bottom, 5)
-            Text(log.time?.formatted(.dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits).second(.twoDigits).day(.twoDigits).month(.twoDigits).year().locale(Locale(identifier: "de_DE"))) ?? "")
+            Text(log.time?.formatted(date: .numeric, time: .standard) ?? "")
                 .font(.subheadline)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)

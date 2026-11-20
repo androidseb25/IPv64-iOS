@@ -129,7 +129,7 @@ struct DomainDetailView: View {
                 }
             }
             LabeledContent("Type", value: DynDNSLogic.kindLabel(detail.kind))
-            LabeledContent("Wildcard", value: detail.wildcard == true ? "yes" : "no")
+            LabeledContent("Wildcard", value: HcFormat.yesNo(detail.wildcard == true) ?? "")
             LabeledContent("Updates", value: "\(detail.updateCount ?? 0)")
             LabeledContent("Ignored on DynDNS updates", value: DynDNSLogic.ignoreLabel(detail.ignore))
             LabeledContent("Fixed IPv6 prefix", value: detail.ipv6Prefix?.nonBlank ?? String(localized: "Off"))

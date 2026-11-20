@@ -4,6 +4,8 @@ import IPv64
 /// Shared by the app and the widget extension (target membership exception).
 nonisolated enum AppConfig {
     static let appGroup = "group.ipv64.net"
+    /// CloudKit container of the node list the Apple TV app reads (`NodeCloudStore`).
+    static let cloudContainer = "iCloud.de.rpicloud.IPv64"
     /// Debug only: `MOCK_API=http://localhost:8064` (environment or launch argument `-MOCK_API …`)
     /// sends every cloud call to `<mock>/api/v2` and SecNtfy to `<mock>/secntfy`. Release builds ignore it.
     static let mockBase: String? = {
@@ -26,7 +28,11 @@ nonisolated enum AppConfig {
         return IPv64(configuration: .init(apiKey: apiKey, baseURL: URL(string: base)!, timeoutInterval: timeout))
     }
     /// Name in a node's audit log for changes made from this app (`Node64.Configuration.agentActor`).
+    #if os(tvOS)
+    static let nodeAgentActor = "IPv64 tvOS"
+    #else
     static let nodeAgentActor = "IPv64 iOS"
+    #endif
     /// WidgetKit kinds of the DNS64 widget and Control (reloaded by the app after pause/resume).
     static let dns64WidgetKind = "DNS64Widget"
     static let dns64ControlKind = "DNS64BlockingControl"

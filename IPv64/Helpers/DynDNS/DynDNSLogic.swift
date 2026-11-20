@@ -37,14 +37,22 @@ nonisolated enum DynDNSLogic {
 
     enum IpStatus: Sendable { case checking, noIp, unknown, differs, matches }
 
+    /// A/AAAA records that can hold this device's IP. CDN records hold CDN addresses, failover records a stand-in,
+    /// inactive ones are not served; none of them may count for the IP check.
+    static func ownRecords(_ detail: DomainDetail?, _ type: RecordType) -> [Record] {
+        (detail?.records ?? []).filter {
+            $0.type == type && ![.cdnRecord, .failoverRecord, .inactive].contains($0.state ?? .active)
+        }
+    }
+
     static func hasIp(_ detail: DomainDetail?) -> Bool {
-        (detail?.records ?? []).contains { $0.type == .a || $0.type == .aaaa }
+        !ownRecords(detail, .a).isEmpty || !ownRecords(detail, .aaaa).isEmpty
     }
 
     /// An A record exists, none holds the current IPv4, and IPv4 is not ignored for this domain.
     static func mismatchV4(_ detail: DomainDetail?, myV4: String) -> Bool {
         guard let detail, myV4 != noIPv4, detail.ignore != .ipv4 else { return false }
-        let records = (detail.records ?? []).filter { $0.type == .a }
+        let records = ownRecords(detail, .a)
         return !records.isEmpty && !records.contains { $0.content == myV4 }
     }
 
@@ -52,7 +60,7 @@ nonisolated enum DynDNSLogic {
     static func mismatchV6(_ detail: DomainDetail?, myV6: String) -> Bool {
         guard let detail, myV6 != noIPv6, detail.ignore != .ipv6,
               (detail.ipv6Prefix ?? "").trimmingCharacters(in: .whitespaces).isEmpty else { return false }
-        let records = (detail.records ?? []).filter { $0.type == .aaaa }
+        let records = ownRecords(detail, .aaaa)
         return !records.isEmpty && !records.contains { $0.content == myV6 }
     }
 
@@ -67,16 +75,16 @@ nonisolated enum DynDNSLogic {
     static func kindLabel(_ kind: DomainKind?) -> String {
         switch kind {
         case .dyndns: "DynDNS"
-        case .own: "Own domain"
+        case .own: String(localized: "Own domain")
         default: "–"
         }
     }
 
     static func ignoreLabel(_ ignore: DomainIgnore?) -> String {
         switch ignore {
-        case .ipv4: "Ignore IPv4"
-        case .ipv6: "Ignore IPv6"
-        default: "None"
+        case .ipv4: String(localized: "Ignore IPv4")
+        case .ipv6: String(localized: "Ignore IPv6")
+        default: String(localized: "None")
         }
     }
 
@@ -89,21 +97,21 @@ nonisolated enum DynDNSLogic {
 
     static func lockReason(_ state: RecordState?) -> String? {
         switch state {
-        case .cdnRecord, .cdnProxied, .cdnPartial: "Managed by the CDN. Change it in the CDN settings."
-        case .failoverRecord, .failoverReplaced: "Managed by DNS failover. Change it in the failover policy."
+        case .cdnRecord, .cdnProxied, .cdnPartial: String(localized: "Managed by the CDN. Change it in the CDN settings.")
+        case .failoverRecord, .failoverReplaced: String(localized: "Managed by DNS failover. Change it in the failover policy.")
         default: nil
         }
     }
 
     static func stateLabel(_ state: RecordState?) -> String? {
         switch state {
-        case .active: "Active"
-        case .inactive: "Inactive"
+        case .active: String(localized: "Active")
+        case .inactive: String(localized: "Inactive")
         case .cdnRecord: "CDN"
-        case .cdnProxied: "CDN proxied"
-        case .cdnPartial: "CDN partial"
-        case .failoverRecord: "Failover"
-        case .failoverReplaced: "Replaced by failover"
+        case .cdnProxied: String(localized: "CDN proxied")
+        case .cdnPartial: String(localized: "CDN partial")
+        case .failoverRecord: String(localized: "Failover")
+        case .failoverReplaced: String(localized: "Replaced by failover")
         default: state?.rawValue
         }
     }
@@ -208,9 +216,9 @@ nonisolated enum DomainKindFilter: String, CaseIterable, Identifiable, Sendable 
 
     var title: String {
         switch self {
-        case .all: "All"
+        case .all: String(localized: "All")
         case .dyndns: "DynDNS"
-        case .own: "Own"
+        case .own: String(localized: "Own")
         }
     }
 
@@ -224,11 +232,9 @@ nonisolated enum DomainKindFilter: String, CaseIterable, Identifiable, Sendable 
 }
 
 nonisolated extension DynDNSLogic {
-    /// Android `formatGermanTime`: dd.MM.yyyy HH:mm:ss.
+    /// Numeric date + time in the user's locale (name kept from the Android port).
     static func germanTime(_ date: Date?, fallback: String = "–") -> String {
         guard let date else { return fallback }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
-        return formatter.string(from: date)
+        return date.formatted(date: .numeric, time: .standard)
     }
 }

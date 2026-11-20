@@ -5,7 +5,7 @@ import IPv64
 nonisolated enum NodesLogic {
     /// Stored / cloud name, else "Node …" + last 4 characters of the id.
     static func nodeName(_ name: String?, nodeId: String) -> String {
-        name?.nonBlank ?? "Node …" + String(nodeId.suffix(4))
+        name?.nonBlank ?? String(localized: "Node …") + String(nodeId.suffix(4))
     }
 
     /// Remote management label (`off`/`read`/`full`/nil).

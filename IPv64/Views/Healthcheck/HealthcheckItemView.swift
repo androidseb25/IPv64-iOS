@@ -45,7 +45,7 @@ struct HealthcheckItemView: View {
 
     private init(name: String?, type: String?, target: String?, meta: [String], state: Hc2StateUi, isBusy: Bool) {
         self.name = name
-        let type = type ?? "Unknown"
+        let type = type ?? String(localized: "Unknown")
         typeLine = target?.nonBlank.map { "\(type) · \($0)" } ?? type
         metaLine = meta.isEmpty ? nil : meta.joined(separator: " · ")
         tagText = state.label

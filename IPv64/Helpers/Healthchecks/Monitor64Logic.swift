@@ -37,37 +37,33 @@ nonisolated func isNodeNotFound(_ error: any Error) -> Bool {
 nonisolated struct Monitor64Display: Sendable {
     let label: String
     let color: Color
+    /// Status-filter bucket; `nil` = only in "All". Not derived from `label`, which is localized.
+    var bucket: HcStatusFilter?
 
     static func host(view: String?, paused: Bool?) -> Monitor64Display {
-        if paused == true { return Monitor64Display(label: "Paused", color: .gray) }
+        if paused == true { return Monitor64Display(label: String(localized: "Paused"), color: .gray, bucket: .paused) }
         switch view {
-        case "ok": return Monitor64Display(label: "OK", color: .green)
-        case "warn": return Monitor64Display(label: "Warning", color: .orange)
-        case "crit": return Monitor64Display(label: "Critical", color: .red)
-        case "unreachable": return Monitor64Display(label: "Unreachable", color: .red)
-        case "maintenance": return Monitor64Display(label: "Maintenance", color: .gray)
-        default: return Monitor64Display(label: "Unknown", color: .gray)
+        case "ok": return Monitor64Display(label: String(localized: "OK"), color: .green, bucket: .up)
+        case "warn": return Monitor64Display(label: String(localized: "Warning"), color: .orange, bucket: .degraded)
+        case "crit": return Monitor64Display(label: String(localized: "Critical"), color: .red, bucket: .down)
+        case "unreachable": return Monitor64Display(label: String(localized: "Unreachable"), color: .red, bucket: .down)
+        case "maintenance": return Monitor64Display(label: String(localized: "Maintenance"), color: .gray, bucket: .paused)
+        default: return Monitor64Display(label: String(localized: "Unknown"), color: .gray)
         }
     }
 
     static func service(_ state: String?) -> Monitor64Display {
         switch state {
-        case "ok": Monitor64Display(label: "OK", color: .green)
-        case "warn": Monitor64Display(label: "Warning", color: .orange)
-        case "crit": Monitor64Display(label: "Critical", color: .red)
-        default: Monitor64Display(label: "Unknown", color: .gray)
+        case "ok": Monitor64Display(label: String(localized: "OK"), color: .green, bucket: .up)
+        case "warn": Monitor64Display(label: String(localized: "Warning"), color: .orange, bucket: .degraded)
+        case "crit": Monitor64Display(label: String(localized: "Critical"), color: .red, bucket: .down)
+        default: Monitor64Display(label: String(localized: "Unknown"), color: .gray)
         }
     }
 
     /// ok = Up, warn = Degraded, crit/unreachable = Down, paused/maintenance = Paused.
     func matches(_ filter: HcStatusFilter) -> Bool {
-        switch filter {
-        case .all: true
-        case .up: label == "OK"
-        case .degraded: label == "Warning"
-        case .down: label == "Critical" || label == "Unreachable"
-        case .paused: label == "Paused" || label == "Maintenance"
-        }
+        filter == .all || bucket == filter
     }
 }
 
@@ -105,7 +101,7 @@ nonisolated let monitor64AccessTypes: [Node64.Monitor64AccessType] = [
 ]
 
 nonisolated extension Node64.Monitor64HostKind {
-    var label: String { self == .unspecified ? "None" : rawValue }
+    var label: String { self == .unspecified ? String(localized: "None") : rawValue }
 }
 
 /// Access form fields. The server checks strictly "only fields of the access type", so only non-empty fields are sent.

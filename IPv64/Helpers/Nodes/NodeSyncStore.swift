@@ -19,18 +19,33 @@ nonisolated enum NodeSyncStore {
              kSecAttrAccessGroup as String: SecureStore.accessGroup()]
     }
 
-    /// Writes the stored access of `id` to the iCloud Keychain and marks it as synced.
-    static func push(_ id: String, account: Int, owner: String) {
+    /// Writes the stored access of `id` to the iCloud Keychain and marks it as synced; mirrors to CloudKit.
+    @MainActor static func push(_ id: String, account: Int, owner: String) {
+        pushKeychain(id, account: account, owner: owner)
+        mirrorToCloudKit(account: account, owner: owner)
+    }
+
+    private static func pushKeychain(_ id: String, account: Int, owner: String) {
         guard let access = LocalNodeStore.get(id, owner: owner), !isDebugMock(access.key) else { return }
         let entry = Entry(url: access.url, key: access.key, name: LocalNodeStore.name(id), updatedAt: .now)
         if write(entry, id: id, account: account) { LocalNodeStore.markSynced(id) }
     }
 
+    /// The Apple TV cannot read the iCloud Keychain: mirrors the account's full local set to CloudKit.
+    @MainActor private static func mirrorToCloudKit(account: Int, owner: String, removed: [String] = []) {
+        let nodes = LocalNodeStore.list(owner: owner).compactMap { id -> NodeCloudStore.Node? in
+            guard let access = LocalNodeStore.get(id, owner: owner), !isDebugMock(access.key) else { return nil }
+            return .init(nodeId: id, account: account, url: access.url, key: access.key, name: LocalNodeStore.name(id))
+        }
+        NodeCloudStore.mirror(nodes, removed: removed, account: account)
+    }
+
     /// "Forget access": replaces the synced access of `id` with a deletion marker, so it is removed on all
     /// devices but a keychain that is merely missing items (iCloud Keychain reset) never removes anything.
     @discardableResult
-    static func delete(_ id: String, account: Int) -> Bool {
-        write(Entry(url: "", key: "", name: nil, updatedAt: .now, deleted: true), id: id, account: account)
+    @MainActor static func delete(_ id: String, account: Int) -> Bool {
+        NodeCloudStore.delete(id, account: account)
+        return write(Entry(url: "", key: "", name: nil, updatedAt: .now, deleted: true), id: id, account: account)
     }
 
     private static func write(_ entry: Entry, id: String, account: Int) -> Bool {
@@ -70,7 +85,7 @@ nonisolated enum NodeSyncStore {
 
     /// Two-way sync of `account`: uploads access changed here or missing in iCloud, imports access from
     /// other devices and removes access forgotten on another device.
-    static func sync(account: Int, owner: String) {
+    @MainActor static func sync(account: Int, owner: String) {
         guard let synced = entries(account: account) else { return }
         let ids = LocalNodeStore.list(owner: owner)
         let local = ids.reduce(into: [String: Entry]()) { local, id in
@@ -80,13 +95,14 @@ nonisolated enum NodeSyncStore {
         let otherOwner = Set(synced.keys.filter { id in LocalNodeStore.owner(id).map { $0 != owner } ?? false })
         let changes = NodeSyncPlan.plan(local: local, synced: synced, dirty: Set(ids.filter(LocalNodeStore.isDirty)),
                            otherOwner: otherOwner)
-        changes.push.forEach { push($0, account: account, owner: owner) }
+        changes.push.forEach { pushKeychain($0, account: account, owner: owner) }
         for (id, entry) in changes.upsert {
             guard (try? LocalNodeStore.save(id: id, url: entry.url, key: entry.key, owner: owner, name: entry.name)) != nil else { continue }
             LocalNodeStore.markSynced(id)
         }
         changes.remove.forEach(LocalNodeStore.remove)
         changes.inSync.forEach(LocalNodeStore.markSynced)
+        mirrorToCloudKit(account: account, owner: owner, removed: changes.remove)
     }
 
 

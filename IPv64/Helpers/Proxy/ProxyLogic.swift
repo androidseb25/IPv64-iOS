@@ -8,7 +8,7 @@ nonisolated enum ProxyLogic {
     /// Limit 0 or missing = unlimited (`nil`).
     static func limit<T: BinaryInteger>(_ value: T?) -> T? { value.flatMap { $0 > 0 ? $0 : nil } }
 
-    static func modeShort(_ mode: Int?) -> String { mode.map { "Mode \($0)" } ?? "Mode ?" }
+    static func modeShort(_ mode: Int?) -> String { mode.map { String(localized: "Mode \($0)") } ?? String(localized: "Mode ?") }
 
     static func reachTag(enabled: Bool?, state: String?, ms: Int?) -> Tag {
         let base: (String, Tone) = switch (enabled == false, state) {
@@ -41,8 +41,8 @@ nonisolated enum ProxyLogic {
     /// Options as one line, e.g. "WS · Cache · HTTPS forced".
     static func optionsLine(websockets: Bool?, blockExploits: Bool?, cacheAssets: Bool?, forceSSL: Bool?,
                             http2: Bool?, http3: Bool?, hsts: Bool?, accessListID: Int?) -> String? {
-        let list = [websockets == true ? "WS" : nil, blockExploits == true ? "Exploits" : nil,
-                    cacheAssets == true ? "Cache" : nil, forceSSL == true ? "HTTPS forced" : nil,
+        let list = [websockets == true ? "WS" : nil, blockExploits == true ? String(localized: "Exploits") : nil,
+                    cacheAssets == true ? String(localized: "Cache") : nil, forceSSL == true ? String(localized: "HTTPS forced") : nil,
                     http2 == true ? "H2" : nil, http3 == true ? "H3" : nil, hsts == true ? "HSTS" : nil,
                     (accessListID ?? 0) > 0 ? String(localized: "Not public") : nil].compactMap { $0 }
         return list.isEmpty ? nil : list.joined(separator: " · ")

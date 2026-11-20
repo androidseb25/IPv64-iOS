@@ -5,7 +5,11 @@ import IPv64
 /// pushed from Proxy64 otherwise. "+" enables CDN64 for a proxy host.
 struct CdnView: View {
     @Environment(ConnectedNodes.self) private var nodes
+    @Environment(Session.self) private var session
     @Binding var popToRootTab: Tabs
+    @State private var usage: Me.Usage?
+    @State private var overview: Cdn64Overview?
+    @State private var domainsError: ErrorText?
     @State private var nodeData: [ProxyNodeData]?
     @State private var enableChoices: [CdnHostChoice]?
     @State private var error: ErrorText?
@@ -17,37 +21,36 @@ struct CdnView: View {
     }
 
     private var content: some View {
-        Group {
-            if nodes.proxyIds.isEmpty {
+        List {
+            ProxyUsageSection(usage: usage, quota: overview?.quota ?? nodeData?.lazy.compactMap { $0.online?.quota }.first)
+            ForEach(nodeData ?? []) { data in
+                CdnNodeSection(node: data) { id in Task { await reload(node: id) } }
+            }
+            CdnWebsiteSection(hosts: overview?.hosts?.filter { $0.mode == 3 }, error: domainsError)
+            if nodes.proxyIds.isEmpty, !(overview?.hosts?.contains(where: { $0.mode == 3 }) ?? false) {
                 ContentUnavailableView {
-                    Label("CDN64 needs a node", systemImage: "cloud")
+                    Label("No proxy node", systemImage: "cloud")
                 } description: {
-                    Text("CDN64 runs on a Node64 with the Proxy64 module. Connect one under More → Nodes.")
+                    Text("Modes 1 and 2 run on a Node64 with the Proxy64 module. Connect one under More → Nodes.")
                 }
-            } else {
-                List {
-                    ForEach(nodeData ?? []) { data in
-                        CdnNodeSection(node: data) { id in Task { await reload(node: id) } }
-                    }
-                }
-                .overlay { if nodeData == nil { ProgressView("Loading CDN64…") } }
-                .refreshable { await load() }
-                .task(id: nodes.proxyIds) { await load() }
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button { enable() } label: { Label("Enable CDN64 for a proxy host", systemImage: "plus") }
-                            .disabled(nodeData == nil)
-                    }
-                }
-                .sheet(isPresented: Binding(get: { enableChoices != nil }, set: { if !$0 { enableChoices = nil } })) {
-                    CdnEnableFlow(choices: enableChoices ?? []) { choice, mode, healthcheck in
-                        if let failure = await nodes.enableCdn64(choice, mode: mode, healthcheck: healthcheck) { error = failure }
-                        await reload(node: choice.nodeId)
-                    }
-                }
-                .errorAlert($error)
             }
         }
+        .overlay { if nodeData == nil { ProgressView("Loading CDN64…") } }
+        .refreshable { await load() }
+        .task(id: nodes.proxyIds) { await load() }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { enable() } label: { Label("Enable CDN64 for a proxy host", systemImage: "plus") }
+                    .disabled(nodeData == nil || nodes.proxyIds.isEmpty)
+            }
+        }
+        .sheet(isPresented: Binding(get: { enableChoices != nil }, set: { if !$0 { enableChoices = nil } })) {
+            CdnEnableFlow(choices: enableChoices ?? []) { choice, mode, healthcheck in
+                if let failure = await nodes.enableCdn64(choice, mode: mode, healthcheck: healthcheck) { error = failure }
+                await reload(node: choice.nodeId)
+            }
+        }
+        .errorAlert($error)
         .navigationTitle(Tabs.cdn.labelNew)
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -62,8 +65,25 @@ struct CdnView: View {
     }
 
     private func load() async {
+        let api = session.api
+        async let me = try? ipv64Retrying { try await api.account.me() }
+        let key = session.apiKey
+        async let website: Result<Cdn64Overview, Error> = {
+            do { return .success(try await Cdn64Overview.load(apiKey: key)) } catch { return .failure(error) }
+        }()
         let loaded = await nodes.loadProxyNodes(withHosts: true)
-        if !Task.isCancelled { nodeData = loaded }
+        guard !Task.isCancelled else { return }
+        nodeData = loaded // the node sections must not wait for the website
+        let (account, list) = await (me, website)
+        guard !Task.isCancelled else { return }
+        usage = account?.usage
+        switch list {
+        case .success(let value): overview = value; domainsError = nil
+        case .failure(let failure):
+            if !(failure is CancellationError || (failure as? URLError)?.code == .cancelled) {
+                overview = nil; domainsError = failure as? ErrorText ?? ErrorText(failure)
+            }
+        }
     }
 
     private func reload(node id: String) async {
@@ -119,6 +139,53 @@ private struct CdnNodeSection: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             ProxyTag(tag: ProxyLogic.Tag(text: ProxyLogic.modeShort(name.mode), tone: .gray))
+        }
+    }
+}
+
+/// CDN64 names in Mode 3 (without Node64, set up on the website), read-only.
+private struct CdnWebsiteSection: View {
+    let hosts: [Cdn64Host]?
+    let error: ErrorText?
+
+    var body: some View {
+        Section("Without Node64 (Mode 3)") {
+            if let error {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(verbatim: error.title)
+                    Text(verbatim: error.message).font(.subheadline).foregroundStyle(.secondary)
+                }
+            } else if let hosts {
+                ForEach(hosts) { row($0) }
+                if hosts.isEmpty { Text("No Mode 3 names yet. Set them up on ipv64.net.").foregroundStyle(.secondary) }
+            }
+        }
+    }
+
+    private func row(_ host: Cdn64Host) -> some View {
+        let target = host.target?.target?.nonBlank.map { "→ \($0)" + (host.target?.port.map { ":\($0)" } ?? "") }
+        let bytes = { (n: Int64?) in ByteCountFormatter.string(fromByteCount: n ?? 0, countStyle: .file) }
+        let traffic = host.trafficMonth.map { "↓ \(bytes($0.bytesOut))  ↑ \(bytes($0.bytesIn))" }
+        let edges = (host.edges ?? []).compactMap { $0.name?.nonBlank }.joined(separator: ", ")
+        let line = [target, traffic, edges.count <= 20 ? edges.nonBlank : nil].compactMap { $0 }.joined(separator: " · ")
+        let problem = [host.blockedReason, host.error].lazy.compactMap { $0?.nonBlank }.first
+        let tag: ProxyLogic.Tag = if host.paused == true {
+            ProxyLogic.Tag(text: String(localized: "Paused"), tone: .gray)
+        } else {
+            switch host.status {
+            case "active": ProxyLogic.Tag(text: String(localized: "Active"), tone: .green)
+            case "blocked": ProxyLogic.Tag(text: String(localized: "Blocked"), tone: .red)
+            default: ProxyLogic.Tag(text: String(localized: "Pending"), tone: .orange)
+            }
+        }
+        return HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: (host.wildcard == true ? "*." : "") + (host.fqdn?.nonBlank ?? "–")).font(.headline).lineLimit(1)
+                if !line.isEmpty { Text(verbatim: line).font(.subheadline).foregroundStyle(.secondary).lineLimit(1) }
+                if let problem { Text(verbatim: problem).font(.footnote).foregroundStyle(.red) }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            ProxyTag(tag: tag)
         }
     }
 }

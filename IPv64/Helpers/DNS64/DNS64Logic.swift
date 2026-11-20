@@ -78,7 +78,8 @@ nonisolated func dns64StatusTag(_ raw: String?) -> ProxyLogic.Tag {
     switch raw {
     case "blocked": .init(text: String(localized: "Blocked"), tone: .red)
     case "error": .init(text: String(localized: "Error"), tone: .orange)
-    case "allowed", "cached": .init(text: raw!.capitalized, tone: .green)
+    case "allowed": .init(text: String(localized: "Allowed"), tone: .green)
+    case "cached": .init(text: String(localized: "Cached"), tone: .green)
     case let other: .init(text: other?.nonBlank?.capitalized ?? "–", tone: .gray)
     }
 }

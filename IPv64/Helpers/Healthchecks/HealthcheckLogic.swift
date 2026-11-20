@@ -8,16 +8,16 @@ nonisolated extension HC2CheckType {
     var label: String {
         switch self {
         case .http: "HTTP(S)"
-        case .keyword: "Keyword"
+        case .keyword: String(localized: "Keyword")
         case .json: "JSON"
         case .dns: "DNS"
         case .icmp: "Ping (ICMP)"
         case .tcp: "TCP"
-        case .port: "Port"
-        case .cert: "Certificate"
-        case .push: "Push"
+        case .port: String(localized: "Port")
+        case .cert: String(localized: "Certificate")
+        case .push: String(localized: "Push")
         case .whois: "WHOIS"
-        default: "Unknown"
+        default: String(localized: "Unknown")
         }
     }
 }
@@ -30,12 +30,12 @@ nonisolated enum Hc2StateUi: Sendable {
 
     var label: String {
         switch self {
-        case .up: "Up"
-        case .down: "Down"
-        case .degraded: "Degraded"
-        case .flapping: "Flapping"
-        case .paused: "Paused"
-        case .pending: "Pending"
+        case .up: String(localized: "Up")
+        case .down: String(localized: "Down")
+        case .degraded: String(localized: "Degraded")
+        case .flapping: String(localized: "Flapping")
+        case .paused: String(localized: "Paused")
+        case .pending: String(localized: "Pending")
         }
     }
 
@@ -55,11 +55,11 @@ nonisolated enum HcStatusFilter: CaseIterable, Hashable, Sendable {
 
     var label: String {
         switch self {
-        case .all: "All"
-        case .up: "Up"
-        case .degraded: "Degraded"
-        case .down: "Down"
-        case .paused: "Paused"
+        case .all: String(localized: "All")
+        case .up: String(localized: "Up")
+        case .degraded: String(localized: "Degraded")
+        case .down: String(localized: "Down")
+        case .paused: String(localized: "Paused")
         }
     }
 
@@ -79,10 +79,10 @@ nonisolated enum HcExecFilter: CaseIterable, Hashable, Sendable {
 
     var label: String {
         switch self {
-        case .all: "All"
-        case .online: "Online"
-        case .node: "Node"
-        case .both: "Both"
+        case .all: String(localized: "All")
+        case .online: String(localized: "Online")
+        case .node: String(localized: "Node")
+        case .both: String(localized: "Both")
         }
     }
 

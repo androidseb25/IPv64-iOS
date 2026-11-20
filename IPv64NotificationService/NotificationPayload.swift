@@ -34,6 +34,6 @@ struct NotificationPayload: Equatable, Sendable {
     }
 
     /// Shown until decryption succeeds (Android defaults).
-    static let defaultTitle = "IPv64.net Notification"
-    static let defaultBody = "New notification received"
+    static let defaultTitle = String(localized: "IPv64.net Notification")
+    static let defaultBody = String(localized: "New notification received")
 }
