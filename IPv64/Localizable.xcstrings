@@ -11667,6 +11667,16 @@
         }
       }
     },
+    "What's New" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuigkeiten"
+          }
+        }
+      }
+    },
     "What's new in IPv64.net \nv%@ (%@)" : {
       "localizations" : {
         "de" : {

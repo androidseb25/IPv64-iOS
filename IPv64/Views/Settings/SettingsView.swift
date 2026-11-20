@@ -16,6 +16,7 @@ struct SettingsView: View {
     @StateObject private var userStorage = UserStorage.shared
     
     @State private var alertType: AlertType?
+    @State private var showWhatsNew = false
     @Environment(ConnectedNodes.self) private var nodes
     @AppStorage(NodeSyncStore.enabledKey, store: UserStorage.sharedDefault) private var syncNodes = true
 
@@ -32,7 +33,7 @@ struct SettingsView: View {
     var body: some View {
             if #available(iOS 26.0, *) {
                 listView
-                    .setColorGradient(.orange)
+                    .setColorGradient(showWhatsNew ? .clear : .orange)
             } else {
                 listView
             }
@@ -75,6 +76,7 @@ struct SettingsView: View {
                 Toggle("Lock screen", isOn: $userStorage.EnableLogscreen)
                 Toggle("Screenshot protection", isOn: $userStorage.ScreenshotProtection)
                 LabeledContent("Version", value: "\(Bundle.main.versionNumber) (\(Bundle.main.buildNumber))")
+                Button("What's New") { showWhatsNew = true }.foregroundStyle(.primary)
                 NavigationLink(value: Tabs.about.route) { Text("About") }
                 Button { open("https://www.youtube.com/c/RaspberryPiCloud") } label: { ExternalLinkRow(title: "YouTube") }
                     .tint(.primary)
@@ -93,6 +95,13 @@ struct SettingsView: View {
             }
         }
         .navigationTitle(Tabs.settings.labelNew)
+        .sheet(isPresented: $showWhatsNew) {
+            if #available(iOS 26.0, *) {
+                WhatsNewView26(activeSheet: .constant(nil), isPresented: $showWhatsNew, isFromSetting: true)
+            } else {
+                WhatsNewView(activeSheet: .constant(nil), isPresented: $showWhatsNew, isFromSetting: true)
+            }
+        }
         .navigationBarTitleDisplayMode(.inline).navigationDestination(for: String.self) { route in
             switch route {
             case Tabs.account.route:
