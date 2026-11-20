@@ -1517,6 +1517,16 @@
         }
       }
     },
+    "Apple TV app" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple-TV-App"
+          }
+        }
+      }
+    },
     "Are you sure you want to delete the file: \n'%@' \n\nThe file cannot be restored!" : {
       "localizations" : {
         "de" : {
@@ -1883,6 +1893,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Beide"
+          }
+        }
+      }
+    },
+    "Bug fixes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fehlerbehebungen"
           }
         }
       }
@@ -4453,6 +4473,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allgemein"
+          }
+        }
+      }
+    },
+    "German" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deutsch"
           }
         }
       }
@@ -10077,6 +10107,16 @@
         }
       }
     },
+    "The DynDNS IP check no longer counts CDN and failover records, so CDN domains no longer show a different IP." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die DynDNS-IP-Prüfung zählt keine CDN- und Failover-Einträge mehr, CDN-Domains zeigen also keine abweichende IP mehr an."
+          }
+        }
+      }
+    },
     "The access token of \"%@\" is revoked. The node keeps running standalone but no longer syncs with ipv64.net. This cannot be undone." : {
       "localizations" : {
         "de" : {
@@ -10113,6 +10153,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die Adresse hat geantwortet, aber nicht wie eine Node64-API. Prüfe die URL (sie endet meist auf /api)."
+          }
+        }
+      }
+    },
+    "The app is now also available in German." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die App gibt es jetzt auch auf Deutsch."
           }
         }
       }
@@ -11763,6 +11813,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dein A- oder AAAA-Eintrag stimmt nicht mit deiner aktuellen IP überein! Das kann an einer aktiven Mobilfunkverbindung liegen oder daran, dass der IP-Adresse eine Serveradresse zugewiesen ist."
+          }
+        }
+      }
+    },
+    "Your DNS64 dashboard and query log on the big screen. Nodes you connect here appear on the Apple TV via iCloud." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein DNS64-Dashboard und das Query-Log auf dem großen Bildschirm. Nodes, die du hier verbindest, erscheinen über iCloud auf dem Apple TV."
           }
         }
       }

@@ -6,6 +6,7 @@ struct SettingsView: View {
     @AppStorage(TVSettings.keepAwake) private var keepAwake = true
     @AppStorage(TVSettings.streamingMode) private var streaming = false
     @State private var dnsVersion: String?
+    @State private var showWhatsNew = false
 
     private var appVersion: String {
         let info = Bundle.main.infoDictionary
@@ -31,11 +32,13 @@ struct SettingsView: View {
                 }
                 Section("About") {
                     LabeledContent("Version", value: appVersion)
+                    Button("What's New") { showWhatsNew = true }
                 }
             }
             .tvFocusRoom()
         }
         .tvPage()
+        .fullScreenCover(isPresented: $showWhatsNew) { TVWhatsNewView() }
         .task(id: session.generation) {
             dnsVersion = nil
             dnsVersion = try? await session.client?.dns64.status().version

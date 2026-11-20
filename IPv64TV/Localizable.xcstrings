@@ -241,6 +241,16 @@
         }
       }
     },
+    "Continue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weiter"
+          }
+        }
+      }
+    },
     "Could not connect" : {
       "localizations" : {
         "de" : {
@@ -257,6 +267,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Log konnte nicht geladen werden"
+          }
+        }
+      }
+    },
+    "DNS64 of your Node64 at a glance: queries, blocked share, a chart and the latest queries." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS64 deiner Node64 auf einen Blick: Anfragen, blockierter Anteil, ein Diagramm und die neuesten Anfragen."
           }
         }
       }
@@ -431,6 +451,26 @@
         }
       }
     },
+    "German" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deutsch"
+          }
+        }
+      }
+    },
+    "Hides addresses, IPs, client names and domains while you stream or film the screen." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blendet Adressen, IPs, Clientnamen und Domains aus, während du streamst oder den Bildschirm filmst."
+          }
+        }
+      }
+    },
     "Hides addresses, IPs, client names and domains, e.g. while you stream or film the screen." : {
       "localizations" : {
         "de" : {
@@ -511,6 +551,26 @@
         }
       }
     },
+    "Nodes from your iPhone" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nodes von deinem iPhone"
+          }
+        }
+      }
+    },
+    "Nodes you connect in the iPhone app appear here via iCloud; no typing with the remote." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nodes, die du in der iPhone-App verbindest, erscheinen hier über iCloud – ohne Tippen mit der Fernbedienung."
+          }
+        }
+      }
+    },
     "OK" : {
       "localizations" : {
         "de" : {
@@ -567,6 +627,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Letzte Anfragen"
+          }
+        }
+      }
+    },
+    "Recent queries, filter by blocked or allowed, and block or allow a domain right from the TV." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die letzten Anfragen, gefiltert nach blockiert oder erlaubt – und Domains direkt vom Fernseher aus blockieren oder erlauben."
           }
         }
       }
@@ -671,6 +741,16 @@
         }
       }
     },
+    "The app is now also available in German." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die App gibt es jetzt auch auf Deutsch."
+          }
+        }
+      }
+    },
     "The node is removed from this Apple TV only." : {
       "localizations" : {
         "de" : {
@@ -737,6 +817,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Warte auf Anfragen…"
+          }
+        }
+      }
+    },
+    "What's New" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuigkeiten"
+          }
+        }
+      }
+    },
+    "What's New in IPv64.net" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neu in IPv64.net"
           }
         }
       }

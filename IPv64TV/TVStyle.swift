@@ -52,4 +52,6 @@ enum TVSettings {
     static let keepAwake = "tvKeepAwake"
     /// Streaming mode: mask addresses, IPs, client names and domains on screen (`Streaming`). Default off.
     static let streamingMode = "tvStreamingMode"
+    /// Build number whose "What's New" screen was last dismissed.
+    static let lastWhatsNewBuild = "tvLastWhatsNewBuild"
 }
