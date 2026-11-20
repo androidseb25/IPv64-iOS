@@ -33,6 +33,7 @@ struct SettingsView: View {
                     LabeledContent("Version", value: appVersion)
                 }
             }
+            .tvFocusRoom()
         }
         .tvPage()
         .task(id: session.generation) {

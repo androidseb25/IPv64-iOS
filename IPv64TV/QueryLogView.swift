@@ -16,10 +16,22 @@ struct TVLogRow: View {
         }
     }
 
+    /// Localized badge text; an unknown server status is shown as sent.
+    private var statusText: Text {
+        switch row.status?.rawValue {
+        case "allowed": Text("Allowed")
+        case "cached": Text("Cached")
+        case "blocked": Text("Blocked")
+        case "error": Text("Error")
+        default: Text(verbatim: (row.status?.rawValue ?? "?").capitalized)
+        }
+    }
+
     var body: some View {
         HStack(spacing: 20) {
-            Text((row.status?.rawValue ?? "?").capitalized)
+            statusText
                 .font(.caption.bold())
+                .lineLimit(1).minimumScaleFactor(0.6)
                 .foregroundStyle(.white)
                 .frame(width: 120)
                 .padding(.vertical, 6)
@@ -82,11 +94,17 @@ struct QueryLogView: View {
                     Text(error)
                 }
             } else {
-                List {
-                    ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
-                        Button { if row.domain != nil { selected = row } } label: { TVLogRow(row: row, detailed: true) }
+                // Own focus look (TVRowButtonStyle): the system list platter washes out the coloured badges.
+                ScrollView {
+                    LazyVStack(spacing: 6) {
+                        ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
+                            Button { if row.domain != nil { selected = row } } label: { TVLogRow(row: row, detailed: true) }
+                                .buttonStyle(TVRowButtonStyle())
+                        }
                     }
+                    .padding(.vertical, 12)
                 }
+                .tvFocusRoom()
             }
         }
         .tvPage()
@@ -110,7 +128,11 @@ struct QueryLogView: View {
                 Text("This domain is on your own block or allow list.")
             } else if row.status?.rawValue == "blocked" {
                 // The reason can name a list URL: hidden in streaming mode.
-                Text("Blocked\(streaming ? "" : row.reason.map { " by \($0)" } ?? ""). Allow this domain and its subdomains for all clients?")
+                if let reason = row.reason, !streaming {
+                    Text("Blocked by \(reason). Allow this domain and its subdomains for all clients?")
+                } else {
+                    Text("Blocked. Allow this domain and its subdomains for all clients?")
+                }
             } else {
                 Text("Block this domain and its subdomains for all clients?")
             }

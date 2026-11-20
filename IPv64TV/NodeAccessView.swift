@@ -56,7 +56,7 @@ struct NodeAccessView: View {
                             }
                             .focused($focused, equals: node.id)
                         }
-                        tile("Add node", "Address and API key", systemImage: "plus") { editor = Editor() }
+                        tile(String(localized: "Add node"), String(localized: "Address and API key"), systemImage: "plus") { editor = Editor() }
                             .focused($focused, equals: "+")
                     }
                     footer

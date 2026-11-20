@@ -121,11 +121,11 @@ struct DashboardView: View {
     }
 
     private func blockingTitle(_ remaining: TimeInterval?) -> String {
-        guard paused else { return "Filter on" }
-        guard let remaining else { return "Filter off" }
+        guard paused else { return String(localized: "Filter on") }
+        guard let remaining else { return String(localized: "Filter off") }
         let t = max(0, Int(remaining.rounded(.up)))
         let time = t >= 3600 ? String(format: "%d:%02d:%02d", t / 3600, t / 60 % 60, t % 60) : String(format: "%02d:%02d", t / 60, t % 60)
-        return "Filter off · \(time)"
+        return String(localized: "Filter off · \(time)")
     }
 
     private func write(_ action: @escaping (Node64.DNS64) async throws -> Node64.DNS64Blocking) {
@@ -154,7 +154,7 @@ struct DashboardView: View {
         .overlay { if let e = errors["summary"] { Text(e).font(.caption).padding(8).background(.red, in: Capsule()) } }
     }
 
-    private func tile(_ title: String, _ value: Int?, _ subtitle: String?, _ icon: String, _ color: Color) -> some View {
+    private func tile(_ title: LocalizedStringKey, _ value: Int?, _ subtitle: String?, _ icon: String, _ color: Color) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Label(title, systemImage: icon).font(.headline).foregroundStyle(color)
             Text(value.map { $0.formatted() } ?? "–").font(.system(size: 48, weight: .bold)).minimumScaleFactor(0.5).lineLimit(1)
@@ -165,6 +165,9 @@ struct DashboardView: View {
         .glassCard()
     }
 
+    private var allowedName: String { String(localized: "Allowed") }
+    private var blockedName: String { String(localized: "Blocked") }
+
     @ViewBuilder private var chart: some View {
         if let e = errors["timeline"] {
             Text(e).foregroundStyle(.red)
@@ -174,7 +177,7 @@ struct DashboardView: View {
             Chart {
                 ForEach(Array(buckets.enumerated()), id: \.offset) { _, bucket in bars(bucket, width: width) }
             }
-            .chartForegroundStyleScale(["Allowed": Color.green, "Blocked": Color.red])
+            .chartForegroundStyleScale([allowedName: Color.green, blockedName: Color.red])
             .chartLegend(position: .bottom)
             .frame(minHeight: 200, maxHeight: .infinity)
         }
@@ -188,10 +191,10 @@ struct DashboardView: View {
             let end = date.addingTimeInterval(width)
             RectangleMark(xStart: .value("Time", date), xEnd: .value("End", end),
                           yStart: .value("Queries", 0), yEnd: .value("Queries", allowed))
-                .foregroundStyle(by: .value("Series", "Allowed"))
+                .foregroundStyle(by: .value("Series", allowedName))
             RectangleMark(xStart: .value("Time", date), xEnd: .value("End", end),
                           yStart: .value("Queries", allowed), yEnd: .value("Queries", allowed + blocked))
-                .foregroundStyle(by: .value("Series", "Blocked"))
+                .foregroundStyle(by: .value("Series", blockedName))
         }
     }
 
