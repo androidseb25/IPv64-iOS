@@ -222,10 +222,10 @@ struct DashboardView: View {
     private func refresh() async {
         guard let dns = session.client?.dns64 else { return }
         let writesAtStart = writes
-        async let s = Result { try await dns.summary(range: range) }
-        async let t = Result { try await dns.timeline(range: range) }
-        async let st = Result { try await dns.status() }
-        async let l = Result { try await dns.log(limit: 5) }  // what fits the card on a 1080p canvas
+        async let s = catching { try await dns.summary(range: range) }
+        async let t = catching { try await dns.timeline(range: range) }
+        async let st = catching { try await dns.status() }
+        async let l = catching { try await dns.log(limit: 5) }  // what fits the card on a 1080p canvas
         let (sr, tr, str, lr) = await (s, t, st, l)
         if Task.isCancelled { return }
         func apply<T>(_ key: String, _ r: Result<T, Error>, _ set: (T) -> Void) {
@@ -260,4 +260,10 @@ private struct GlassButtonStyle: ViewModifier {
     func body(content: Content) -> some View {
         if #available(tvOS 26.0, *) { content.buttonStyle(.glass) } else { content }
     }
+}
+
+/// `Result` of an async call. The async `Result { … }` initializer only exists in newer Swift standard
+/// libraries (Xcode 27); this keeps the app building with older toolchains (CI runner).
+private func catching<T>(_ body: () async throws -> T) async -> Result<T, any Error> {
+    do { return .success(try await body()) } catch { return .failure(error) }
 }
