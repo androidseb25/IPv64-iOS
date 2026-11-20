@@ -1,14 +1,13 @@
 import SwiftUI
 import IPv64
 
-/// Proxy64 tab: usage, entry to CDN64, proxy hosts per connected node.
+/// Proxy64 tab: traffic chart, entry to CDN64, proxy hosts per connected node.
 struct ProxyView: View {
-    @Environment(Session.self) private var session
     @Environment(ConnectedNodes.self) private var nodes
     @Binding var popToRootTab: Tabs
     @State private var groups: [ProxyNodeData]?
-    @State private var usage: Me.Usage?
     @State private var sheet: ProxySheet?
+    @State private var chartRefresh = 0
     @State private var newHost: ProxyHostRoute?
     @State private var error: ErrorText?
 
@@ -21,7 +20,7 @@ struct ProxyView: View {
     private var listView: some View {
         List {
             if groups != nil {
-                ProxyUsageSection(usage: usage, quota: groups?.lazy.compactMap { $0.online?.quota }.first)
+                ProxyTrafficSection(refresh: chartRefresh)
                 cdnSection
                 ForEach(groups ?? []) { group in
                     Section(group.name) {
@@ -64,7 +63,7 @@ struct ProxyView: View {
         }
         .navigationDestination(for: ProxyHostRoute.self) { editor($0) }
         .navigationDestination(item: $newHost) { editor($0) }
-        .refreshable { await load() }
+        .refreshable { chartRefresh += 1; await load() }
         .task(id: nodes.proxyIds) { await load() }
         .sheet(item: $sheet) { sheet in
             switch sheet {
@@ -143,10 +142,7 @@ struct ProxyView: View {
     }
 
     private func load() async {
-        let api = session.api
-        async let me = try? ipv64Retrying { try await api.account.me() }
         let loaded = await nodes.loadProxyNodes(withHosts: true)
-        usage = await me?.usage
         if !Task.isCancelled { groups = loaded }
     }
 }

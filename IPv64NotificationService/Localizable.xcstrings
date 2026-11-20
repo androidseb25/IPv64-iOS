@@ -1,0 +1,26 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "IPv64.net Notification" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IPv64.net-Benachrichtigung"
+          }
+        }
+      }
+    },
+    "New notification received" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neue Benachrichtigung erhalten"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

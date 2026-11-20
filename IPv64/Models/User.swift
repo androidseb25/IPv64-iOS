@@ -29,7 +29,7 @@ struct User: Codable {
         }
         
         if user.Information.isEmpty {
-            user.Information = "No Information"
+            user.Information = String(localized: "No Information")
         }
         
         return user

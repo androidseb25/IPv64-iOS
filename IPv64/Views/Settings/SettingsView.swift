@@ -72,7 +72,7 @@ struct SettingsView: View {
             }
 
             Section("App") {
-                Toggle("Lockscreen \(userStorage.EnableLogscreen ? "enabled" : "disabled")", isOn: $userStorage.EnableLogscreen)
+                Toggle("Lock screen", isOn: $userStorage.EnableLogscreen)
                 Toggle("Screenshot protection", isOn: $userStorage.ScreenshotProtection)
                 LabeledContent("Version", value: "\(Bundle.main.versionNumber) (\(Bundle.main.buildNumber))")
                 NavigationLink(value: Tabs.about.route) { Text("About") }

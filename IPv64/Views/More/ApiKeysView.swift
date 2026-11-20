@@ -35,6 +35,10 @@ struct ApiKeysView: View {
                     } icon: {
                         Image(systemName: "key")
                     }
+                    // Only this app's own key can be copied: the server returns other keys just as a hint.
+                    if !session.apiKey.isEmpty {
+                        Button("Copy this app's key", systemImage: "doc.on.doc") { Clipboard.copy(session.apiKey, sensitive: true) }
+                    }
                 }
                 if !keys.isEmpty {
                     Section("API keys (\(keys.count))") {

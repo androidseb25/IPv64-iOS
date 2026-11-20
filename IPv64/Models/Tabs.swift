@@ -67,11 +67,11 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
         case .domain:
             return "DynDNS"
         case .healthcheck:
-            return "Healthchecks"
+            return String(localized: "Healthchecks")
         case .notification:
-            return "Channels"
+            return String(localized: "Channels")
         case .settings:
-            return "More"
+            return String(localized: "More")
         case .cdn:
             return "CDN64"
         case .proxy64:
@@ -79,15 +79,15 @@ public enum Tabs: Int, Identifiable, Hashable, Decodable, Encodable {
         case .dns64:
             return "DNS64"
         case .account:
-            return "Account"
+            return String(localized: "Account")
         case .log:
-            return "Logs"
+            return String(localized: "Logs")
         case .syslog:
-            return "System Logs"
+            return String(localized: "System Logs")
         case .myip:
-            return "IP lookup & My IP"
+            return String(localized: "IP lookup & My IP")
         case .about:
-            return "About"
+            return String(localized: "About")
         default:
             return ""
         }

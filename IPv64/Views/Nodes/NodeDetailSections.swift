@@ -266,7 +266,7 @@ private struct NodeModuleRow: View {
                     Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
                 }
                 .buttonStyle(.borderless)
-                .accessibilityLabel("Open")
+                .accessibilityLabel("Open module")
             }
         } else {
             Toggle(isOn: toggle) { label }

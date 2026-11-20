@@ -34,7 +34,9 @@ extension WhatsNew {
     /// Entries of the current version (shared by WhatsNewView and WhatsNewView26).
     static var current: [WhatsNew] {
         [
-            WhatsNew(imageName: "ladybug", title: "Bug fixes".localized, subtitle: "Scanning the API key QR code when adding an account works again, and an invalid key now shows an error message after the scan.".localized),
+            WhatsNew(imageName: "chart.bar.xaxis", title: "Proxy64 chart".localized, subtitle: "Requests and traffic of your proxy hosts for the last 24 hours or 7 days, per node.".localized),
+            WhatsNew(imageName: "cloud", title: "CDN64".localized, subtitle: "Usage now sits in the CDN64 screen, which also lists the domains you set up on the website without a Node64 (Mode 3).".localized),
+            WhatsNew(imageName: "ellipsis.circle", title: "More".localized, subtitle: "Copy this app's API key, and edit channels with a swipe, including this device's channel.".localized),
         ]
     }
 }

@@ -238,9 +238,9 @@ nonisolated extension HC2CheckType {
         switch self {
         case .http, .keyword, .json: "https://example.com/health"
         case .dns, .whois: "example.com"
-        case .icmp: "example.com or IP address"
+        case .icmp: String(localized: "example.com or IP address")
         case .tcp, .port: "host:port"
-        case .cert: "example.com or host:port"
+        case .cert: String(localized: "example.com or host:port")
         default: ""
         }
     }

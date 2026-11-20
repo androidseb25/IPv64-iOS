@@ -62,6 +62,7 @@ struct ChannelsView: View {
                             .accessibilityAddTraits(.isButton)
                         // This device's push channel can't be deleted here (it would silently stop its pushes).
                         .swipeActions {
+                            editSwipe(channel)
                             if channel.id != deviceChannelId {
                                 Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = channel }
                                     .labelStyle(.iconOnly)
@@ -113,6 +114,12 @@ struct ChannelsView: View {
         }
     }
 
+    private func editSwipe(_ channel: HC2Channel) -> some View {
+        Button("Edit channel", systemImage: "pencil") { sheet = .edit(channel.id) }
+            .labelStyle(.iconOnly)
+            .tint(.orange)
+    }
+
     private func deviceSection(hasDefault: Bool) -> some View {
         Section {
             if let channel = deviceChannel {
@@ -124,6 +131,8 @@ struct ChannelsView: View {
                     }
                 }
                 .tint(.primary)
+                .swipeActions { editSwipe(channel) }
+                Button("Edit channel", systemImage: "pencil") { sheet = .edit(channel.id) }
                 Button("Send test", systemImage: "paperplane", action: sendTest)
             } else {
                 Label {

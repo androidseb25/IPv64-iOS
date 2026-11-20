@@ -1,0 +1,38 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSCameraUsageDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IPv64.net nutzt die Kamera, um den QR-Code deines API-Keys zu scannen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IPv64.net uses the camera to scan the QR code of your API key."
+          }
+        }
+      }
+    },
+    "NSFaceIDUsageDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IPv64.net nutzt Face ID, um die App zu entsperren, wenn die Sperre aktiv ist."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IPv64.net uses Face ID to unlock the app when the privacy lock is on."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

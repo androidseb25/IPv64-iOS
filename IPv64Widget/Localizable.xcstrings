@@ -1,0 +1,568 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
+    "%lld blocked · 24 h" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld blockiert · 24 Std."
+          }
+        }
+      }
+    },
+    "%lld queries" : {
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Abfrage"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld Abfragen"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "1 h" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 Std."
+          }
+        }
+      }
+    },
+    "15 min" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 Min."
+          }
+        }
+      }
+    },
+    "Active" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktiv"
+          }
+        }
+      }
+    },
+    "Blocking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blockierung"
+          }
+        }
+      }
+    },
+    "Blocking status of a DNS64 node." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blockierstatus eines DNS64-Nodes."
+          }
+        }
+      }
+    },
+    "Blocking status of a directly connected node; chart and pause/resume in the medium and large sizes." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blockierstatus eines direkt verbundenen Nodes; Diagramm und Pause/Fortsetzen in der mittleren und großen Größe."
+          }
+        }
+      }
+    },
+    "Choose healthchecks in Edit Widget" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle Healthchecks unter „Widget bearbeiten“"
+          }
+        }
+      }
+    },
+    "Choose up to 10 healthchecks: small shows 2, medium 4, large 10." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle bis zu 10 Healthchecks: klein zeigt 2, mittel 4, groß 10."
+          }
+        }
+      }
+    },
+    "Clear Widget Cache" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget-Cache leeren"
+          }
+        }
+      }
+    },
+    "Configuration" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konfiguration"
+          }
+        }
+      }
+    },
+    "Connect a node with DNS64 in the app first." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinde zuerst in der App einen Node mit DNS64."
+          }
+        }
+      }
+    },
+    "Connect a node with DNS64 in the app." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinde in der App einen Node mit DNS64."
+          }
+        }
+      }
+    },
+    "DNS64" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS64"
+          }
+        }
+      }
+    },
+    "DNS64 Blocking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS64-Blockierung"
+          }
+        }
+      }
+    },
+    "DNS64 node" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS64-Node"
+          }
+        }
+      }
+    },
+    "Enter a valid address, e.g. http://192.168.1.10:8080/api" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib eine gültige Adresse ein, z. B. http://192.168.1.10:8080/api"
+          }
+        }
+      }
+    },
+    "Enter a valid address. HTTP works with an IP address (e.g. 192.168.1.10 or a public IP) or a local name." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib eine gültige Adresse ein. HTTP funktioniert mit einer IP-Adresse (z. B. 192.168.1.10 oder einer öffentlichen IP) oder einem lokalen Namen."
+          }
+        }
+      }
+    },
+    "Favorite Emoji" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lieblings-Emoji"
+          }
+        }
+      }
+    },
+    "HC 1" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HC 1"
+          }
+        }
+      }
+    },
+    "HC 10" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HC 10"
+          }
+        }
+      }
+    },
+    "HC 2" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HC 2"
+          }
+        }
+      }
+    },
+    "HC 3" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HC 3"
+          }
+        }
+      }
+    },
+    "HC 4" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HC 4"
+          }
+        }
+      }
+    },
+    "HC 5" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HC 5"
+          }
+        }
+      }
+    },
+    "HC 6" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HC 6"
+          }
+        }
+      }
+    },
+    "HC 7" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HC 7"
+          }
+        }
+      }
+    },
+    "HC 8" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HC 8"
+          }
+        }
+      }
+    },
+    "HC 9" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HC 9"
+          }
+        }
+      }
+    },
+    "Healthcheck" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Healthcheck"
+          }
+        }
+      }
+    },
+    "Healthchecks" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Healthchecks"
+          }
+        }
+      }
+    },
+    "Keine Auswahl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Auswahl"
+          }
+        }
+      }
+    },
+    "Minutes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minuten"
+          }
+        }
+      }
+    },
+    "No entry" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Eintrag"
+          }
+        }
+      }
+    },
+    "Node" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Node"
+          }
+        }
+      }
+    },
+    "Node not reachable" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Node nicht erreichbar"
+          }
+        }
+      }
+    },
+    "Node …" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Node …"
+          }
+        }
+      }
+    },
+    "Pause DNS64 Blocking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS64-Blocking pausieren"
+          }
+        }
+      }
+    },
+    "Pause or resume DNS64 blocking." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS64-Blocking pausieren oder fortsetzen."
+          }
+        }
+      }
+    },
+    "Paused" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausiert"
+          }
+        }
+      }
+    },
+    "Paused until %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausiert bis %@"
+          }
+        }
+      }
+    },
+    "Paused until resumed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausiert, bis es fortgesetzt wird"
+          }
+        }
+      }
+    },
+    "Queries" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anfragen"
+          }
+        }
+      }
+    },
+    "Queries of the last 24 hours, %lld bars, maximum %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anfragen der letzten 24 Stunden, %lld Balken, Maximum %@"
+          }
+        }
+      }
+    },
+    "Resume" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fortsetzen"
+          }
+        }
+      }
+    },
+    "Resume DNS64 Blocking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS64-Blocking fortsetzen"
+          }
+        }
+      }
+    },
+    "Set DNS64 Blocking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS64-Blocking festlegen"
+          }
+        }
+      }
+    },
+    "Show up to 2 (small), 4 (medium) or 10 (large) healthchecks." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt bis zu 2 (klein), 4 (mittel) oder 10 (groß) Healthchecks."
+          }
+        }
+      }
+    },
+    "This is an example widget." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dies ist ein Beispiel-Widget."
+          }
+        }
+      }
+    },
+    "Time" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeit"
+          }
+        }
+      }
+    },
+    "Updated" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualisiert"
+          }
+        }
+      }
+    },
+    "Waiting for update" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warte auf Update"
+          }
+        }
+      }
+    },
+    "max %@ · 24 h" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "max. %@ · 24 Std."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

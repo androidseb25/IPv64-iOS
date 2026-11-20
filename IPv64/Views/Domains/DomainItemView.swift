@@ -12,7 +12,7 @@ struct DomainItemView: View {
                 Text(row.name)
                     .font(.headline)
                     .lineLimit(1)
-                Text("Updates: \(row.updates) · Wildcard: \(row.wildcard ? "yes" : "no")")
+                Text("Updates: \(row.updates) · Wildcard: \(HcFormat.yesNo(row.wildcard) ?? "")")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)

@@ -29,7 +29,7 @@ struct UserItemView: View {
                         .font(.title3)
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(user.Information.isEmpty ? "No Information" : user.Information)
+                    Text(user.Information.isEmpty ? String(localized: "No Information") : user.Information)
                         .lineLimit(1)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
