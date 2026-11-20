@@ -19,24 +19,19 @@ struct TVWhatsNewView: View {
     ]
 
     var body: some View {
-        VStack(spacing: 32) {
-            Text("What's New in IPv64.net").font(.largeTitle.bold())
-            VStack(alignment: .leading, spacing: 22) {
-                ForEach(entries) { entry in
-                    HStack(spacing: 32) {
-                        Image(systemName: entry.icon)
-                            .font(.system(size: 52))
-                            .foregroundStyle(Color.ipv64)
-                            .frame(width: 90)
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(entry.title).font(.title3.bold())
-                            Text(entry.subtitle).font(.callout).foregroundStyle(.secondary)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
+        VStack(spacing: 24) {
+            Text("What's New in IPv64.net").font(.title.bold())
+            // Rows are focusable: on tvOS a scroll view only moves with focus, so longer lists stay reachable.
+            ScrollView {
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(entries) { entry in
+                        EntryRow(entry: entry).focusable()
                     }
                 }
+                .frame(maxWidth: 1400, alignment: .leading)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
             }
-            .frame(maxWidth: 1400, alignment: .leading)
             Button("Continue") { dismiss() }
                 .focused($focused)
         }
@@ -50,5 +45,29 @@ struct TVWhatsNewView: View {
                 .ignoresSafeArea()
         }
         .defaultFocus($focused, true)
+    }
+
+    private struct EntryRow: View {
+        let entry: Entry
+        @Environment(\.isFocused) private var focused
+
+        var body: some View {
+            HStack(spacing: 24) {
+                Image(systemName: entry.icon)
+                    .font(.system(size: 38))
+                    .foregroundStyle(Color.ipv64)
+                    .frame(width: 64)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(entry.title).font(.headline)
+                    Text(entry.subtitle).font(.callout).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 12)
+            .background(.white.opacity(focused ? 0.12 : 0), in: RoundedRectangle(cornerRadius: 20))
+            .animation(.easeOut(duration: 0.15), value: focused)
+        }
     }
 }
